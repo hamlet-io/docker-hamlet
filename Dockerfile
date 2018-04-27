@@ -13,8 +13,9 @@ RUN apt-get update && apt-get install -y \
 
 RUN mkdir -p /opt/codeontap/generation && \
     mkdir -p /opt/codeontap/automation && \
-    mkdir -p /opt/codeontap/startup
-
+    mkdir -p /opt/codeontap/startup && \
+    mkdir -p /var/opt/codeontap
+    
 RUN git clone --depth 1 https://github.com/codeontap/gen3.git /opt/codeontap/generation && \
     git clone --depth 1 https://github.com/codeontap/gen3-automation.git /opt/codeontap/automation && \
     git clone --depth 1 https://github.com/codeontap/gen3-startup.git /opt/codeontap/startup
@@ -30,4 +31,4 @@ ENV PRODUCT=""
 ENV ENVIRONMENT=""
 ENV SEGMENT=""
 
-WORKDIR ~/
+WORKDIR /var/opt/codeontap

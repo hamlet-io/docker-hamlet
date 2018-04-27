@@ -8,8 +8,10 @@ RUN apt-get update && apt-get install -y \
     dos2unix \
     git \
     jq \
-    awscli \
+    python3.6 \
  && rm -rf /var/lib/apt/lists/*
+
+RUN pip install awscli --upgrade --no-cache-dir
 
 RUN mkdir -p /opt/codeontap/generation && \
     mkdir -p /opt/codeontap/automation && \

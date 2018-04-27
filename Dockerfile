@@ -33,6 +33,7 @@ ENV ENVIRONMENT=""
 ENV SEGMENT=""
 
 RUN adduser --system --home /home/codeontap --disabled-password codeontap 
+RUN chown -R codeontap:codeontap /var/opt/codeontap
 
 USER codeontap
 

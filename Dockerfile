@@ -9,10 +9,10 @@ RUN apt-get update && apt-get install -y \
     git \
     jq \
     python3 \
-    pyhton3-pip \
+    python3-pip \
  && rm -rf /var/lib/apt/lists/*
 
-RUN pip install awscli --upgrade --no-cache-dir --user
+RUN python3 -m pip install awscli --upgrade --no-cache-dir --user
 
 RUN mkdir -p /opt/codeontap/generation && \
     mkdir -p /opt/codeontap/automation && \

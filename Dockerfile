@@ -8,10 +8,11 @@ RUN apt-get update && apt-get install -y \
     dos2unix \
     git \
     jq \
-    python3.6 \
+    python3 \
+    pyhton3-pip \
  && rm -rf /var/lib/apt/lists/*
 
-RUN pip install awscli --upgrade --no-cache-dir
+RUN pip install awscli --upgrade --no-cache-dir --user
 
 RUN mkdir -p /opt/codeontap/generation && \
     mkdir -p /opt/codeontap/automation && \
@@ -33,4 +34,8 @@ ENV PRODUCT=""
 ENV ENVIRONMENT=""
 ENV SEGMENT=""
 
+RUN groupadd codeontap
+RUN useradd codeontap -G codeontap 
+
+USER codeontap
 WORKDIR /var/opt/codeontap

@@ -35,7 +35,7 @@ ENV ENVIRONMENT=""
 ENV SEGMENT=""
 
 RUN groupadd codeontap
-RUN useradd codeontap -G codeontap 
+RUN useradd codeontap -g codeontap 
 
 USER codeontap
 WORKDIR /var/opt/codeontap

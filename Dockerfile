@@ -32,11 +32,6 @@ ENV PRODUCT=""
 ENV ENVIRONMENT=""
 ENV SEGMENT=""
 
-RUN adduser --system --home /home/codeontap --group --disabled-password codeontap 
-RUN chown -R codeontap:codeontap /var/opt/codeontap
-
-USER codeontap
-
 RUN python3 -m pip install awscli --upgrade --no-cache-dir --user
 
 WORKDIR /var/opt/codeontap

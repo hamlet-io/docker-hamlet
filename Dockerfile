@@ -32,6 +32,6 @@ ENV PRODUCT=""
 ENV ENVIRONMENT=""
 ENV SEGMENT=""
 
-RUN python3 -m pip install awscli --upgrade --no-cache-dir --user
+RUN python3 -m pip install awscli --upgrade --no-cache-dir
 
 WORKDIR /var/opt/codeontap

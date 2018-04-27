@@ -32,8 +32,7 @@ ENV PRODUCT=""
 ENV ENVIRONMENT=""
 ENV SEGMENT=""
 
-RUN groupadd codeontap
-RUN useradd codeontap -g codeontap 
+RUN adduser codeontap -r -m -s /bin/bash
 
 USER codeontap
 

@@ -12,8 +12,6 @@ RUN apt-get update && apt-get install -y \
     python3-pip \
  && rm -rf /var/lib/apt/lists/*
 
-RUN python3 -m pip install awscli --upgrade --no-cache-dir --user
-
 RUN mkdir -p /opt/codeontap/generation && \
     mkdir -p /opt/codeontap/automation && \
     mkdir -p /opt/codeontap/startup && \
@@ -38,4 +36,7 @@ RUN groupadd codeontap
 RUN useradd codeontap -g codeontap 
 
 USER codeontap
+
+RUN python3 -m pip install awscli --upgrade --no-cache-dir --user
+
 WORKDIR /var/opt/codeontap

@@ -32,7 +32,7 @@ ENV PRODUCT=""
 ENV ENVIRONMENT=""
 ENV SEGMENT=""
 
-RUN adduser codeontap -r -m -s /bin/bash
+RUN adduser --system --home /home/codeontap --disabled-password codeontap 
 
 USER codeontap
 

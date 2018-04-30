@@ -17,7 +17,7 @@ RUN mkdir -p /opt/codeontap/generation && \
     mkdir -p /opt/codeontap/startup && \
     mkdir -p /var/opt/codeontap
     
-RUN git clone --depth 1 --branch fix-lb-healthchecklookup https://github.com/roleyfoley/gen3.git /opt/codeontap/generation && \
+RUN git clone --depth 1 --branch fix-jenkins-env-naming https://github.com/roleyfoley/gen3.git /opt/codeontap/generation && \
     git clone --depth 1 https://github.com/roleyfoley/gen3-automation.git /opt/codeontap/automation && \
     git clone --depth 1 https://github.com/roleyfoley/gen3-startup.git /opt/codeontap/startup
 

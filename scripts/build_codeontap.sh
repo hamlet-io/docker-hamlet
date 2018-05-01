@@ -4,4 +4,4 @@ jq -r '.Repositories[] | "git clone --depth 1 --branch \(.Branch) \(.Repository)
 chmod u+rwx /build/scripts/clone.sh 
 
 # Create the Version file from the config
-jq '{ "FrameworkVersion" : .FrameworkVersion }' </build/config.json > /var/opt/codeontap/version.json
+jq '{ "FrameworkVersion" : .FrameworkVersion }' </build/config.json > /opt/codeontap/version.json

@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -y \
 
 # Clone in codeontap repositories using config.json
 RUN mkdir -p /build/scripts
+RUN mkdir -p /opt/codeontap
 RUN mkdir -p /var/opt/codeontap
 
 COPY scripts/ /build/scripts

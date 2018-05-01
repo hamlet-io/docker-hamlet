@@ -18,7 +18,8 @@ RUN mkdir -p /var/opt/codeontap
 
 COPY scripts/ /build/scripts
 
-RUN chmod  u+rwxs /build/scripts
+RUN chmod -R u+rwx /build/scripts
+RUN chmod u+s /build/scripts
 
 COPY config.json build/
 

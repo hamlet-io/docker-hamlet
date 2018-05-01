@@ -12,14 +12,17 @@ RUN apt-get update && apt-get install -y \
     python3-pip \
  && rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /opt/codeontap/generation && \
-    mkdir -p /opt/codeontap/automation && \
-    mkdir -p /opt/codeontap/startup && \
-    mkdir -p /var/opt/codeontap
-    
-RUN git clone --depth 1 --branch fix-jenkins-env-naming https://github.com/roleyfoley/gen3.git /opt/codeontap/generation && \
-    git clone --depth 1 https://github.com/roleyfoley/gen3-automation.git /opt/codeontap/automation && \
-    git clone --depth 1 https://github.com/roleyfoley/gen3-startup.git /opt/codeontap/startup
+# Clone in codeontap repositories using config.json
+RUN mkdir -p /build/scripts
+RUN mkdir -p /var/opt/codeontap
+
+COPY scripts/ /build/scripts
+
+RUN chmod -R u+rwx /build/scripts
+
+COPY config.json build/
+
+RUN /build/scripts/build_codeontap.sh
 
 ENV AUTOMATION_BASE_DIR=/opt/codeontap/automation
 ENV AUTOMATION_DIR=/opt/codeontap/automation/jenkins/aws

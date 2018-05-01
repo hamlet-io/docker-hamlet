@@ -25,7 +25,7 @@ COPY config.json build/
 
 RUN /build/scripts/build_codeontap.sh
 
-RUN /build/scropts/clone.sh
+RUN /build/scripts/clone.sh
 
 ENV AUTOMATION_BASE_DIR=/opt/codeontap/automation
 ENV AUTOMATION_DIR=/opt/codeontap/automation/jenkins/aws

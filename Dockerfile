@@ -18,11 +18,13 @@ RUN mkdir -p /var/opt/codeontap
 
 COPY scripts/ /build/scripts
 
-RUN chmod -R u+rwx /build/scripts
+RUN chmod  u+rwxs /build/scripts
 
 COPY config.json build/
 
 RUN /build/scripts/build_codeontap.sh
+
+RUN /build/scropts/clone.sh
 
 ENV AUTOMATION_BASE_DIR=/opt/codeontap/automation
 ENV AUTOMATION_DIR=/opt/codeontap/automation/jenkins/aws

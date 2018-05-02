@@ -5,8 +5,8 @@ RUN mkdir -p /build/scripts
 RUN mkdir -p /opt/codeontap
 RUN mkdir -p /var/opt/codeontap
 
-COPY /scripts/  /build/scripts
-COPY /files/    /build/
+COPY scripts/  /build/scripts/
+COPY files/    /build/
 
 # Install OS Packages
 RUN apt-get update && apt-get install -y \

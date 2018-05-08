@@ -29,9 +29,10 @@ RUN apt-get update && apt-get install -y \
 
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 10
 RUN update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 10
-RUN pip install --upgrade pip setuptools
 
-RUN python3 -m pip install awscli --upgrade --no-cache-dir
+RUN pip install --upgrade --no-cache-dir \
+    pip setuptools \
+    awscli
 
 # Install NodeJs
 RUN curl -sL https://deb.nodesource.com/setup_8.x |  bash - \

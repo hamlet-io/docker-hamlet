@@ -2,10 +2,6 @@ FROM openjdk:8-jdk
 
 USER root
 
-#####
-# CodeOnTap Configuration
-#####
-
 # Directory set up and file copying 
 RUN mkdir -p /build/scripts
 RUN mkdir -p /opt/codeontap
@@ -28,7 +24,7 @@ RUN apt-get update && apt-get install -y \
  && rm -rf /var/lib/apt/lists/*
 
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 10
-RUN update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 10 
+RUN update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 10
 
 RUN pip install --upgrade --no-cache-dir \
     pip setuptools \
@@ -36,7 +32,13 @@ RUN pip install --upgrade --no-cache-dir \
 
 # Install NodeJs
 RUN curl -sL https://deb.nodesource.com/setup_8.x |  bash - \
-    && apt-get install -y nodejs \
+    && apt-get update && apt-get install -y nodejs \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Yarn 
+RUN curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
+    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
+    && apt-get update && apt-get install -y yarn \
     && rm -rf /var/lib/apt/lists/*
 
 # Update Script permissions
@@ -59,23 +61,4 @@ ENV PRODUCT=""
 ENV ENVIRONMENT=""
 ENV SEGMENT=""
 
-#####
-#Slave Specific config
-#####
-RUN useradd jenkins --shell /bin/bash --create-home \
-    && usermod -a -G sudo jenkins \
-    && echo 'ALL ALL = (ALL) NOPASSWD: ALL' >> /etc/sudoers \
-    && echo 'jenkins:secret' | chpasswd
-
-# See https://github.com/jenkinsci/docker-slave/blob/master/Dockerfile#L31
-ARG JENKINS_REMOTING_VERSION=3.19
-RUN curl --create-dirs -sSLo /usr/share/jenkins/slave.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/$JENKINS_REMOTING_VERSION/remoting-$JENKINS_REMOTING_VERSION.jar \
-  && chmod 755 /usr/share/jenkins \
-  && chmod 644 /usr/share/jenkins/slave.jar
-
-COPY scripts-jenkinsslave/jenkins-slave /usr/local/bin/jenkins-slave
-RUN chmod 755 /usr/local/bin/jenkins-slave
-
-USER jenkins
-
-ENTRYPOINT [ "/usr/local/bin/jenkins-slave"]
+WORKDIR /var/opt/codeontap

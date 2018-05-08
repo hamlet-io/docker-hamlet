@@ -16,6 +16,7 @@ RUN curl --create-dirs -sSLo /usr/share/jenkins/slave.jar https://repo.jenkins-c
 COPY scripts/jenkins-slave /usr/local/bin/jenkins-slave
 RUN chmod 755 /usr/local/bin/jenkins-slave
 
+WORKDIR /home/jenkins
 USER jenkins
 
 ENTRYPOINT [ "/usr/local/bin/jenkins-slave"]

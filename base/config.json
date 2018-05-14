@@ -4,17 +4,17 @@
         {
             "Repository" : "https://github.com/codeontap/gen3.git",
             "Directory" : "/opt/codeontap/generation",
-            "Branch" : "v5.0-beta"
+            "Branch" : "v5.0-presettings"
         },
         {
             "Repository" : "https://github.com/codeontap/gen3-automation.git",
             "Directory" : "/opt/codeontap/automation",
-            "Branch" : "v5.0-beta"
+            "Branch" : "v5.0-presettings"
         },
         {
             "Repository" : "https://github.com/codeontap/gen3-startup.git",
             "Directory" : "/opt/codeontap/startup",
-            "Branch" : "master"
+            "Branch" : "v5.0-presettings"
         }   
     ]
 }

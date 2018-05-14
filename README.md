@@ -20,10 +20,10 @@ This image is intended to be used as a JNLP slave using a Jenkins Docker plugin 
 
 ## Versions
 
-Each image has the following tags: 
+Each image has the following tags:
 
-- latest - The latest codeontap framework commits - Images are built using the development branch of this repo and the master/default branch of each codeontap repository
-- stable - The latest tagged release of the codeontap gen3 framework - Images are built using the master branch of this repo
+- latest - The latest codeontap framework commits - Images are built using the master branch of this repo and the master/default branch of each codeontap repository
+- stable - The latest tagged release of the codeontap gen3 framework - Images are built using the train branch of this repo
 - x.x.x - A specific release of the codeontap framework - Images are built based on tags on this repo
 
 ## Configuration

@@ -4,22 +4,22 @@
         {
             "Repository" : "https://github.com/codeontap/gen3.git",
             "Directory" : "/opt/codeontap/generation",
-            "Branch" : "master"
+            "Branch" : "v5.1.0"
         },
         {
             "Repository" : "https://github.com/codeontap/gen3-automation.git",
             "Directory" : "/opt/codeontap/automation",
-            "Branch" : "master"
+            "Branch" : "v5.1.0"
         },
         {
             "Repository" : "https://github.com/codeontap/gen3-startup.git",
             "Directory" : "/opt/codeontap/startup",
-            "Branch" : "master"
+            "Branch" : "v5.1.0"
         },
         {
             "Repository" : "https://github.com/codeontap/gen3-patterns.git",
             "Directory" : "/opt/codeontap/patterns",
-            "Branch" : "master"
+            "Branch" : "v5.1.0"
         }
     ]
 }

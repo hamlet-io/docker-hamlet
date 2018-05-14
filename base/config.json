@@ -1,5 +1,5 @@
 {
-    "FrameworkVersion" : "0.0.0",
+    "FrameworkVersion" : "5.1.0",
     "Repositories" :[
         {
             "Repository" : "https://github.com/codeontap/gen3.git",

@@ -15,6 +15,11 @@
             "Repository" : "https://github.com/codeontap/gen3-startup.git",
             "Directory" : "/opt/codeontap/startup",
             "Branch" : "master"
-        }   
+        },
+        {
+            "Repository" : "https://github.com/codeontap/gen3-patterns.git",
+            "Directory" : "/opt/codeontap/patterns",
+            "Branch" : "master"
+        }
     ]
 }

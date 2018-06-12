@@ -12,15 +12,16 @@ COPY config.json /build/config.json
 
 # Install OS Packages
 RUN apt-get update && apt-get install -y \
+    apt-utils \
     build-essential \
     curl wget \
-    docker \
     dos2unix \
     git \
     tar zip unzip \
     less vim tree \
     jq \
-    python3 python3-pip groff \
+    groff \
+    python3 python3-pip \
  && rm -rf /var/lib/apt/lists/*
 
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 10
@@ -28,11 +29,34 @@ RUN update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 10
 
 RUN pip install --upgrade --no-cache-dir \
     pip setuptools \
-    awscli
+    awscli \ 
+    cookiecutter
+
+# Install Docker 
+RUN apt-get update && apt-get install -y \
+     apt-transport-https \
+     ca-certificates \
+     curl \
+     gnupg2 \
+     software-properties-common \
+   && rm -rf /var/lib/apt/lists/*
+
+RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
+
+RUN add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/debian \
+   $(lsb_release -cs) \
+   stable"
+
+RUN apt-get update && apt-get install -y \
+        docker-ce \
+      && rm -rf /var/lib/apt/lists/*
 
 # Install NodeJs
 RUN curl -sL https://deb.nodesource.com/setup_8.x |  bash - \
-    && apt-get update && apt-get install -y nodejs \
+    && apt-get update && apt-get install -y \
+        nodejs \
+        npm \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Yarn 

@@ -1,4 +1,4 @@
-FROM codeontap/gen3:stable
+FROM codeontap/gen3:latest
 
 USER root
 

@@ -7,6 +7,8 @@ RUN useradd jenkins --shell /bin/bash --create-home \
     && echo 'ALL ALL = (ALL) NOPASSWD: ALL' >> /etc/sudoers \
     && echo 'jenkins:secret' | chpasswd
 
+RUN sudo usermod -aG docker jenkins
+
 # See https://github.com/jenkinsci/docker-slave/blob/master/Dockerfile#L31
 ARG JENKINS_REMOTING_VERSION=3.19
 RUN curl --create-dirs -sSLo /usr/share/jenkins/slave.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/$JENKINS_REMOTING_VERSION/remoting-$JENKINS_REMOTING_VERSION.jar \

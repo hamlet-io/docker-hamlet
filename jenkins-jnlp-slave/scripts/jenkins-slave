@@ -27,8 +27,10 @@
 # * JENKINS_TUNNEL : HOST:PORT for a tunnel to route TCP traffic to jenkins host, when jenkins can't be directly accessed over network
 # * JENKINS_URL : alternate jenkins URL
 
-# Try to start Docker service - Requires NET_ADMIN capability
-sudo service docker start > /dev/null
+# Run Docker in docker for slave tasks
+if [[ ! -z "${ENABLE_DOCKER}" ]]; then
+	nohup sudo dind dockerd > /dev/null 2>&1 &
+fi
 
 if [[ $# -eq 1 ]]; then
 

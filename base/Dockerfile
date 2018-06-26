@@ -43,6 +43,18 @@ RUN apt-get update && apt-get install -y \
 
 RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
 
+#Install dind
+RUN set -x \
+	&& useradd dockremap \
+  && usermod -a -G dockremap dockremap \
+	&& echo 'dockremap:165536:65536' >> /etc/subuid \
+  && echo 'dockremap:165536:65536' >> /etc/subgid
+
+ENV DIND_COMMIT 52379fa76dee07ca038624d639d9e14f4fb719ff
+
+RUN wget -O /usr/local/bin/dind "https://raw.githubusercontent.com/docker/docker/${DIND_COMMIT}/hack/dind"; \
+	chmod +x /usr/local/bin/dind; 
+
 RUN add-apt-repository \
    "deb [arch=amd64] https://download.docker.com/linux/debian \
    $(lsb_release -cs) \
@@ -84,5 +96,7 @@ ENV ACCOUNT=""
 ENV PRODUCT=""
 ENV ENVIRONMENT=""
 ENV SEGMENT=""
+
+VOLUME /var/lib/docker
 
 WORKDIR /var/opt/codeontap

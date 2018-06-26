@@ -22,4 +22,6 @@ USER jenkins
 
 VOLUME /var/lib/docker
 
+ENV ENABLE_DOCKER=""
+
 ENTRYPOINT [ "/usr/local/bin/jenkins-slave"]

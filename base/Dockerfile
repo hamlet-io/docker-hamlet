@@ -46,9 +46,9 @@ RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
 #Install dind
 RUN set -x \
 	&& useradd dockremap \
-  && usermod -a -G dockremap dockremap \
+    && usermod -a -G dockremap dockremap \
 	&& echo 'dockremap:165536:65536' >> /etc/subuid \
-  && echo 'dockremap:165536:65536' >> /etc/subgid
+    && echo 'dockremap:165536:65536' >> /etc/subgid
 
 ENV DIND_COMMIT 52379fa76dee07ca038624d639d9e14f4fb719ff
 

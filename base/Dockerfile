@@ -77,6 +77,8 @@ RUN curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
     && apt-get update && apt-get install -y yarn \
     && rm -rf /var/lib/apt/lists/*
 
+RUN npm install -g grunt-cli
+
 # Update Script permissions
 RUN chmod -R u+rwx /build/scripts
 RUN chmod u+s /build/

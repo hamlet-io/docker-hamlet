@@ -2,11 +2,10 @@ FROM codeontap/gen3:latest
 
 USER root
 
-RUN useradd jenkins --shell /bin/bash --create-home \
-    && usermod -a -G sudo jenkins  \
-    && usermod -a -G docker jenkins \
-    && echo 'ALL ALL = (ALL) NOPASSWD: ALL' >> /etc/sudoers \
-    && echo 'jenkins:secret' | chpasswd
+ARG UID=1000
+
+RUN useradd jenkins -u ${UID} --shell /bin/bash --create-home \
+    && usermod -a -G docker jenkins 
 
 # See https://github.com/jenkinsci/docker-slave/blob/master/Dockerfile#L31
 ARG JENKINS_REMOTING_VERSION=3.19
@@ -21,7 +20,5 @@ WORKDIR /home/jenkins
 USER jenkins
 
 VOLUME /var/lib/docker
-
-ENV ENABLE_DOCKER=""
 
 ENTRYPOINT [ "/usr/local/bin/jenkins-slave"]

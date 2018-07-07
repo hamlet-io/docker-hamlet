@@ -3,13 +3,12 @@ FROM codeontap/gen3:latest
 USER root
 
 ARG JENKINSUID=1000
-ENV DOCKERGID=""
+ARG DOCKERGID=497
 
-# Need permissions to modify the docker group configuration so that it aligns with the host GID
-RUN useradd -u ${JENKINSUID} --shell /bin/bash --create-home -G sudo jenkins  && \
-    echo "jenkins ALL=(root) NOPASSWD: /usr/sbin/groupadd" >> /etc/sudoers && \
-    echo "jenkins ALL=(root) NOPASSWD: /usr/sbin/usermod" >> /etc/sudoers && \
-    echo "jenkins ALL=(root) NOPASSWD: /usr/sbin/groupdel" >> /etc/sudoers 
+# Workaround for docker in docker permissions - ECS seems to use 497 for the group Id
+RUN useradd -u ${JENKINSUID} --shell /bin/bash --create-home jenkins \
+  && groupmod -g "${DOCKERGID}" docker \
+  && usermod -G docker jenkins
 
 # See https://github.com/jenkinsci/docker-slave/blob/master/Dockerfile#L31
 ARG JENKINS_REMOTING_VERSION=3.19

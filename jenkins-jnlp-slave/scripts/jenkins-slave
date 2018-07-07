@@ -27,6 +27,13 @@
 # * JENKINS_TUNNEL : HOST:PORT for a tunnel to route TCP traffic to jenkins host, when jenkins can't be directly accessed over network
 # * JENKINS_URL : alternate jenkins URL
 
+# Create the docker group at runtime so it matches the host
+if [[ -n "${DOCKERGID}" ]]; then 
+	sudo groupdel docker && sudo groupadd -g "${DOCKERGID}" docker && sudo usermod -G docker jenkins
+else
+	sudo usermod -G docker jenkins
+fi
+
 if [[ $# -eq 1 ]]; then
 
 	# if `docker run` only has one arguments, we assume user is running alternate command like `bash` to inspect the image

@@ -2,10 +2,14 @@ FROM codeontap/gen3:latest
 
 USER root
 
-ARG UID=1000
+ARG JENKINSUID=1000
+ENV DOCKERGID=""
 
-RUN useradd jenkins -u ${UID} --shell /bin/bash --create-home \
-    && usermod -a -G docker jenkins 
+# Need permissions to modify the docker group configuration so that it aligns with the host GID
+RUN useradd -u ${JENKINSUID} --shell /bin/bash --create-home -G sudo jenkins  && \
+    echo "jenkins ALL=(root) NOPASSWD: /usr/sbin/groupadd" >> /etc/sudoers && \
+    echo "jenkins ALL=(root) NOPASSWD: /usr/sbin/usermod" >> /etc/sudoers && \
+    echo "jenkins ALL=(root) NOPASSWD: /usr/sbin/groupdel" >> /etc/sudoers 
 
 # See https://github.com/jenkinsci/docker-slave/blob/master/Dockerfile#L31
 ARG JENKINS_REMOTING_VERSION=3.19

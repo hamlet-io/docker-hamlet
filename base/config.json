@@ -1,15 +1,15 @@
 {
-    "FrameworkVersion" : "v5.2.0-rc2",
+    "FrameworkVersion" : "v5.2.0-rc3",
     "Repositories" :[
         {
             "Repository" : "https://github.com/codeontap/gen3.git",
             "Directory" : "/opt/codeontap/generation",
-            "Branch" : "v5.2.0-rc2"
+            "Branch" : "v5.2.0-rc3"
         },
         {
             "Repository" : "https://github.com/codeontap/gen3-automation.git",
             "Directory" : "/opt/codeontap/automation",
-            "Branch" : "v5.2.0-rc2"
+            "Branch" : "v5.2.0-rc3"
         },
         {
             "Repository" : "https://github.com/codeontap/gen3-startup.git",

@@ -78,9 +78,3 @@ ENV AUTOMATION_DIR=/opt/codeontap/automation/jenkins/aws
 ENV GENERATION_BASE_DIR=/opt/codeontap/generation
 ENV GENERATION_DIR=/opt/codeontap/generation/aws
 ENV GENERATION_STARTUP_DIR=/opt/codeontap/startup
-
-ENV REGION=""
-ENV ACCOUNT=""
-ENV PRODUCT=""
-ENV ENVIRONMENT=""
-ENV SEGMENT=""

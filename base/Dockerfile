@@ -59,11 +59,18 @@ RUN update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 10
 # Install Python Packages
 RUN pip install --upgrade --no-cache-dir \
     pip setuptools \
+    virtualenv \
+    docker-compose \
+    zappa \
     awscli \ 
     cookiecutter
 
 # Install NPM Packages
-RUN npm install -g grunt-cli
+RUN npm install -g \
+    grunt-cli \
+    gulp-cli \
+    gulp \
+    bower
 
 # Update Script permissions
 RUN chmod -R u+rwx /build/scripts

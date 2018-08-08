@@ -45,15 +45,25 @@ RUN apt-get update && apt-get install -y \
     less vim tree \
     jq \
     groff \
-    python3 python3-pip \
     docker-ce \
     nodejs \
     npm \
     yarn \
  && rm -rf /var/lib/apt/lists/*
 
+# Add Debian testing repos
+RUN echo 'deb http://deb.debian.org/debian testing main' | tee -a /etc/apt/sources.list 
+RUN echo 'APT::Default-Release "stable";' | tee -a /etc/apt/apt.conf.d/00local
+
+# Install Python3.6
+RUN apt-get update && apt-get -t testing install -y \
+    python3.6 \
+    python3.6-dev \
+    python3-pip \
+ && rm -rf /var/lib/apt/lists/*
+
 # Make Python3 the default
-RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 10
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.6 10
 RUN update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 10
 
 # Install Python Packages
@@ -61,7 +71,7 @@ RUN pip install --upgrade --no-cache-dir \
     pip setuptools \
     virtualenv \
     docker-compose \
-    zappa \
+    PyYAML==3.12 zappa \
     awscli \ 
     cookiecutter
 
@@ -69,7 +79,6 @@ RUN pip install --upgrade --no-cache-dir \
 RUN npm install -g \
     grunt-cli \
     gulp-cli \
-    gulp \
     bower
 
 # Update Script permissions

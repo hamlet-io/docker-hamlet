@@ -60,6 +60,7 @@ RUN apt-get update && apt-get -t testing install -y \
     python3.6 \
     python3.6-dev \
     python3-pip \
+    libpq-dev \
  && rm -rf /var/lib/apt/lists/*
 
 # Make Python3 the default

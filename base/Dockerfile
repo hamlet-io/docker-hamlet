@@ -76,7 +76,8 @@ RUN pip install --upgrade --no-cache-dir \
     docker-compose \
     PyYAML==3.12 zappa \
     awscli \ 
-    cookiecutter
+    cookiecutter \
+    pytest  pytest-cov
 
 # Install NPM Packages
 RUN npm install -g \

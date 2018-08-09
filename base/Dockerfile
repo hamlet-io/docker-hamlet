@@ -49,6 +49,10 @@ RUN apt-get update && apt-get install -y \
     nodejs \
     npm \
     yarn \
+    python3 \
+    python3-dev \
+    python3-pip \
+    libpq-dev \
  && rm -rf /var/lib/apt/lists/*
 
 # Add Debian testing repos
@@ -59,8 +63,6 @@ RUN echo 'APT::Default-Release "stable";' | tee -a /etc/apt/apt.conf.d/00local
 RUN apt-get update && apt-get -t testing install -y \
     python3.6 \
     python3.6-dev \
-    python3-pip \
-    libpq-dev \
  && rm -rf /var/lib/apt/lists/*
 
 # Make Python3 the default

@@ -77,7 +77,7 @@ RUN pip install --upgrade --no-cache-dir \
     PyYAML==3.12 zappa \
     awscli \ 
     cookiecutter \
-    pytest  pytest-cov
+    pytest pytest-sugar pytest-django coverage flake8 
 
 # Install NPM Packages
 RUN npm install -g \

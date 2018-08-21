@@ -19,6 +19,9 @@ RUN curl --create-dirs -sSLo /usr/share/jenkins/slave.jar https://repo.jenkins-c
 COPY scripts/jenkins-slave /usr/local/bin/jenkins-slave
 RUN chmod 755 /usr/local/bin/jenkins-slave
 
+COPY scripts/wait-for-it /usr/local/bin/wait-for-it
+RUN chmod 755 /usr/local/bin/wait-for-it
+
 WORKDIR /home/jenkins
 USER jenkins
 

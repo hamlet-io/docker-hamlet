@@ -81,7 +81,6 @@ RUN pip install --upgrade --no-cache-dir \
 
 # Install NPM Packages
 RUN npm install -g \
-    remark-cli \
     grunt-cli \
     gulp-cli \
     bower

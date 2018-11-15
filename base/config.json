@@ -1,20 +1,20 @@
 {
-    "FrameworkVersion" : "5.2.0",
+    "FrameworkVersion" : "5.3.0",
     "Repositories" :[
         {
             "Repository" : "https://github.com/codeontap/gen3.git",
             "Directory" : "/opt/codeontap/generation",
-            "Branch" : "v5.2.0"
+            "Branch" : "v5.3.0"
         },
         {
             "Repository" : "https://github.com/codeontap/gen3-automation.git",
             "Directory" : "/opt/codeontap/automation",
-            "Branch" : "v5.2.0"
+            "Branch" : "v5.3.0"
         },
         {
             "Repository" : "https://github.com/codeontap/gen3-startup.git",
             "Directory" : "/opt/codeontap/startup",
-            "Branch" : "v5.2.0"
+            "Branch" : "v5.3.0"
         },
         {
             "Repository" : "https://github.com/codeontap/gen3-patterns.git",

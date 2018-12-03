@@ -84,7 +84,8 @@ RUN pip install --upgrade --no-cache-dir \
 RUN npm install -g \
     grunt-cli \
     gulp-cli \
-    bower
+    bower \
+    yamljs
 
 # Update Script permissions
 RUN chmod -R u+rwx /build/scripts

@@ -10,8 +10,11 @@ RUN useradd -u ${JENKINSUID} --shell /bin/bash --create-home jenkins \
   && groupmod -g "${DOCKERGID}" docker \
   && usermod -G docker jenkins
 
+RUN echo '#Allow Jenkins user to install extra packages'
+RUN echo 'jenkins ALL = NOPASSWD : /usr/bin/apt-get' >> /etc/sudoers
+
 # See https://github.com/jenkinsci/docker-slave/blob/master/Dockerfile#L31
-ARG JENKINS_REMOTING_VERSION=3.27
+ARG JENKINS_REMOTING_VERSION=3.28
 RUN curl --create-dirs -sSLo /usr/share/jenkins/slave.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/$JENKINS_REMOTING_VERSION/remoting-$JENKINS_REMOTING_VERSION.jar \
   && chmod 755 /usr/share/jenkins \
   && chmod 644 /usr/share/jenkins/slave.jar

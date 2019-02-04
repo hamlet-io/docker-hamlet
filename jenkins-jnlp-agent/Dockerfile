@@ -19,8 +19,8 @@ RUN curl --create-dirs -sSLo /usr/share/jenkins/slave.jar https://repo.jenkins-c
   && chmod 755 /usr/share/jenkins \
   && chmod 644 /usr/share/jenkins/slave.jar
 
-COPY scripts/jenkins-slave /usr/local/bin/jenkins-slave
-RUN chmod 755 /usr/local/bin/jenkins-slave
+COPY scripts/jenkins-slave /usr/local/bin/jenkins-agent
+RUN chmod 755 /usr/local/bin/jenkins-agent
 
 COPY scripts/wait-for-it /usr/local/bin/wait-for-it
 RUN chmod 755 /usr/local/bin/wait-for-it
@@ -30,4 +30,4 @@ USER jenkins
 
 VOLUME /var/lib/docker
 
-ENTRYPOINT [ "/usr/local/bin/jenkins-slave"]
+ENTRYPOINT [ "/usr/local/bin/jenkins-agent"]

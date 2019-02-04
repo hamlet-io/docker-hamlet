@@ -12,11 +12,21 @@ https://hub.docker.com/r/codeontap/gen3/
 
 This image is intended to be used for interactive sessions with codeontap where you run the process manually or a process is invoking the container directly
 
-### Jenkins-Slave
+### Jenkins Agents
 
-https://hub.docker.com/r/codeontap/gen3-jenkins-slave/
+CodeOnTap mostly runs on a Jenkins instance and we use JNLP based agents. These Docker images are used for container based agents deployed using an appropriate plugin ( ECS, Docker or Kubernetes). It is based on the jenkins jnlp agent and has a specific entry point script suitable for the plugins.
 
-This image is intended to be used as a JNLP slave using a Jenkins Docker plugin (ECS, Docker, Kubernetes). It is based on the jenkins jnlp slave image and has a specifc entry point to ensure that the JNLP agent reports back to the jenkins sever which invoked it 
+#### jenkins-jnlp-agent
+
+DockerHub: https://dockerhub.com/r/codeontap/gen3-jenkins-agent
+
+A standard agent with some basic build tools include for node, python and java based builds
+
+#### jenkins-jnlp-meteor-agent
+
+DockerHub: https://dockerhub.com/r/codeontap/gen3-jenkins-meteor-agent
+
+The standard image along with meteor.js. This also includes precached node and meteor modules as they can take some time to download
 
 ## Versions
 

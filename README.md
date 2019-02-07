@@ -4,13 +4,13 @@ This repo contains the docker build process to create docker containers for the 
 
 ## Images
 
-We currently create the following docker images
+We currently create the following docker images which are hosted on dockerhub https://dockerhub.com/r/codeontap/gen3
 
-### Base
+### gen3
 
-https://hub.docker.com/r/codeontap/gen3/
+The gen3 is our based image and contains the baseline requirements for running codeontap
 
-This image is intended to be used for interactive sessions with codeontap where you run the process manually or a process is invoking the container directly
+**Tag:** gen3
 
 ### Jenkins Agents
 
@@ -18,13 +18,13 @@ CodeOnTap mostly runs on a Jenkins instance and we use JNLP based agents. These 
 
 #### jenkins-jnlp-agent
 
-DockerHub: https://dockerhub.com/r/codeontap/gen3-jenkins-agent
+**Tag:** jenkins-jnlp-agent
 
 A standard agent with some basic build tools include for node, python and java based builds
 
 #### jenkins-jnlp-meteor-agent
 
-DockerHub: https://dockerhub.com/r/codeontap/gen3-jenkins-meteor-agent
+**Tag:** jenkins-jnlp-meteor-agent
 
 The standard image along with meteor.js. This also includes precached node and meteor modules as they can take some time to download
 

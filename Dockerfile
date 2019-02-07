@@ -72,7 +72,6 @@ RUN echo 'APT::Default-Release "stable";' | tee -a /etc/apt/apt.conf.d/00local
 # Install Python3.6
 RUN apt-get update && apt-get -t testing install -y \
     python3.6 \
-    python3.6-dev \
  && rm -rf /var/lib/apt/lists/*
 
 # Make Python3 the default

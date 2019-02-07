@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Push gen3 image
+docker push "${IMAGE_NAME}" 
+docker push "${DOCKER_REPO}:${CACHE_TAG}-gen3"
+
+# push jnlp Agent
+docker push "${DOCKER_REPO}:${CACHE_TAG}-jenkins-jnlp-agent"
+
+# push jnlp meteor agent
+docker push "${DOCKER_REPO}:${CACHE_TAG}-jenkins-jnlp-meteor-agent"

@@ -2,11 +2,13 @@
 
 # This overrides the standard dockerHub build process os that we can perform multi stage builds for different image types
 
+env 
+
 # Gen3 Agent
-docker build --target gen3 -t ${IMAGE_NAME} -t "${DOCKER_REPO}:${CACHE_TAG}-gen3" . || exit $?
+docker build --target gen3 -t "${IMAGE_NAME}" -t "${DOCKER_REPO}:${DOCKER_TAG}-gen3" . || exit $?
 
 # gen3 Jenkins JNLP 
-docker build --target jenkins-jnlp-agent -t "${DOCKER_REPO}:${CACHE_TAG}-jenkins-jnlp-agent" . || exit $?
+docker build --target jenkins-jnlp-agent -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-jnlp-agent" . || exit $?
 
 # gen3 Jenkins JNLP Meteor
-docker build --target jenkins-jnlp-meteor-agent -t "${DOCKER_REPO}:${CACHE_TAG}-jenkins-jnlp-meteor-agent" . || exit $?
+docker build --target jenkins-jnlp-meteor-agent -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-jnlp-meteor-agent" . || exit $?

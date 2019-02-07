@@ -2,10 +2,10 @@
 
 # Push gen3 image
 docker push "${IMAGE_NAME}" || exit $?
-docker push "${DOCKER_REPO}:${CACHE_TAG}-gen3" || exit $?
+docker push "${DOCKER_REPO}:${DOCKER_TAG}-gen3" || exit $?
 
 # push jnlp Agent
-docker push "${DOCKER_REPO}:${CACHE_TAG}-jenkins-jnlp-agent" || exit $?
+docker push "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-jnlp-agent" || exit $?
 
 # push jnlp meteor agent
-docker push "${DOCKER_REPO}:${CACHE_TAG}-jenkins-jnlp-meteor-agent" || exit $?
+docker push "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-jnlp-meteor-agent" || exit $?

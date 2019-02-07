@@ -2,8 +2,6 @@
 
 # This overrides the standard dockerHub build process os that we can perform multi stage builds for different image types
 
-env 
-
 # Gen3 Agent
 docker build --target gen3 -t "${IMAGE_NAME}" -t "${DOCKER_REPO}:${DOCKER_TAG}-gen3" . || exit $?
 

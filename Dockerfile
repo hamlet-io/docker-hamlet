@@ -160,6 +160,14 @@ RUN npm install -g \
     bower \
     yamljs
 
+# Get CodeOnTap code
+RUN chmod -R u+rwx /build/scripts && \
+    chmod u+s /build/ && \
+    chmod -R ugo+rx /opt/codeontap
+ 
+RUN /build/scripts/build_codeontap.sh && \
+    /build/scripts/clone.sh
+
 # -------------------------------------------------------
 # Jenkins JNLP Agent 
 # -------------------------------------------------------
@@ -201,8 +209,6 @@ ENTRYPOINT [ "/usr/local/bin/jenkins-agent"]
 # Jenkins JNLP Agent - With precached Meteor
 # -------------------------------------------------------
 FROM jenkins-jnlp-agent AS jenkins-jnlp-meteor-agent
-
-FROM codeontap/gen3-jenkins-slave:latest
 
 USER root
 

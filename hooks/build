@@ -2,7 +2,7 @@
 
 # This overrides the standard dockerHub build process os that we can perform multi stage builds for different image types
 
-docker build --target gen3 -t ${IMAGE_NAME} . || exit $?
+docker build --target gen3 -t ${IMAGE_NAME} -t ${DOCKER_REPO}:gen3_${CACHE_TAG} . || exit $?
 docker push ${IMAGE_NAME}
 docker build --target jenkins-jnlp-agent -t ${DOCKER_REPO}:jenkins-jnlp-agent_${CACHE_TAG} . || exit $?
 docker push ${DOCKER_REPO}:jenkins-jnlp-agent_${CACHE_TAG}

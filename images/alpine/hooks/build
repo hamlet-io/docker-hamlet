@@ -4,21 +4,21 @@
 
 # gen3 base image 
 docker build -t "${DOCKER_REPO}:${DOCKER_TAG}-base"  \
-    -f images/stretch/Dockerfile . || exit $?
+    -f alpine/Dockerfile . || exit $?
 
 docker build -t "${DOCKER_REPO}:${DOCKER_TAG}" -t "${DOCKER_REPO}:${DOCKER_TAG}"  \
     --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-base" \
-    -f utilities/codeontap/Dockerfile . || exit $?
+    -f ../utilities/codeontap/Dockerfile . || exit $?
 
 docker build -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins" -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins" -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-agent-jnlp" \
     --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}" \
-    -f utilities/jenkins/agent-jnlp/Dockerfile . || exit $?
+    -f ../utilities/jenkins/agent-jnlp/Dockerfile . || exit $?
 
 # gen3 builder  
 docker build -t "${DOCKER_REPO}:${DOCKER_TAG}-builder" -t "${DOCKER_REPO}:${DOCKER_TAG}-builder" \
     --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}" \
-    -f images/stretch/builder/Dockerfile . || exit $?
+    -f alpine/builder/Dockerfile . || exit $?
 
 docker build -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-builder" -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-builder" -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-agent-jnlp-builder" \
     --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-builder" \
-    -f utilities/jenkins/agent-jnlp/Dockerfile . || exit $?
+    -f ../utilities/jenkins/agent-jnlp/Dockerfile . || exit $?

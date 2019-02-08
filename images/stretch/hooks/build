@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# This overrides the standard dockerHub build process os that we can perform multi stage builds for different image types
+
+# gen3 base image 
+docker build -t "${DOCKER_REPO}:${DOCKER_TAG}-base"  \
+    -f images/stretch/Dockerfile . || exit $?
+
+docker build -t "${DOCKER_REPO}:${DOCKER_TAG}" -t "${DOCKER_REPO}:${DOCKER_TAG}"  \
+    --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-base" \
+    -f utilities/codeontap/Dockerfile . || exit $?
+
+docker build -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins" -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins" -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-agent-jnlp" \
+    --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}" \
+    -f utilities/jenkins/agent-jnlp/Dockerfile . || exit $?
+
+# gen3 builder  
+docker build -t "${DOCKER_REPO}:${DOCKER_TAG}-builder" -t "${DOCKER_REPO}:${DOCKER_TAG}-builder" \
+    --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}" \
+    -f images/stretch/builder/Dockerfile . || exit $?
+
+docker build -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-builder" -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-builder" -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-agent-jnlp-builder" \
+    --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-builder" \
+    -f utilities/jenkins/agent-jnlp/Dockerfile . || exit $?
+
+# gen3 builder meteor
+docker build -t "${DOCKER_REPO}:${DOCKER_TAG}-builder-meteor" -t "${DOCKER_REPO}:${DOCKER_TAG}-builder-meteor" \
+    --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-builder" \
+    -f images/stretch/builder/meteor/Dockerfile . || exit $?
+
+docker build  -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-agent-jnlp-builder-meteor-nocache" -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-agent-jnlp-builder-meteor-nocache" \
+    --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-builder-meteor" \
+    -f utilities/jenkins/agent-jnlp/Dockerfile . || exit $?
+
+docker build -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-builder-meteor" -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-builder-meteor" -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-agent-jnlp-builder-meteor" \
+    --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-jenkins-agent-jnlp-builder-meteor-nocache" \
+    -f utilities/meteor/cache-packages/Dockerfile . || exit $?

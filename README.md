@@ -2,31 +2,29 @@
 
 This repo contains the docker build process to create docker containers for the CodeOnTap Gen3 Framework
 
-## Images
+## Image Variants
 
-We currently create the following docker images which are hosted on dockerhub https://dockerhub.com/r/codeontap/gen3
+### Base Images
 
-### gen3
+#### codeontap/gen3:<version>
 
-The gen3 is our based image and contains the baseline requirements for running codeontap
+This is the standard debian stretch based image which will generate and manage codeontap templates
 
-**Tag:** gen3
+#### ```codeontap/gen3:<version>-builder```
 
-### Jenkins Agents
+This image is used of building application code as part of a CodeOnTap build process. It should contain the required OS software packages to build and test application code
 
-CodeOnTap mostly runs on a Jenkins instance and we use JNLP based agents. These Docker images are used for container based agents deployed using an appropriate plugin ( ECS, Docker or Kubernetes). It is based on the jenkins jnlp agent and has a specific entry point script suitable for the plugins.
+#### ```codeontap/gen3:<version>-builder-meteor```
 
-#### jenkins-jnlp-agent
+An extension for the builder image which but also includes Meteor (https://www.meteor.com/ ) installed along with a pre-cached package repository. *This is only supported on stretch based images*
 
-**Tag:** jenkins-jnlp-agent
+### CI/CD Tool Images
 
-A standard agent with some basic build tools include for node, python and java based builds
+The CI/CD Tool images are extensions of the base images with support for a specific CI/CD Tooling service
 
-#### jenkins-jnlp-meteor-agent
+#### ```codeontap/gen3:<version>-jenkins-<base>
 
-**Tag:** jenkins-jnlp-meteor-agent
-
-The standard image along with meteor.js. This also includes precached node and meteor modules as they can take some time to download
+This image extends the given base image with the Jenkins JNLP based remoting agent installed and configured to run as the entrypoint. This is designed to work with Container based cloud agents.
 
 ## Versions
 

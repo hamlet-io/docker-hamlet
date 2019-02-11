@@ -30,11 +30,11 @@ This image extends the given base image with the Jenkins JNLP based remoting age
 
 OS Variants are available for both base image and CICD images. Tags without the OS specified will use a Debian Stretch based image. Not all images will have all OS images available please check the image variant you are looking for before adding the OS tag.
 
-### ```codeontap/gen3:<version>-stretch-<image>
+### ```codeontap/gen3:<version>-stretch-<image>```
 
 A Debian stretch based image
 
-### ```codeontap/gen3:<version>-alpine-<image>
+### ```codeontap/gen3:<version>-alpine-<image>```
 
 A alpine linux based image
 

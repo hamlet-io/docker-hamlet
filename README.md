@@ -4,9 +4,9 @@ This repo contains the docker build process to create docker containers for the 
 
 ## Image Variants
 
-### Base Images
+### Base
 
-#### codeontap/gen3:<version>
+#### ```codeontap/gen3:<version>```
 
 This is the standard debian stretch based image which will generate and manage codeontap templates
 
@@ -18,13 +18,25 @@ This image is used of building application code as part of a CodeOnTap build pro
 
 An extension for the builder image which but also includes Meteor (https://www.meteor.com/ ) installed along with a pre-cached package repository. *This is only supported on stretch based images*
 
-### CI/CD Tool Images
+### CI/CD Tools
 
 The CI/CD Tool images are extensions of the base images with support for a specific CI/CD Tooling service
 
-#### ```codeontap/gen3:<version>-jenkins-<base>
+#### ```codeontap/gen3:<version>-jenkins-<base>```
 
 This image extends the given base image with the Jenkins JNLP based remoting agent installed and configured to run as the entrypoint. This is designed to work with Container based cloud agents.
+
+### OS
+
+OS Variants are available for both base image and CICD images. Tags without the OS specified will use a Debian Stretch based image. Not all images will have all OS images available please check the image variant you are looking for before adding the OS tag.
+
+### ```codeontap/gen3:<version>-stretch-<image>
+
+A Debian stretch based image
+
+### ```codeontap/gen3:<version>-alpine-<image>
+
+A alpine linux based image
 
 ## Versions
 

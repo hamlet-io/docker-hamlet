@@ -9,6 +9,7 @@ RUN echo 'jenkins ALL = NOPASSWD : /usr/bin/apt-get' >> /etc/sudoers
 # Install Basic build requirements
 RUN apt-get update && apt-get install -y \
     build-essential \
+    libbz2-dev \
     libpq-dev \
     libcurl4-openssl-dev libssl-dev \
     && rm -rf /var/lib/apt/lists/*

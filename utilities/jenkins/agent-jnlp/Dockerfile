@@ -31,6 +31,4 @@ RUN chmod 755 /usr/local/bin/wait-for-it \
 WORKDIR /home/jenkins
 USER jenkins
 
-VOLUME /var/lib/docker
-
 ENTRYPOINT [ "/usr/local/bin/jenkins-agent"]

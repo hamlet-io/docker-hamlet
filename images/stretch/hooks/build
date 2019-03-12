@@ -41,6 +41,6 @@ docker build -t "${DOCKER_REPO}:${DOCKER_TAG%-*}-builder-expo" -t "${DOCKER_REPO
     --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-builder" \
     -f ./builder/expo/Dockerfile ../../ || exit $?
 
-docker build  -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-agent-jnlp-builder-expo"  \
+docker build -t "${DOCKER_REPO}:${DOCKER_TAG%-*}-jenkins-builder-expo" -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-builder-expo" -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-builder-expo" -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-agent-jnlp-builder-expo"  \
     --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-builder-expo" \
     -f ../../utilities/jenkins/agent-jnlp/Dockerfile ../../ || exit $?

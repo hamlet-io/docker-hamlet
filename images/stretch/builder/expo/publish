@@ -1,0 +1,23 @@
+##!/bin/bash
+
+if [[ -z "${EXPO_ENDPOINT_URL}" || -z "${EXPO_PUBLISH_BACKEND}"  ]]; then
+    echo "Required Variables not set - EXPO_ENDPOINT_URL - EXPO_PUBLISH_BACKEND"
+    exit 255
+fi
+
+# Publish the data 
+expo export --public-url "https://${EXPO_ENDPOINT_URL}" --output-dir '/app/dist' || exit $?
+
+if [[ -f "/app/dist/ios-index.json" || -f "/app/dist/android-index.json" ]]; then
+
+    case "${EXPO_PUBLISH_BACKEND}" in
+        "s3")   
+            aws --region "${AWS_REGION}" s3 sync "/app/dist" "${EXPO_PUBLISH_BUCKET}/${EXPO_PUBLISH_PREFIX}"  || exit $?
+            ;;
+        *)
+            echo "Unsupported expo publish backend - ${EXPO_PUBLISH_BACKEND}"
+            ;;
+    esac
+else
+    echo "Could not find build files" && exit 128
+fi

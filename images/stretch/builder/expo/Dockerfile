@@ -9,6 +9,6 @@ RUN yarn global add --prefix /usr/local \
         expo-cli@${EXPO_VERSION} \
         turtle-cli@${TURTLE_VERSION}
 
-COPY ./publish /publish
+COPY scripts/builder-expo/publish /publish
 
 WORKDIR /app

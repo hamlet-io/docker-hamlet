@@ -35,12 +35,3 @@ docker build  -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-agent-jnlp-builder-meteor
 docker build -t "${DOCKER_REPO}:${DOCKER_TAG%-*}-jenkins-builder-meteor" -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-builder-meteor" -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-builder-meteor" -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-agent-jnlp-builder-meteor" \
     --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-jenkins-agent-jnlp-builder-meteor-nocache" \
     -f ../../utilities/meteor/cache-packages/Dockerfile ../../ || exit $?
-
-# expo app builder
-docker build -t "${DOCKER_REPO}:${DOCKER_TAG%-*}-builder-expo" -t "${DOCKER_REPO}:${DOCKER_TAG}-builder-expo" -t "${DOCKER_REPO}:${DOCKER_TAG}-builder-expo" \
-    --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-builder" \
-    -f ./builder/expo/Dockerfile ../../ || exit $?
-
-docker build -t "${DOCKER_REPO}:${DOCKER_TAG%-*}-jenkins-builder-expo" -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-builder-expo" -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-builder-expo" -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-agent-jnlp-builder-expo"  \
-    --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-builder-expo" \
-    -f ../../utilities/jenkins/agent-jnlp/Dockerfile ../../ || exit $?

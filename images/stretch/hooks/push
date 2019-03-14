@@ -26,8 +26,3 @@ docker push "${DOCKER_REPO}:${DOCKER_TAG%-*}-builder-meteor" || exit $?
 docker push "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-builder-meteor" || exit $?
 docker push "${DOCKER_REPO}:${DOCKER_TAG%-*}-jenkins-builder-meteor" || exit $?
 docker push "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-agent-jnlp-builder-meteor" || exit $?
-
-# gen3 builder expo - Jenkins JNLP
-docker push "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-builder-expo" || exit $?
-docker push "${DOCKER_REPO}:${DOCKER_TAG%-*}-jenkins-builder-expo" || exit $?
-docker push "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-agent-jnlp-builder-expo" || exit $?

@@ -19,12 +19,8 @@ RUN apk add --no-cache \
         jq \
         groff \
         docker \
-        nodejs \
-        npm \
-        yarn \
-        gcc \
-        python3 \
-        py3-virtualenv 
+        nodejs npm yarn \
+        python3
 
 # Configure Python3 to work as default python
 ENV PATH /usr/local/bin:$PATH
@@ -36,8 +32,6 @@ RUN cd /usr/local/bin \
     && ln -s $(which pip3)      pip
 
 RUN pip install --upgrade --no-cache-dir \
-        docker-compose \
-        virtualenv \
         PyYAML==3.12 \
         awscli \ 
         cookiecutter

@@ -20,13 +20,13 @@ RUN apk add --no-cache \
 # Python based build tools 
 RUN apk add --no-cache  \ 
             python3-dev \
+            py3-virtualenv \
     && pip install --no-cache-dir \
-            pytest \ 
-            pytest-sugar \ 
-            pytest-django \
-            coverage \
-            flake8 \
-            zappa
+            pytest pytest-sugar pytest-django \
+            coverage flake8 \
+            zappa \
+            docker-compose \
+            PyYAML==3.12
 
 # NPM based build tools
 RUN npm install -g \

@@ -22,6 +22,7 @@ RUN apk add --no-cache \
         nodejs \
         npm \
         yarn \
+        gcc \
         python3 \
         py3-virtualenv 
 

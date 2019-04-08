@@ -13,8 +13,7 @@ RUN apk add --no-cache \
     wget \
     curl \
     git \
-    postgresql-dev \
-    curl-dev \ 
+    postgresql-dev curl-dev libffi-dev openssl-dev\ 
     openssl-dev
 
 # Python based build tools 

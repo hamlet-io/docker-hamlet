@@ -4,6 +4,9 @@ ARG BASE_IMAGE=codeontap/gen3:latest-alpine
 
 FROM ${BASE_IMAGE} AS jenkins-jnlp-agent
 
+ARG CODEONTAP_VERSION=master
+ARG DOCKER_IMAGE_VERSION=master
+
 ENV AUTOMATION_BASE_DIR=/opt/codeontap/automation
 ENV AUTOMATION_DIR=/opt/codeontap/automation/jenkins/aws
 ENV GENERATION_BASE_DIR=/opt/codeontap/generation

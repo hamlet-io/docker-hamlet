@@ -7,6 +7,8 @@ docker build -t "${DOCKER_REPO}:${DOCKER_TAG}-base"  \
     -f ./Dockerfile ../../ || exit $?
 
 docker build -t "${DOCKER_REPO}:${DOCKER_TAG%-*}" -t "${DOCKER_REPO}:${DOCKER_TAG}" -t "${DOCKER_REPO}:${DOCKER_TAG}"  \
+    --build-arg CODEONTAP_VERSION="${DOCKER_TAG}" \
+    --build-arg DOCKER_IMAGE_VERSION="${SOURCE_COMMIT}" \
     --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-base" \
     -f ../../utilities/codeontap/Dockerfile ../../ || exit $?
 

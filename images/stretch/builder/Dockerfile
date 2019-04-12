@@ -28,6 +28,7 @@ ENV LANG C.UTF-8
 # extra dependencies (over what buildpack-deps already includes)
 RUN apt-get update && apt-get install -y --no-install-recommends \
 		tk-dev \
+		libsqlite3-dev \
 	&& rm -rf /var/lib/apt/lists/*
 
 ENV PYTHON_VERSION 3.6.8

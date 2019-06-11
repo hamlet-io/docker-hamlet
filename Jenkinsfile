@@ -1,5 +1,3 @@
-#!groovy
-
 pipeline {
     agent {
         label 'codeontap'
@@ -25,12 +23,28 @@ pipeline {
             parallel { 
                 stage('stretch') { 
                     steps {
-                        sh './images/stretch/hooks/build'
+                        sh '''
+                            . "${AUTOMATION_BASE_DIR}/common.sh
+                            dockerstagedir="$(getTempDir "cota_docker_XXXXXX" "${DOCKER_STAGE_DIR}")
+
+                            cp -r ./* "${dockerstagedir}/"
+                            cd "${dockerstagedir}"
+
+                            ./images/stretch/hooks/build'
+                        '''
                     }
                 }
                 stage('alpine') { 
                     steps { 
-                        sh './images/alpine/hooks/build'
+                        sh '''
+                            . "${AUTOMATION_BASE_DIR}/common.sh
+                            dockerstagedir="$(getTempDir "cota_docker_XXXXXX" "${DOCKER_STAGE_DIR}")
+
+                            cp -r ./* "${dockerstagedir}/"
+                            cd "${dockerstagedir}"
+                            
+                            ./images/alpine/hooks/build'
+                        '''
                     }
                 }
             }

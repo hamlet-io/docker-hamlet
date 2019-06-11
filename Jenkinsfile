@@ -1,3 +1,7 @@
+#!groovy
+
+env.DOCKER_TAG = env.TAG_NAME ? 'master'
+
 pipeline {
     agent {
         label 'codeontap'

@@ -14,7 +14,7 @@ pipeline {
     stages {
         stage('setup') { 
            steps {
-               sh 'docker login --username ${DOCKERHUB_CREDENTIALS_USR} --password ${DOCKERHUB_CREDENTIALS_PSW'
+               sh 'docker login --username ${DOCKERHUB_CREDENTIALS_USR} --password ${DOCKERHUB_CREDENTIALS_PSW}'
                sh 'export DOCKER_TAG="${TAG_NAME:-"master"}"'
            } 
         }

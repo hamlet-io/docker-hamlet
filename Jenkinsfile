@@ -9,6 +9,7 @@ pipeline {
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub')
         DOCKER_REPO = 'codeontap/gen3'
+        DOCKER_TAG = "${env.TAG_NAME ? 'master'}"
     }
 
     stages {
@@ -27,7 +28,7 @@ pipeline {
                 }
                 stage('alpine') { 
                     steps { 
-                        sh './images/apline/hooks/build'
+                        sh './images/alpine/hooks/build'
                     }
                 }
             }

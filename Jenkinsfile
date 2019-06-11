@@ -26,7 +26,7 @@ pipeline {
                         sh '''
                             dockerstagedir="$(mktemp -d "${DOCKER_STAGE_DIR}/cota_docker_XXXXXX")"
 
-                            cp -r ./* "${dockerstagedir}/"
+                            cp -r ./ "${dockerstagedir}/"
                             cd "${dockerstagedir}"
 
                             ./images/stretch/hooks/build
@@ -38,7 +38,7 @@ pipeline {
                         sh '''
                             dockerstagedir="$(mktemp -d "${DOCKER_STAGE_DIR}/cota_docker_XXXXXX")"
 
-                            cp -r ./* "${dockerstagedir}/"
+                            cp -r ./ "${dockerstagedir}/"
                             cd "${dockerstagedir}"
                             
                             ./images/alpine/hooks/build

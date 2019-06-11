@@ -9,7 +9,7 @@ pipeline {
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub')
         DOCKER_REPO = 'codeontap/gen3'
-        DOCKER_TAG = "${env.TAG_NAME ?: 'master'}"
+        DOCKER_TAG = "${env.TAG_NAME ?: 'latest'}"
     }
 
     stages {

@@ -26,7 +26,7 @@ pipeline {
             parallel { 
                 stage('stretch') { 
                     steps {
-
+                        echo 'Source Commit: ${env.SOURCE_COMMIT} - Source Branch ${env.SOURCE_BRANCH}'
                         sh '''
                             dockerstagedir="$(mktemp -d "${DOCKER_STAGE_DIR}/cota_docker_XXXXXX")"
 

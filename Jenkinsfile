@@ -25,8 +25,8 @@ pipeline {
         stage('image build') { 
             parallel { 
                 stage('stretch') { 
-                    stage('build') {
-                        steps {
+                    steps {
+                        stage('build') {
                             sh '''
                                 dockerstagedir="$(mktemp -d "${DOCKER_STAGE_DIR}/cota_docker_XXXXXX")"
 
@@ -36,16 +36,16 @@ pipeline {
                                 ./hooks/build
                             '''
                         }
-                    }
-                    stage('push') { 
-                        steps {
-                            sh './images/stretch/hooks/push'
+                        stage('push') { 
+                            steps {
+                                sh './images/stretch/hooks/push'
+                            }
                         }
                     }
                 }
-                stage('alpine') { 
-                    stage('build') {
-                        steps {
+                stage('alpine') {
+                    steps {
+                        stage('build') {
                             sh '''
                                 dockerstagedir="$(mktemp -d "${DOCKER_STAGE_DIR}/cota_docker_XXXXXX")"
 
@@ -55,10 +55,10 @@ pipeline {
                                 ./hooks/build
                             '''
                         }
-                    }
-                    stage('push') { 
-                        steps {
-                            sh './images/alpine/hooks/push'
+                        stage('push') { 
+                            steps {
+                                sh './images/alpine/hooks/push'
+                            }
                         }
                     }
                 }

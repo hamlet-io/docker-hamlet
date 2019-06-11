@@ -25,16 +25,18 @@ pipeline {
         stage('image build') { 
             parallel { 
                 stage('stretch') { 
-                    steps {
+                    stages {
                         stage('build') {
-                            sh '''
-                                dockerstagedir="$(mktemp -d "${DOCKER_STAGE_DIR}/cota_docker_XXXXXX")"
+                            steps {
+                                sh '''
+                                    dockerstagedir="$(mktemp -d "${DOCKER_STAGE_DIR}/cota_docker_XXXXXX")"
 
-                                cp -r ./ "${dockerstagedir}/"
-                                cd "${dockerstagedir}/images/stretch"
+                                    cp -r ./ "${dockerstagedir}/"
+                                    cd "${dockerstagedir}/images/stretch"
 
-                                ./hooks/build
-                            '''
+                                    ./hooks/build
+                                '''
+                            }
                         }
                         stage('push') { 
                             steps {
@@ -43,17 +45,19 @@ pipeline {
                         }
                     }
                 }
-                stage('alpine') {
-                    steps {
+                stage('alpine') { 
+                    stages {
                         stage('build') {
-                            sh '''
-                                dockerstagedir="$(mktemp -d "${DOCKER_STAGE_DIR}/cota_docker_XXXXXX")"
+                            steps {
+                                sh '''
+                                    dockerstagedir="$(mktemp -d "${DOCKER_STAGE_DIR}/cota_docker_XXXXXX")"
 
-                                cp -r ./ "${dockerstagedir}/"
-                                cd "${dockerstagedir}/images/alpine"
+                                    cp -r ./ "${dockerstagedir}/"
+                                    cd "${dockerstagedir}/images/alpine"
 
-                                ./hooks/build
-                            '''
+                                    ./hooks/build
+                                '''
+                            }
                         }
                         stage('push') { 
                             steps {

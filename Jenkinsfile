@@ -22,11 +22,10 @@ pipeline {
                }
            } 
         }
-        stage('build') { 
-            parallel { 
-                stage('stretch') { 
+        parallel { 
+            stage('stretch') { 
+                stage('build') {
                     steps {
-                        echo "Source Commit: ${env.SOURCE_COMMIT} - Source Branch ${env.SOURCE_BRANCH}"
                         sh '''
                             dockerstagedir="$(mktemp -d "${DOCKER_STAGE_DIR}/cota_docker_XXXXXX")"
 
@@ -37,28 +36,26 @@ pipeline {
                         '''
                     }
                 }
-                stage('alpine') { 
-                    steps { 
+                stage('push') { 
+                    steps {
+                        sh './images/stretch/hooks/push'
+                    }
+                }
+            }
+            stage('alpine') { 
+                stage('build') {
+                    steps {
                         sh '''
                             dockerstagedir="$(mktemp -d "${DOCKER_STAGE_DIR}/cota_docker_XXXXXX")"
 
                             cp -r ./ "${dockerstagedir}/"
                             cd "${dockerstagedir}/images/alpine"
-                            
+
                             ./hooks/build
                         '''
                     }
                 }
-            }
-        }
-        stage('push') { 
-            parallel {
-                stage('stretch') { 
-                    steps {
-                        sh './images/stretch/hooks/push'
-                    }
-                }
-                stage('alpine') { 
+                stage('push') { 
                     steps {
                         sh './images/alpine/hooks/push'
                     }

@@ -12,20 +12,21 @@ pipeline {
         DOCKER_TAG = "${env.TAG_NAME ?: 'master'}"
     }
 
-    env.SOURCE_COMMIT = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%H'").trim()
-    env.SOURCE_BRANCH = sh(returnStdout: true, script: "git rev-parse --abbrev-ref HEAD").trim()
-
     stages {
         stage('setup') { 
            steps {
                sh 'docker login --username ${DOCKERHUB_CREDENTIALS_USR} --password ${DOCKERHUB_CREDENTIALS_PSW}'
-               sh 'export DOCKER_TAG="${TAG_NAME:-"master"}"'
+               script { 
+                    env.SOURCE_COMMIT = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%H'").trim()
+                    env.SOURCE_BRANCH = sh(returnStdout: true, script: "git rev-parse --abbrev-ref HEAD").trim()
+               }
            } 
         }
         stage('build') { 
             parallel { 
                 stage('stretch') { 
                     steps {
+
                         sh '''
                             dockerstagedir="$(mktemp -d "${DOCKER_STAGE_DIR}/cota_docker_XXXXXX")"
 

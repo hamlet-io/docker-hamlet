@@ -12,6 +12,9 @@ pipeline {
         DOCKER_TAG = "${env.TAG_NAME ?: 'master'}"
     }
 
+    env.SOURCE_COMMIT = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%H'").trim()
+    env.SOURCE_BRANCH = sh(returnStdout: true, script: "git rev-parse --abbrev-ref HEAD").trim()
+
     stages {
         stage('setup') { 
            steps {

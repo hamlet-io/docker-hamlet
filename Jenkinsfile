@@ -1,7 +1,5 @@
 #!groovy
 
-env.DOCKER_TAG = env.TAG_NAME ? 'master'
-
 pipeline {
     agent {
         label 'codeontap'
@@ -13,7 +11,7 @@ pipeline {
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub')
         DOCKER_REPO = 'codeontap/gen3'
-        DOCKER_TAG = "${env.TAG_NAME ? 'master'}"
+        DOCKER_TAG = "${env.TAG_NAME ?: 'master'}"
     }
 
     stages {

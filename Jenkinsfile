@@ -29,6 +29,8 @@ pipeline {
                             cp -r ./ "${dockerstagedir}/"
                             cd "${dockerstagedir}"
 
+                            ls $(pwd)
+
                             ./images/stretch/hooks/build
                         '''
                     }
@@ -40,6 +42,8 @@ pipeline {
 
                             cp -r ./ "${dockerstagedir}/"
                             cd "${dockerstagedir}"
+
+                            ls $(pwd)
                             
                             ./images/alpine/hooks/build
                         '''

@@ -24,26 +24,26 @@ pipeline {
                 stage('stretch') { 
                     steps {
                         sh '''
-                            . "${AUTOMATION_BASE_DIR}/common.sh
+                            . "${AUTOMATION_BASE_DIR}/common.sh"
                             dockerstagedir="$(getTempDir "cota_docker_XXXXXX" "${DOCKER_STAGE_DIR}")
 
                             cp -r ./* "${dockerstagedir}/"
                             cd "${dockerstagedir}"
 
-                            ./images/stretch/hooks/build'
+                            ./images/stretch/hooks/build
                         '''
                     }
                 }
                 stage('alpine') { 
                     steps { 
                         sh '''
-                            . "${AUTOMATION_BASE_DIR}/common.sh
+                            . "${AUTOMATION_BASE_DIR}/common.sh"
                             dockerstagedir="$(getTempDir "cota_docker_XXXXXX" "${DOCKER_STAGE_DIR}")
 
                             cp -r ./* "${dockerstagedir}/"
                             cd "${dockerstagedir}"
                             
-                            ./images/alpine/hooks/build'
+                            ./images/alpine/hooks/build
                         '''
                     }
                 }

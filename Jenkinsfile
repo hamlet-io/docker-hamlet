@@ -24,8 +24,7 @@ pipeline {
                 stage('stretch') { 
                     steps {
                         sh '''
-                            . "${AUTOMATION_BASE_DIR}/common.sh"
-                            dockerstagedir="$(getTempDir "cota_docker_XXXXXX" "${DOCKER_STAGE_DIR}")
+                            dockerstagedir="$(mktemp -d "${DOCKER_STAGE_DIR}/${cota_docker_XXXXXX}")
 
                             cp -r ./* "${dockerstagedir}/"
                             cd "${dockerstagedir}"
@@ -37,8 +36,7 @@ pipeline {
                 stage('alpine') { 
                     steps { 
                         sh '''
-                            . "${AUTOMATION_BASE_DIR}/common.sh"
-                            dockerstagedir="$(getTempDir "cota_docker_XXXXXX" "${DOCKER_STAGE_DIR}")
+                            dockerstagedir="$(mktemp -d "${DOCKER_STAGE_DIR}/${cota_docker_XXXXXX}")
 
                             cp -r ./* "${dockerstagedir}/"
                             cd "${dockerstagedir}"

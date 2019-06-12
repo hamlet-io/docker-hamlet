@@ -29,11 +29,7 @@ pipeline {
                         stage('build') {
                             steps {
                                 sh '''
-                                    dockerstagedir="$(mktemp -d "${DOCKER_STAGE_DIR}/cota_docker_XXXXXX")"
-
-                                    cp -r ./ "${dockerstagedir}/"
-                                    cd "${dockerstagedir}/images/stretch"
-
+                                    cd "./images/stretch"
                                     ./hooks/build
                                 '''
                             }
@@ -50,11 +46,7 @@ pipeline {
                         stage('build') {
                             steps {
                                 sh '''
-                                    dockerstagedir="$(mktemp -d "${DOCKER_STAGE_DIR}/cota_docker_XXXXXX")"
-
-                                    cp -r ./ "${dockerstagedir}/"
-                                    cd "${dockerstagedir}/images/alpine"
-
+                                    cd "./images/alpine"
                                     ./hooks/build
                                 '''
                             }

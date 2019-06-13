@@ -20,8 +20,10 @@ pipeline {
                     string(name: 'TAG', defaultValue: 'latest', description: 'Tag to build')
                 }
             }
-            script {
-                env.DOCKER_TAG = "${TAG}"
+            steps {
+                script {
+                    env.DOCKER_TAG = "${TAG}"
+                }
             }
         }
         stage('setup') { 

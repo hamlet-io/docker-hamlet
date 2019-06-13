@@ -5,22 +5,25 @@ pipeline {
     options {
         timestamps ()
     }   
-
-    input {
-        message "Enter the Tag to build"
-        ok "Get Building"
-        parameters {
-            string(name: 'TAG', defaultValue: 'latest', description: 'Tag to build')
-        }
-    }
-
+    
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub')
         DOCKER_REPO = 'codeontap/gen3'
-        DOCKER_TAG = "${TAG}"
     }
 
     stages {
+        stage('input') { 
+            input {
+                message "Enter the Tag to build"
+                ok "Get Building"
+                parameters {
+                    string(name: 'TAG', defaultValue: 'latest', description: 'Tag to build')
+                }
+            }
+            script {
+                env.DOCKER_TAG = "${TAG}"
+            }
+        }
         stage('setup') { 
            steps {
                sh 'docker login --username ${DOCKERHUB_CREDENTIALS_USR} --password ${DOCKERHUB_CREDENTIALS_PSW}'

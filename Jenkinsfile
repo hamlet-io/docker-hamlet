@@ -6,14 +6,18 @@ pipeline {
         timestamps ()
     }   
 
-    parameters {
-        string(name: 'TAG', defaultValue: 'latest', description: 'Which tag would you like to build?')
+    input {
+        message "Enter the Tag to build"
+        ok "Get Building"
+        parameters {
+            string(name: 'TAG', defaultValue: 'latest', description: 'Tag to build')
+        }
     }
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub')
         DOCKER_REPO = 'codeontap/gen3'
-        DOCKER_TAG = "${param.TAG ?: 'latest'}"
+        DOCKER_TAG = "${TAG}"
     }
 
     stages {

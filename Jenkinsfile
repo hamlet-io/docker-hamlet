@@ -4,6 +4,10 @@ pipeline {
     }
     options {
         timestamps ()
+        durabilityHint('PERFORMANCE_OPTIMIZED')
+        buildDiscarder(
+            logRotator(numToKeepStr: '20')
+        )
     }   
     
     environment {

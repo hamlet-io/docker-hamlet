@@ -25,5 +25,6 @@ RUN chmod -R u+rwx /build/scripts && \
     chmod u+s /build/ && \
     chmod -R ugo+rx /opt/codeontap
  
+RUN echo "Cloning images on $(date +%s)"
 RUN /build/scripts/build_codeontap.sh && \
     /build/scripts/clone.sh

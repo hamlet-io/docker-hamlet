@@ -27,7 +27,7 @@ RUN apk add --no-cache  \
             docker-compose \
             PyYAML==3.12
 
-# NPM based build tools
-RUN npm install -g \
-    grunt-cli \
-    gulp-cli    
+# NPM based build tools - unsafe perms workaround ( https://github.com/npm/uid-number/issues/3 )
+RUN npm config set unsafe-perm true && \ 
+    npm install -g grunt-cli gulp-cli && \
+    npm config set unsafe-perm false    

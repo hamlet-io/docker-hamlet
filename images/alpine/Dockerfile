@@ -36,8 +36,9 @@ RUN pip install --upgrade --no-cache-dir \
         awscli \ 
         cookiecutter
 
-# Install NPM Packages
-RUN npm install -g \
-    bower
+# NPM based build tools - unsafe perms workaround ( https://github.com/npm/uid-number/issues/3 )
+RUN npm config set unsafe-perm true && \
+    npm install -g bower && \
+    npm config set unsafe-perm false
     
 CMD ["/bin/bash"]

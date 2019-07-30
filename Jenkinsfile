@@ -37,50 +37,49 @@ pipeline {
                }
            } 
         }
-        stage('image build') { 
-            parallel { 
-                stage('stretch') { 
-                    when { 
-                        environment name: 'BUILD_FORMAT', value: 'stretch' 
-                    }
-                    stages {
-                        stage('build') {
-                            steps {
-                                sh '''
-                                    cd "./images/stretch"
-                                    ./hooks/build
-                                '''
-                            }
-                        }
-                        stage('push') { 
-                            steps {
-                                sh './images/stretch/hooks/push'
-                            }
-                        }
+
+        stage('ImageBuild - stretch') { 
+            when { 
+                environment name: 'BUILD_FORMAT', value: 'stretch' 
+            }
+            stages {
+                stage('build') {
+                    steps {
+                        sh '''
+                            cd "./images/stretch"
+                            ./hooks/build
+                        '''
                     }
                 }
-                stage('alpine') { 
-                    when { 
-                        environment name: 'BUILD_FORMAT', value: 'alpine' 
-                    }
-                    stages {
-                        stage('build') {
-                            steps {
-                                sh '''
-                                    cd "./images/alpine"
-                                    ./hooks/build
-                                '''
-                            }
-                        }
-                        stage('push') { 
-                            steps {
-                                sh './images/alpine/hooks/push'
-                            }
-                        }
+                stage('push') { 
+                    steps {
+                        sh './images/stretch/hooks/push'
                     }
                 }
             }
         }
+        
+        stage('ImageBuild - alpine') { 
+            when { 
+                environment name: 'BUILD_FORMAT', value: 'alpine' 
+            }
+            stages {
+                stage('build') {
+                    steps {
+                        sh '''
+                            cd "./images/alpine"
+                            ./hooks/build
+                        '''
+                    }
+                }
+                stage('push') { 
+                    steps {
+                        sh './images/alpine/hooks/push'
+                    }
+                }
+            }
+        }
+            
     }
 
     post { 

@@ -58,7 +58,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('ImageBuild - alpine') { 
             when { 
                 environment name: 'BUILD_FORMAT', value: 'alpine' 
@@ -85,14 +85,14 @@ pipeline {
     post { 
         failure { 
             slackSend (
-                message: "DockerImageBuild - *${env["DOCKER_REPO"]}* - A error occurred during the iamge build - #${BUILD_NUMBER} (<${BUILD_URL}|Open>)",
+                message: "DockerImageBuild - *${env["DOCKER_REPO"]} - ${env["BUILD_FORMAT"]} - ${env["DOCKER_TAG"]}* - A error occurred during the iamge build - #${BUILD_NUMBER} (<${BUILD_URL}|Open>)",
                 channel: "${slackChannel}",
                 color: "${slackColours['bad']}"
             )
         }
         success { 
             slackSend (
-                 message: "DockerImageBuild - *${env["DOCKER_REPO"]}* - Was successful - #${BUILD_NUMBER} (<${BUILD_URL}|Open>)",
+                 message: "DockerImageBuild - *${env["DOCKER_REPO"]} - ${env["BUILD_FORMAT"]} - ${env["DOCKER_TAG"]}* - Was successful - #${BUILD_NUMBER} (<${BUILD_URL}|Open>)",
                 channel: "${slackChannel}",
                 color: "${slackColours['good']}"
             )

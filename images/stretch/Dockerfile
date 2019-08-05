@@ -29,6 +29,9 @@ RUN curl -sL https://deb.nodesource.com/setup_8.x |  bash -
 RUN curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
     && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list 
 
+RUN echo "deb http://deb.debian.org/debian stretch-backports main" | tee /etc/apt/sources.list.d/backports.list 
+RUN echo 'Package: * \n Pin: release o=Debian,a=testing  \n Pin-Priority: 900' | tee /etc/apt/preferences.d/backports
+
 # Install Packages
 RUN apt-get update && apt-get install -y \
     apt-utils \
@@ -40,12 +43,14 @@ RUN apt-get update && apt-get install -y \
     jq \
     groff \
     docker-ce \
-    nodejs \
-    npm \
-    yarn \
-    python3 \
-    python3-pip \
+    nodejs yarn \
+    python3 python3-pip \
  && rm -rf /var/lib/apt/lists/*
+
+# Install Backport packages 
+RUN apt-get update && apt-get -t stretch-backports install -y \
+   git-lfs \
+   && rm -rf /var/lib/apt/lists/*
 
 # Make Python3 the default
 RUN update-alternatives --install /usr/bin/python python $(which python3) 10

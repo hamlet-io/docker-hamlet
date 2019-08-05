@@ -1,6 +1,6 @@
 # Install CodeOnTap
 
-ARG BASE_IMAGE=codeontap/gen3:latest-alpine
+ARG BASE_IMAGE=codeontap/gen3:latest-stretch
 
 FROM ${BASE_IMAGE} AS jenkins-jnlp-agent
 

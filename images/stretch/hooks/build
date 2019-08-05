@@ -36,4 +36,4 @@ docker build  -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-agent-jnlp-builder-meteor
 
 docker build -t "${DOCKER_REPO}:${DOCKER_TAG%-*}-jenkins-builder-meteor" -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-builder-meteor" -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-builder-meteor" -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-agent-jnlp-builder-meteor" \
     --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-jenkins-agent-jnlp-builder-meteor-nocache" \
-    -f ../../builder/meteor/cache-packages/Dockerfile ../../ || exit $?
+    -f ./builder/meteor/cache-packages/Dockerfile ../../ || exit $?

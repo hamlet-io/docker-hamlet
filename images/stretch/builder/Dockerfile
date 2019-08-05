@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y \
 	python3-dev \
 	libcurl4-openssl-dev libssl-dev libsqlite3-dev\
 	zlib1g-dev libbz2-dev libsqlite3-dev llvm libncurses5-dev libncursesw5-dev \
-	xz-utils tk-dev libffi-dev liblzma-dev python3-openssl \
+	xz-utils tk-dev libffi-dev liblzma-dev python3-openssl libedit-dev \
     && rm -rf /var/lib/apt/lists/*
 
 ENV PYENV_ROOT=/usr/local/opt/pyenv

@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y \
 ENV PYENV_ROOT=/usr/local/opt/pyenv
 RUN curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
 RUN ln -s /usr/local/opt/pyenv/bin/pyenv /usr/local/bin/pyenv
-ENV PATH="$(pyenv root)/shims:${PATH}"
+ENV PATH="${PYENV_ROOT}/shims:${PATH}"
 
 RUN pyenv install "${PYTHON_VERSION}" && pyenv global "${PYTHON_VERSION}"
 

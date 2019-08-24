@@ -21,8 +21,7 @@ pipeline {
     }
 
     parameters { 
-        text(name: 'TAG', defaultValue: 'master', description: "The ${env["DOCKER_REPO"]} git tag to build with" )
-        choice(name: 'BUILD_FORMAT', choices: ['stretch' ], description: 'The Docker image format to build')
+        text(name: 'TAG', defaultValue: 'latest', description: "The ${env["DOCKER_REPO"]} git tag to build with" )
     }
 
     stages {

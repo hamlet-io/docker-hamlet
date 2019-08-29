@@ -62,7 +62,8 @@ RUN pip install --upgrade --no-cache-dir \
         virtualenv \
         docker-compose \
         PyYAML==3.12 \
-        awscli \ 
+        awscli \
+        azure-cli \
         cookiecutter
 
 # Install NPM Packages

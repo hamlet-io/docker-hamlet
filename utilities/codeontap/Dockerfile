@@ -12,6 +12,7 @@ ENV AUTOMATION_DIR=/opt/codeontap/automation/jenkins/aws
 ENV GENERATION_BASE_DIR=/opt/codeontap/generation
 ENV GENERATION_DIR=/opt/codeontap/generation/aws
 ENV GENERATION_STARTUP_DIR=/opt/codeontap/startup
+ENV GENERATION_PLUGIN_DIRS=/opt/codeontap/plugins
 
 # Directory set up and file copying 
 RUN mkdir -p /build/scripts

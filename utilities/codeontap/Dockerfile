@@ -15,8 +15,7 @@ ENV GENERATION_STARTUP_DIR=/opt/codeontap/startup
 ENV GENERATION_PLUGIN_DIRS=/opt/codeontap/plugins
 
 # Directory set up and file copying 
-RUN mkdir -p /build/scripts
-RUN mkdir -p /opt/codeontap
+RUN mkdir -p /build/scripts &&  mkdir -p /opt/codeontap && mkdir -p /opt/codeontap/plugins
 
 COPY scripts/base/ /build/scripts/
 COPY config.json /build/config.json

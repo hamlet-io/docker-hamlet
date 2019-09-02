@@ -18,7 +18,7 @@ docker build -t "${DOCKER_REPO}:${DOCKER_TAG%-*}-jenkins" -t "${DOCKER_REPO}:${D
 
 docker build -t "${DOCKER_REPO}:${DOCKER_TAG%-*}-azpipeline" -t "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline" -t "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline" -t "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-agent" \
     --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}" \
-    -f ../../utilities/jenkins/agent-jnlp/Dockerfile ../../ || exit $?
+    -f ../../utilities/azure-pipelines/agent/Dockerfile ../../ || exit $?
 
 # gen3 builder  
 docker build -t "${DOCKER_REPO}:${DOCKER_TAG%-*}-builder" -t "${DOCKER_REPO}:${DOCKER_TAG}-builder" -t "${DOCKER_REPO}:${DOCKER_TAG}-builder" \
@@ -31,7 +31,7 @@ docker build -t "${DOCKER_REPO}:${DOCKER_TAG%-*}-jenkins-builder" -t "${DOCKER_R
 
 docker build -t "${DOCKER_REPO}:${DOCKER_TAG%-*}-azpipeline-builder" -t "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-builder" -t "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-builder" -t "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-builder-agent" \
     --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}" \
-    -f ../../utilities/jenkins/agent-jnlp/Dockerfile ../../ || exit $?
+    -f ../../utilities/azure-pipelines/agent/Dockerfile ../../ || exit $?
 
 # gen3 builder meteor
 docker build -t "${DOCKER_REPO}:${DOCKER_TAG%-*}-builder-meteor" -t "${DOCKER_REPO}:${DOCKER_TAG}-builder-meteor" -t "${DOCKER_REPO}:${DOCKER_TAG}-builder-meteor" \
@@ -44,7 +44,7 @@ docker build  -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-agent-jnlp-builder-meteor
 
 docker build  -t "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-builder-meteor-nocache"  \
     --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-builder-meteor" \
-    -f ../../utilities/jenkins/agent-jnlp/Dockerfile ../../ || exit $?
+    -f ../../utilities/azure-pipelines/agent/Dockerfile ../../ || exit $?
 
 docker build -t "${DOCKER_REPO}:${DOCKER_TAG%-*}-jenkins-builder-meteor" -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-builder-meteor" -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-builder-meteor" -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-agent-jnlp-builder-meteor" \
     --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-jenkins-agent-jnlp-builder-meteor-nocache" \
@@ -52,4 +52,4 @@ docker build -t "${DOCKER_REPO}:${DOCKER_TAG%-*}-jenkins-builder-meteor" -t "${D
 
 docker build -t "${DOCKER_REPO}:${DOCKER_TAG%-*}-azpipeline-builder-meteor" -t "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-builder-meteor" -t "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-builder-meteor" -t "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-builder-meteor" \
     --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-jenkins-agent-jnlp-builder-meteor-nocache" \
-    -f ./builder/meteor/cache-packages/Dockerfile ../../ || exit $?
+    -f ../../utilities/azure-pipelines/agent/Dockerfile ../../ || exit $?

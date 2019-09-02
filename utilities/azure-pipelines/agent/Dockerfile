@@ -11,11 +11,11 @@ ARG PIPELINESUID=1000
 ARG DOCKERGID=497
 
 # Workaround for docker in docker permissions - ECS seems to use 497 for the group Id
-RUN useradd -u ${PIPELINESUID} --shell /bin/bash --create-home azpipelines \
+RUN useradd -u ${PIPELINESUID} --shell /bin/bash --create-home azp \
   && groupmod -g "${DOCKERGID}" docker \
-  && usermod -G docker azpipelines \
+  && usermod -G docker azp \
   && echo '#Allow Azure Pipelines user to install extra packages' \
-  && echo 'azpipelines ALL = NOPASSWD : /usr/bin/apt-get' >> /etc/sudoers
+  && echo 'azp ALL = NOPASSWD : /usr/bin/apt-get' >> /etc/sudoers
 
 # https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/docker?view=azure-devops#linux
 RUN apt-get update \
@@ -26,15 +26,16 @@ RUN apt-get update \
         git \
         iputils-ping \
         libcurl3 \
-        libicu55 \
         libunwind8 \
         netcat \
+        unzip \
         zip \
-        unzip
+&& rm -rf /var/lib/apt/lists/*
 
-WORKDIR /home/azpipelines
-COPY scripts/azpipelines-agent/start /home/azpipelines/start
-RUN chmod +x /home/azpipelines/start
-USER azpipelines
+COPY scripts/azpipelines-agent/start /usr/local/bin/start
+RUN chmod 755 /usr/local/bin/start
+RUN chmod +x /usr/local/bin/start
+WORKDIR /home/azp
+USER azp
 
-ENTRYPOINT [ "/home/azpipelines/start" ]
+ENTRYPOINT [ "/usr/local/bin/start" ]

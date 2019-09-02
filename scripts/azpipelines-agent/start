@@ -12,7 +12,7 @@ if [ -z "$AZP_TOKEN_FILE" ]; then
     exit 1
   fi
 
-  AZP_TOKEN_FILE=/azp/.token
+  AZP_TOKEN_FILE=/home/azp/.token
   echo -n $AZP_TOKEN > "$AZP_TOKEN_FILE"
 fi
 
@@ -22,9 +22,9 @@ if [ -n "$AZP_WORK" ]; then
   mkdir -p "$AZP_WORK"
 fi
 
-rm -rf /azp/agent
-mkdir /azp/agent
-cd /azp/agent
+rm -rf /home/azp/agent
+mkdir /home/azp/agent
+cd /home/azp/agent
 
 export AGENT_ALLOW_RUNASROOT="1"
 
@@ -87,6 +87,6 @@ print_header "3. Configuring Azure Pipelines agent..."
 
 print_header "4. Running Azure Pipelines agent..."
 
-# `exec` the node runtime so it's aware of TERM and INT signals
-# AgentService.js understands how to handle agent self-update and restart
-exec ./externals/node/bin/node ./bin/AgentService.js interactive
+# Run the Agent Listener and wait - this correctly removes the Agent from the 
+# Agent Pool in Azure DevOps when shut-down through "docker stop <container_name>"
+./bin/Agent.Listener run & wait $!

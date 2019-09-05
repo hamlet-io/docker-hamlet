@@ -7,8 +7,8 @@ FROM ${BASE_IMAGE} AS azpipeline-agent
 
 USER root
 
-ARG PIPELINESUID=1000
-ARG DOCKERGID=497
+ARG PIPELINESUID=1001
+ARG DOCKERGID=498
 
 # Workaround for docker in docker permissions - ECS seems to use 497 for the group Id
 RUN useradd -u ${PIPELINESUID} --shell /bin/bash --create-home azp \

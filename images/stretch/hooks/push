@@ -7,12 +7,10 @@ docker push "${DOCKER_REPO}:${DOCKER_TAG%-*}" || exit $?
 # gen3 base - Jenkins JNLP
 docker push "${DOCKER_REPO}:${DOCKER_TAG}-jenkins" || exit $?
 docker push "${DOCKER_REPO}:${DOCKER_TAG%-*}-jenkins" || exit $?
-docker push "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-agent-jnlp" || exit $?
 
 # gen3 base - Azure Pipelines
 docker push "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline" || exit $?
 docker push "${DOCKER_REPO}:${DOCKER_TAG%-*}-azpipeline" || exit $?
-docker push "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-agent" || exit $?
 
 # gen3 builder 
 docker push "${DOCKER_REPO}:${DOCKER_TAG}-builder" || exit $?
@@ -21,12 +19,10 @@ docker push "${DOCKER_REPO}:${DOCKER_TAG%-*}-builder" || exit $?
 # gen3 builder - Jenkins JNLP
 docker push "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-builder" || exit $?
 docker push "${DOCKER_REPO}:${DOCKER_TAG%-*}-jenkins-builder" || exit $?
-docker push "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-agent-jnlp-builder" || exit $?
 
 # gen3 builder - Azure Pipelines
 docker push "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-builder" || exit $?
 docker push "${DOCKER_REPO}:${DOCKER_TAG%-*}-azpipeline-builder" || exit $?
-docker push "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-agent-builder" || exit $?
 
 # gen3 builder meteor
 docker push "${DOCKER_REPO}:${DOCKER_TAG}-builder-meteor" || exit $?
@@ -35,9 +31,7 @@ docker push "${DOCKER_REPO}:${DOCKER_TAG%-*}-builder-meteor" || exit $?
 # gen3 builder meteor - Jenkins JNLP
 docker push "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-builder-meteor" || exit $?
 docker push "${DOCKER_REPO}:${DOCKER_TAG%-*}-jenkins-builder-meteor" || exit $?
-docker push "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-agent-jnlp-builder-meteor" || exit $?
 
 # gen3 builder meteor - Azure Pipelines
 docker push "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-builder-meteor" || exit $?
 docker push "${DOCKER_REPO}:${DOCKER_TAG%-*}-azpipeline-builder-meteor" || exit $?
-docker push "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-agent-builder-meteor" || exit $?

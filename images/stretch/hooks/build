@@ -52,4 +52,4 @@ docker build -t "${DOCKER_REPO}:${DOCKER_TAG%-*}-jenkins-builder-meteor" -t "${D
 
 docker build -t "${DOCKER_REPO}:${DOCKER_TAG%-*}-azpipeline-builder-meteor" -t "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-builder-meteor" \
     --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-builder-meteor-nocache" \
-    -f ../../utilities/azure-pipelines/agent/Dockerfile ../../ || exit $?
+    -f ./builder/meteor/cache-packages/Dockerfile ../../ || exit $?

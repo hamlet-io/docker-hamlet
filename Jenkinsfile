@@ -21,7 +21,7 @@ pipeline {
     }
 
     parameters { 
-        text(name: 'TAG', defaultValue: 'latest', description: "The ${env["DOCKER_REPO"]} git tag to build with" )
+        string(name: 'TAG', defaultValue: 'latest', description: "The ${env["DOCKER_REPO"]} git tag to build with" )
     }
 
     stages {

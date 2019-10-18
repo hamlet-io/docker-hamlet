@@ -87,6 +87,6 @@ print_header "3. Configuring Azure Pipelines agent..."
 
 print_header "4. Running Azure Pipelines agent..."
 
-# Run the Agent Listener and wait - this correctly removes the Agent from the 
+# Run the Agent Listener and wait - this correctly removes the Agent from the
 # Agent Pool in Azure DevOps when shut-down through "docker stop <container_name>"
 ./bin/Agent.Listener run & wait $!

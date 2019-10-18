@@ -13,27 +13,27 @@ pipeline {
         buildDiscarder(
             logRotator(numToKeepStr: '20')
         )
-    }   
-    
+    }
+
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub')
         DOCKER_REPO = 'codeontap/gen3'
     }
 
-    parameters { 
+    parameters {
         string(name: 'TAG', defaultValue: 'latest', description: "The ${env["DOCKER_REPO"]} git tag to build with" )
     }
 
     stages {
-        stage('setup') { 
+        stage('setup') {
            steps {
                sh 'docker login --username ${DOCKERHUB_CREDENTIALS_USR} --password ${DOCKERHUB_CREDENTIALS_PSW}'
-               script { 
+               script {
                     env.SOURCE_COMMIT = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%H'").trim()
                     env.SOURCE_BRANCH = sh(returnStdout: true, script: "echo ${env.GIT_BRANCH} | cut -d / -f 2").trim()
                     env.DOCKER_TAG = "${params.TAG}"
                }
-           } 
+           }
         }
 
         stage('Image - build') {
@@ -45,22 +45,22 @@ pipeline {
             }
         }
 
-        stage('Image - push') { 
+        stage('Image - push') {
             steps {
                 sh './images/stretch/hooks/push'
             }
-        }         
+        }
     }
 
-    post { 
-        failure { 
+    post {
+        failure {
             slackSend (
                 message: "DockerImageBuild - *${env["DOCKER_REPO"]} - ${env["DOCKER_TAG"]}* - A error occurred during the iamge build - #${BUILD_NUMBER} (<${BUILD_URL}|Open>)",
                 channel: "${slackChannel}",
                 color: "${slackColours['bad']}"
             )
         }
-        success { 
+        success {
             slackSend (
                  message: "DockerImageBuild - *${env["DOCKER_REPO"]} - ${env["DOCKER_TAG"]}* - Was successful - #${BUILD_NUMBER} (<${BUILD_URL}|Open>)",
                 channel: "${slackChannel}",

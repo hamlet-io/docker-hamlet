@@ -14,7 +14,7 @@ ENV GENERATION_DIR=/opt/codeontap/generation/aws
 ENV GENERATION_STARTUP_DIR=/opt/codeontap/startup
 ENV GENERATION_PLUGIN_DIRS=/opt/codeontap/plugins
 
-# Directory set up and file copying 
+# Directory set up and file copying
 RUN mkdir -p /build/scripts &&  mkdir -p /opt/codeontap && mkdir -p /opt/codeontap/plugins
 
 COPY scripts/base/ /build/scripts/
@@ -24,7 +24,7 @@ COPY config.json /build/config.json
 RUN chmod -R u+rwx /build/scripts && \
     chmod u+s /build/ && \
     chmod -R ugo+rx /opt/codeontap
- 
+
 RUN echo "Cloning images on $(date +%s)"
 RUN /build/scripts/build_codeontap.sh && \
     /build/scripts/clone.sh

@@ -2,7 +2,7 @@
 
 # This overrides the standard dockerHub build process os that we can perform multi stage builds for different image types
 
-# gen3 base image 
+# gen3 base image
 docker build -t "${DOCKER_REPO}:${DOCKER_TAG}-base"  \
     -f ./Dockerfile ../../ || exit $?
 
@@ -20,7 +20,7 @@ docker build -t "${DOCKER_REPO}:${DOCKER_TAG%-*}-azpipeline" -t "${DOCKER_REPO}:
     --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}" \
     -f ../../utilities/azure-pipelines/agent/Dockerfile ../../ || exit $?
 
-# gen3 builder  
+# gen3 builder
 docker build -t "${DOCKER_REPO}:${DOCKER_TAG%-*}-builder" -t "${DOCKER_REPO}:${DOCKER_TAG}-builder" \
     --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}" \
     -f ./builder/Dockerfile ../../ || exit $?

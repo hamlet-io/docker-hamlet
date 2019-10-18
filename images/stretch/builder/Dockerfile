@@ -25,7 +25,7 @@ RUN pyenv install "${PYTHON_VERSION}" && pyenv global "${PYTHON_VERSION}"
 RUN pip install --no-cache-dir \
 		pipenv \
         zappa \
-        pytest pytest-sugar pytest-django coverage flake8 
+        pytest pytest-sugar pytest-django coverage flake8
 
 # Install NPM Packages
 RUN npm install -g \

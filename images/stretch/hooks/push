@@ -12,7 +12,7 @@ docker push "${DOCKER_REPO}:${DOCKER_TAG%-*}-jenkins" || exit $?
 docker push "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline" || exit $?
 docker push "${DOCKER_REPO}:${DOCKER_TAG%-*}-azpipeline" || exit $?
 
-# gen3 builder 
+# gen3 builder
 docker push "${DOCKER_REPO}:${DOCKER_TAG}-builder" || exit $?
 docker push "${DOCKER_REPO}:${DOCKER_TAG%-*}-builder" || exit $?
 

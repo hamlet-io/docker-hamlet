@@ -15,6 +15,10 @@
         {
             "Repository" : "https://github.com/codeontap/gen3-patterns.git",
             "Directory" : "/opt/codeontap/patterns"
+        },
+        {
+            "Repository" : "https://github.com/codeontap/gen3-azure.git",
+            "Directory" : "/opt/codeontap/plugins/azure"
         }
     ]
 }

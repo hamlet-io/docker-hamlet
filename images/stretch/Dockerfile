@@ -64,6 +64,7 @@ RUN pip install --upgrade --no-cache-dir \
         PyYAML==3.12 \
         awscli \
         azure-cli \
+        requests \
         cookiecutter
 
 # Install NPM Packages

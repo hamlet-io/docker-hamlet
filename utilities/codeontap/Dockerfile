@@ -2,7 +2,7 @@
 
 ARG BASE_IMAGE=codeontap/gen3:latest-stretch
 
-FROM ${BASE_IMAGE} AS jenkins-jnlp-agent
+FROM ${BASE_IMAGE} AS codeontap
 
 ARG CODEONTAP_VERSION=master
 ARG DOCKER_IMAGE_VERSION=master

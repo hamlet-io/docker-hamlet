@@ -48,15 +48,26 @@ pipeline {
 
                             docker build \
                                 --no-cache \
-                                -t "${DOCKER_REPO}:${DOCKER_TAG%-*}" \
-                                -t "${DOCKER_REPO}:${DOCKER_TAG}"  \
+                                -t "${DOCKER_REPO}:${DOCKER_TAG%-*}-nocli" \
+                                -t "${DOCKER_REPO}:${DOCKER_TAG}-nocli"  \
                                 --build-arg CODEONTAP_VERSION="${SOURCE_BRANCH}" \
                                 --build-arg DOCKER_IMAGE_VERSION="${SOURCE_COMMIT}" \
                                 --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-base" \
                                 -f ./utilities/codeontap/Dockerfile . || exit $?
+
+                            docker build \
+                                --no-cache \
+                                -t "${DOCKER_REPO}:${DOCKER_TAG%-*}" \
+                                -t "${DOCKER_REPO}:${DOCKER_TAG}"  \
+                                --build-arg CODEONTAP_VERSION="${SOURCE_BRANCH}" \
+                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-nocli" \
+                                -f ./utilities/codeontap-cli/Dockerfile . || exit $?
                         '''
 
                         sh '''#!/usr/bin/env bash
+                            docker push "${DOCKER_REPO}:${DOCKER_TAG}-base" || exit $?
+                            docker push "${DOCKER_REPO}:${DOCKER_TAG}-nocli" || exit $?
+                            docker push "${DOCKER_REPO}:${DOCKER_TAG%-*}-nocli" || exit $?
                             docker push "${DOCKER_REPO}:${DOCKER_TAG}" || exit $?
                             docker push "${DOCKER_REPO}:${DOCKER_TAG%-*}" || exit $?
                         '''

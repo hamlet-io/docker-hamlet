@@ -30,5 +30,7 @@ RUN chmod 755 /usr/local/bin/wait-for-it \
 
 WORKDIR /home/jenkins
 USER jenkins
+# Create the workspace directory so we can mount volumes to it and maintain user permissions
+RUN mkdir -p /home/jenkins/workspace
 
 ENTRYPOINT [ "/usr/local/bin/jenkins-agent"]

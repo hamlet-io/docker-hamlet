@@ -46,9 +46,7 @@ pipeline {
     stages {
 
         stage('Webhook-Process') {
-            when {
-                triggeredBy: 'GenericTrigger'
-            }
+            when { triggeredBy: 'GenericTrigger' }
             steps {
                 script {
                     env['TAG'] = env['ref'].split('/')[2]

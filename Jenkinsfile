@@ -41,15 +41,12 @@ pipeline {
     }
 
     parameters {
-        string(name: 'TAG', defaultValue: 'latest', description: "The git tag to build with" )
+        string(name: 'ref', defaultValue: '/ref/heads/master', description: "The git tag to build with" ),
     }
 
     stages {
 
         stage('Webhook-Process') {
-            when {
-                environment name: 'Trigger', value: 'WebhookTrigger'
-            }
             steps {
                 script {
                     env['TAG'] = ("${env['ref']}".split('/'))[2]

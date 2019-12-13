@@ -80,6 +80,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     libsqlite3-dev wget curl llvm libncurses5-dev xz-utils tk-dev \
     libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
 
+ENV LANG C.UTF-8
 ENV PYENV_ROOT=/usr/local/opt/pyenv
 RUN curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
 RUN ln -s /usr/local/opt/pyenv/bin/pyenv /usr/local/bin/pyenv

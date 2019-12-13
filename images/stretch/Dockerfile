@@ -28,7 +28,6 @@ RUN apt-get update && apt-get install -y \
      ca-certificates \
      curl \
      gnupg2 \
-     openjdk-11-jdk \
      software-properties-common \
      tk-dev \
    && rm -rf /var/lib/apt/lists/*
@@ -61,6 +60,13 @@ RUN apt-get update && apt-get install -y \
     nodejs yarn \
  && rm -rf /var/lib/apt/lists/*
 
+# Add Unstable sources
+RUN echo "deb http://deb.debian.org/debian unstable main" | tee /etc/apt/sources.list.d/unstable.list
+RUN echo 'Package: * \n Pin: release o=Debian,a=unstable  \n Pin-Priority: 900' | tee /etc/apt/preferences.d/unstable
+
+RUN apt-get update && apt-get install -y \
+    openjdk-8-jdk
+
 # Setup PyEnv
 ENV PYTHON_VERSION=3.6.9
 
@@ -85,7 +91,6 @@ RUN python -m pip install --upgrade --no-cache-dir \
 
 # Install NPM Packages
 RUN npm install -g \
-    bower \
     yamljs
 
 # Directory set up and file copying

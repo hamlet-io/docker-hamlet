@@ -133,7 +133,6 @@ pipeline {
                                 '''
 
                                 sh '''#!/usr/bin/env bash
-                                    docker pull "${DOCKER_REPO}:${DOCKER_TAG}"
                                     docker build \
                                         --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
                                         -t "${DOCKER_REPO}:${DOCKER_TAG%-*}" \

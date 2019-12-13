@@ -145,7 +145,7 @@ pipeline {
                                 '''
                                 sh '''#!/usr/bin/env bash
                                     docker build \
-                                        --no-cache
+                                        --no-cache \
                                         -t "${DOCKER_REPO}:${DOCKER_TAG}"  \
                                         --build-arg CODEONTAP_VERSION="${CODEONTAP_VERSION}" \
                                         --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-base" \

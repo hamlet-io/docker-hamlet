@@ -131,7 +131,7 @@ pipeline {
                     stages{
                         stage('Build-Base') {
                             steps {
-                                sh '''#!/user/bin/env bash
+                                sh '''#!/usr/bin/env bash
                                     docker image pull "${DOCKER_REPO}:${DOCKER_TAG}"
                                 '''
 

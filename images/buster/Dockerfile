@@ -75,7 +75,8 @@ RUN curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-instal
 RUN ln -s /usr/local/opt/pyenv/bin/pyenv /usr/local/bin/pyenv
 ENV PATH="${PYENV_ROOT}/shims:${PATH}"
 
-RUN pyenv install "${PYTHON_VERSION}" && pyenv global "${PYTHON_VERSION}"
+RUN pyenv install "${PYTHON_VERSION}" && pyenv global "${PYTHON_VERSION}" && \
+        locale-gen "en_US.UTF-8" && dpkg-reconfigure locales
 
 # Install Python Packages
 RUN python -m pip install --upgrade --no-cache-dir \

@@ -29,7 +29,6 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
      curl \
      gnupg2 \
      software-properties-common \
-     tk-dev \
    && rm -rf /var/lib/apt/lists/*
 
 # Add docker to apt-get
@@ -69,6 +68,14 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 
 # Setup PyEnv
 ENV PYTHON_VERSION=3.6.9
+ENV PYTHON2_VERSION=2.7.16
+
+# PyEnv requirements
+RUN apt-get update && apt-get install --no-install-recommends -y \
+    make build-essential \
+    libssl-dev zlib1g-dev libbz2-dev libreadline-dev \
+    libsqlite3-dev wget curl llvm libncurses5-dev xz-utils tk-dev \
+    libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
 
 ENV PYENV_ROOT=/usr/local/opt/pyenv
 RUN curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash

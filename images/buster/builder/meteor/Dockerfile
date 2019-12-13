@@ -8,3 +8,5 @@ ENV METEOR_RELEASE=1.8.0.1
 
 #Install Meteor
 RUN curl https://install.meteor.com/?release=${METEOR_RELEASE} | sh
+
+USER codeontap

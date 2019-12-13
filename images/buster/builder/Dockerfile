@@ -2,6 +2,8 @@ ARG BASE_IMAGE=codeontap/gen3:latest-buster
 
 FROM ${BASE_IMAGE} AS builder
 
+USER root
+
 # Install Basic build requirements
 RUN apt-get update && apt-get install -y \
 	make build-essential \
@@ -20,3 +22,5 @@ RUN pip install --no-cache-dir \
 RUN npm install -g \
     grunt-cli \
     gulp-cli
+
+USER codeontap

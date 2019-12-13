@@ -108,7 +108,7 @@ pipeline {
                     steps {
                         script {
                             env.CODEONTAP_VERSION = "${env['TAG']}"
-                            env.DOCKER_IMAGE_VERSION = "${env['TAG'}"
+                            env.DOCKER_IMAGE_VERSION = "${env['TAG']}"
                             env.SOURCE_BRANCH = "${env['TAG']}"
                             env.DOCKER_TAG = "${env['TAG']}"
                         }
@@ -118,8 +118,8 @@ pipeline {
                 stage('Setup')  {
                     steps {
                         echo "Runnig build..."
-                        echo "CodeOnTap Version: ${env['CODEONTAP_VERSION'}"
-                        echo "Docker Image Version: ${env['DOCKER_IMAGE_VERSION'}"
+                        echo "CodeOnTap Version: ${env['CODEONTAP_VERSION']}"
+                        echo "Docker Image Version: ${env['DOCKER_IMAGE_VERSION']}"
                         echo "Source Branch: ${env['SOURCE_BRANCH']}"
                         echo "Docker Tag: ${env['DOCKER_TAG']}"
                     }

@@ -90,7 +90,7 @@ pipeline {
                     }
                     steps {
                         script {
-                            env.CODEONTAP_VERSION = "${env['commit']}"
+                            env.CODEONTAP_VERSION = "${env['repo']}-${env['commit']}"
                             env.DOCKER_IMAGE_VERSION =   sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%H'").trim()
                             env.SOURCE_BRANCH = 'master'
                             env.DOCKER_TAG = 'latest'

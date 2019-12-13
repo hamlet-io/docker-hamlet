@@ -52,7 +52,7 @@ pipeline {
                     env['TAG'] = env['ref'].split('/')[2]
                 }
 
-                echo "My Tag is env['TAG']"
+                echo "My Tag is ${env['TAG']}"
             }
         }
 
@@ -63,8 +63,10 @@ pipeline {
                script {
                     env.SOURCE_COMMIT = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%H'").trim()
                     env.SOURCE_BRANCH = sh(returnStdout: true, script: "echo ${env.GIT_BRANCH} | cut -d / -f 2").trim()
-                    env.DOCKER_TAG = "${params.TAG}"
+                    env.DOCKER_TAG = "${env['TAG']}"
                }
+
+               echo "Building Image - Commit: ${env.SOURCE_COMMIT} - Branch: ${env.SOURCE_BRANCH} - Tag ${env.DOCKER_TAG}"
                sh 'cd "./images/stretch"'
            }
         }

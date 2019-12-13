@@ -24,7 +24,7 @@ RUN apt-get update \
   jq \
   git \
   iputils-ping \
-  libcurl4 \
+  libcurl3 \
   libunwind8 \
   netcat \
   unzip \

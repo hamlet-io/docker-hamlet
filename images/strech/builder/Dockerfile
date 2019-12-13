@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=codeontap/gen3:latest-buster
+ARG BASE_IMAGE=codeontap/gen3:latest
 
 FROM ${BASE_IMAGE} AS builder
 

@@ -24,6 +24,9 @@ ENV LC_ALL C.UTF-8
 ENV PYTHON_VERSION 3.6.9
 ENV PYTHON2_VERSION 2.7.16
 
+#Docker user
+ARG DOCKERGID=497
+
 RUN useradd -u ${COTUID} --shell /bin/bash --create-home codeontap && \
         mkdir /home/codeontap/cmdb
 
@@ -77,6 +80,9 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     git-lfs \
     nodejs yarn \
     && rm -rf /var/lib/apt/lists/*
+
+# Add docker user for docker bind mount
+RUN groupadd -g "${DOCKERGID}" docker
 
 # PyEnv requirements
 ENV PYENV_ROOT /usr/local/opt/pyenv

@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=codeontap/gen3:latest-buster-builder
+ARG BASE_IMAGE=codeontap/gen3:latest-builder
 
 FROM ${BASE_IMAGE} AS meteor
 

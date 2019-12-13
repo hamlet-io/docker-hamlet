@@ -46,6 +46,18 @@ pipeline {
 
     stages {
 
+        stage('Webhook-Process') {
+            when {
+                environment name: 'Trigger', value: 'WebhookTrigger'
+            }
+            steps {
+                script {
+                    env['TAG'] = ("${env['ref']}".split('/'))[2]
+                }
+
+                echo "My Tag is ${env['TAG']}"
+            }
+        }
 
         stage('Setup') {
            steps {

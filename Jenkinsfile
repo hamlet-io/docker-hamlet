@@ -13,6 +13,7 @@ pipeline {
         buildDiscarder(
             logRotator(numToKeepStr: '20')
         )
+        quietPeriod(30)
     }
 
     triggers {

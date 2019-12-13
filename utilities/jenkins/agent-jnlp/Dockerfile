@@ -1,7 +1,7 @@
 # -------------------------------------------------------
 # Jenkins JNLP Agent
 # -------------------------------------------------------
-ARG BASE_IMAGE=codeontap/gen3:latest-stretch
+ARG BASE_IMAGE=codeontap/gen3:latest-buster
 
 FROM ${BASE_IMAGE} AS jenkins-jnlp-agent
 

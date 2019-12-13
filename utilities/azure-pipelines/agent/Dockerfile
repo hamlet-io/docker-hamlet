@@ -1,7 +1,7 @@
 # -------------------------------------------------------
 # Azure Pipelines Agent Dockerfile
 # -------------------------------------------------------
-ARG BASE_IMAGE=codeontap/gen3:latest-stretch
+ARG BASE_IMAGE=codeontap/gen3:latest-buster
 
 FROM ${BASE_IMAGE} AS azpipeline-agent
 

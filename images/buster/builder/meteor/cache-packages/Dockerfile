@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=codeontap/gen3:latest-stretch-builder-meteor
+ARG BASE_IMAGE=codeontap/gen3:latest-buster-builder-meteor
 
 FROM ${BASE_IMAGE} AS jenkins-jnlp-agent
 

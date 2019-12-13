@@ -79,7 +79,7 @@ pipeline {
                     steps {
 
                         sh 'docker login --username ${DOCKERHUB_CREDENTIALS_USR} --password ${DOCKERHUB_CREDENTIALS_PSW}'
-                        sh 'cd "./images/stretch"'
+                        sh 'cd "./images/buster"'
                     }
                 }
 
@@ -139,7 +139,7 @@ pipeline {
                                         -t "${DOCKER_REPO}:${DOCKER_TAG}"  \
                                         --build-arg CODEONTAP_VERSION="${CODEONTAP_VERSION}" \
                                         --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-" \
-                                        -f ./images/stretch/Dockerfile . || exit $?
+                                        -f ./images/buster/Dockerfile . || exit $?
                                 '''
 
                                 sh '''#!/usr/bin/env bash
@@ -202,7 +202,7 @@ pipeline {
                                         -t "${DOCKER_REPO}:${DOCKER_TAG%-*}-builder" \
                                         -t "${DOCKER_REPO}:${DOCKER_TAG}-builder" \
                                         --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}" \
-                                        -f ./images/stretch/builder/Dockerfile . || exit $?
+                                        -f ./images/buster/builder/Dockerfile . || exit $?
                                 '''
 
                                 sh '''#!/usr/bin/env bash
@@ -274,7 +274,7 @@ pipeline {
                                         -t "${DOCKER_REPO}:${DOCKER_TAG%-*}-builder-meteor" \
                                         -t "${DOCKER_REPO}:${DOCKER_TAG}-builder-meteor" \
                                         --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-builder" \
-                                        -f ./images/stretch/builder/meteor/Dockerfile . || exit $?
+                                        -f ./images/buster/builder/meteor/Dockerfile . || exit $?
                                 '''
 
                                 sh '''#!/usr/bin/env bash
@@ -300,7 +300,7 @@ pipeline {
                                                 -t "${DOCKER_REPO}:${DOCKER_TAG%-*}-jenkins-builder-meteor" \
                                                 -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-builder-meteor" \
                                                 --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-jenkins-agent-jnlp-builder-meteor-nocache" \
-                                                -f ./images/stretch/builder/meteor/cache-packages/Dockerfile . || exit $?
+                                                -f ./images/buster/builder/meteor/cache-packages/Dockerfile . || exit $?
                                         '''
 
                                         sh '''#!/usr/bin/env bash
@@ -324,7 +324,7 @@ pipeline {
                                                 -t "${DOCKER_REPO}:${DOCKER_TAG%-*}-azpipeline-builder-meteor" \
                                                 -t "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-builder-meteor" \
                                                 --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-builder-meteor-nocache" \
-                                                -f ./images/stretch/builder/meteor/cache-packages/Dockerfile . || exit $?
+                                                -f ./images/buster/builder/meteor/cache-packages/Dockerfile . || exit $?
                                         '''
 
                                         sh '''#!/usr/bin/env bash

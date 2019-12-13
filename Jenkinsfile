@@ -8,12 +8,14 @@ pipeline {
         label 'codeontaplatest'
     }
     options {
-        timestamps ()
+        timestamps()
         durabilityHint('PERFORMANCE_OPTIMIZED')
         buildDiscarder(
             logRotator(numToKeepStr: '20')
         )
         quietPeriod(0)
+        disableConcurrentBuilds()
+        parallelsAlwaysFailFast()
     }
 
     triggers {

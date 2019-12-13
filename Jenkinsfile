@@ -16,6 +16,7 @@ pipeline {
         quietPeriod(0)
         disableConcurrentBuilds()
         parallelsAlwaysFailFast()
+        options { timeout(time: 3, unit: 'HOURS') }
     }
 
     triggers {
@@ -131,12 +132,7 @@ pipeline {
                         stage('Build-Base') {
                             steps {
                                 sh '''#!/usr/bin/env bash
-                                    docker pull "${DOCKER_REPO}:${DOCKER_TAG}"
-                                '''
-
-                                sh '''#!/usr/bin/env bash
                                     docker build \
-                                        --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
                                         -t "${DOCKER_REPO}:${DOCKER_TAG%-*}" \
                                         -t "${DOCKER_REPO}:${DOCKER_TAG}"  \
                                         --build-arg CODEONTAP_VERSION="${CODEONTAP_VERSION}" \

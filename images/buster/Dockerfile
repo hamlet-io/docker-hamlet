@@ -58,7 +58,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     less vim tree \
     jq \
     groff \
-    docker-ce \
+    docker-ce-cli \
     nodejs yarn \
  && rm -rf /var/lib/apt/lists/*
 

@@ -15,6 +15,22 @@ pipeline {
         )
     }
 
+    triggers {
+        GenericTrigger(
+            genericVariables: [
+                [key: 'ref',  value: '$.ref']
+            ],
+            causeString: "Triggered by on $ref",
+            token: '14741357d69c4c5b767e538b495c1363',
+            printContributedVariables: false,
+            printPostContent: true,
+            silentResponse: true,
+
+            regexpFilterText: '$ref',
+            regexpFilterExpression: '\/refs\/(heads|tags)\/(master|v.*)'
+        )
+    }
+
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub')
         DOCKER_REPO = 'codeontap/gen3'
@@ -25,8 +41,23 @@ pipeline {
     }
 
     stages {
+
+        stage('Webhook-Process') {
+            when {
+                triggeredBy: 'GenericTrigger'
+            }
+            steps {
+                script {
+                    env['TAG'] = env['ref'].split('/')[2]
+                }
+
+                echo "My Tag is env['TAG']"
+            }
+        }
+
         stage('Setup') {
            steps {
+
                sh 'docker login --username ${DOCKERHUB_CREDENTIALS_USR} --password ${DOCKERHUB_CREDENTIALS_PSW}'
                script {
                     env.SOURCE_COMMIT = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%H'").trim()

@@ -57,10 +57,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     groff \
     docker-ce \
     nodejs yarn \
-    locales \
  && rm -rf /var/lib/apt/lists/*
-
-RUN locale-gen "en_US.UTF-8"
 
 # Add Unstable sources
 RUN echo "deb http://deb.debian.org/debian unstable main" | tee /etc/apt/sources.list.d/unstable.list

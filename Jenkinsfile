@@ -135,7 +135,7 @@ pipeline {
                                 sh '''#!/usr/bin/env bash
                                     docker pull "${DOCKER_REPO}:${DOCKER_TAG}"
                                     docker build \
-                                        --no-cache \
+                                        --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
                                         -t "${DOCKER_REPO}:${DOCKER_TAG%-*}" \
                                         -t "${DOCKER_REPO}:${DOCKER_TAG}"  \
                                         --build-arg CODEONTAP_VERSION="${CODEONTAP_VERSION}" \

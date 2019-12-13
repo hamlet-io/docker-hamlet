@@ -28,7 +28,8 @@ pipeline {
             ],
             causeString: "Push event trigger",
             token: '14741357d69c4c5b767e538b495c1363',
-            printContributedVariables: false,
+
+            printContributedVariables: true,
             printPostContent: false,
             silentResponse: true,
 
@@ -55,8 +56,6 @@ pipeline {
                 script {
                     env['TAG'] = ("${env['ref']}".split('/'))[2]
                 }
-
-                echo "My Tag is ${env['TAG']}"
             }
         }
 

@@ -42,8 +42,8 @@ pipeline {
     }
 
     parameters {
-        string(name: 'ref', defaultValue: '/ref/heads/master', description: "The git ref to build with" ),
-        string(name: 'repo', defaultValue: 'codeontap/docker-gen3', description: "The git ref to build with" )
+        string(name: 'ref', defaultValue: '/ref/heads/master', description: "The git ref to use for build" )
+        string(name: 'repo', defaultValue: 'codeontap/docker-gen3', description: "The git repo" )
     }
 
     stages {

@@ -130,19 +130,17 @@ pipeline {
                             steps {
                                 sh '''#!/usr/bin/env bash
                                     docker pull "${DOCKER_REPO}:${DOCKER_TAG}"
+                                '''
 
-                                    docker build \
-                                        --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
-                                        -t "${DOCKER_REPO}:${DOCKER_TAG}-base"  \
-                                        -f ./images/stretch/Dockerfile . || exit $?
-
+                                sh '''#!/usr/bin/env bash
+                                    docker pull "${DOCKER_REPO}:${DOCKER_TAG}"
                                     docker build \
                                         --no-cache \
                                         -t "${DOCKER_REPO}:${DOCKER_TAG%-*}" \
                                         -t "${DOCKER_REPO}:${DOCKER_TAG}"  \
                                         --build-arg CODEONTAP_VERSION="${CODEONTAP_VERSION}" \
                                         --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-" \
-                                        -f ./utilities/codeontap-cli/Dockerfile . || exit $?
+                                        -f ./images/stretch/Dockerfile . || exit $?
                                 '''
 
                                 sh '''#!/usr/bin/env bash

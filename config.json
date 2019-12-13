@@ -19,6 +19,10 @@
         {
             "Repository" : "https://github.com/codeontap/gen3-azure.git",
             "Directory" : "/opt/codeontap/plugins/azure"
+        },
+        {
+            "Repository" : "https://github.com/codeontap/gen3-cli.git",
+            "Directory" : "/opt/codeontap/cli"
         }
     ]
 }

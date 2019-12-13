@@ -29,8 +29,8 @@ pipeline {
             causeString: "Push event trigger",
             token: '14741357d69c4c5b767e538b495c1363',
             printContributedVariables: false,
-            printPostContent: true,
-            silentResponse: false,
+            printPostContent: false,
+            silentResponse: true,
 
             regexpFilterText: '$ref',
             regexpFilterExpression: '^refs/(heads|tags)/(master|v.*)'

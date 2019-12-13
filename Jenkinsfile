@@ -20,7 +20,7 @@ pipeline {
         GenericTrigger(
             genericVariables: [
                 [key: 'ref',  value: '$.ref'],
-                [key: 'repo', value: '$.full_name' ]
+                [key: 'repo', value: '$.repository.full_name' ]
             ],
             genericHeaderVariables: [
                 [key: 'X-GitHub-Event', regexpFilter: 'push']

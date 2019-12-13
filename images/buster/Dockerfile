@@ -88,6 +88,7 @@ ENV PATH="${PYENV_ROOT}/shims:${PATH}"
 RUN pyenv install "${PYTHON_VERSION}" && pyenv install "${PYTHON2_VERSION}" && pyenv global "${PYTHON_VERSION}"
 
 # Install Python Packages
+RUN python -m pip install --upgrade --no-cache-dir pip
 RUN python -m pip install --upgrade --no-cache-dir \
         setuptools \
         pipenv \

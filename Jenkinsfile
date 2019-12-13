@@ -41,7 +41,7 @@ pipeline {
     }
 
     parameters {
-        string(name: 'ref', defaultValue: '/ref/heads/master', description: "The git tag to build with" ),
+        string(name: 'ref', defaultValue: '/ref/heads/master', description: "The git ref to build with" )
     }
 
     stages {

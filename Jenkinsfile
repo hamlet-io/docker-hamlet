@@ -20,6 +20,9 @@ pipeline {
             genericVariables: [
                 [key: 'ref',  value: '$.ref']
             ],
+            genericHeaderVariables: [
+                [key: 'X-GitHub-Event', regexpFilter: '^push']
+            ],
             causeString: "Triggered by on $ref",
             token: '14741357d69c4c5b767e538b495c1363',
             printContributedVariables: false,
@@ -27,7 +30,7 @@ pipeline {
             silentResponse: true,
 
             regexpFilterText: '$ref',
-            regexpFilterExpression: '\/refs\/(heads|tags)\/(master|v.*)'
+            regexpFilterExpression: '/refs/(heads|tags)/(master|v.*)'
         )
     }
 

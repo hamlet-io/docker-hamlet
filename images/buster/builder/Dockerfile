@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
     libbz2-dev libpq-dev \
 	libcurl4-openssl-dev libssl-dev libsqlite3-dev\
 	zlib1g-dev libbz2-dev libsqlite3-dev llvm libncurses5-dev libncursesw5-dev \
-	xz-utils tk-dev libffi-dev liblzma-dev libedit-dev \
+	xz-utils libffi-dev liblzma-dev libedit-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python packages

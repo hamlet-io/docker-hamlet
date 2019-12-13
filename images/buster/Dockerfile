@@ -23,7 +23,7 @@ RUN useradd -u ${COTUID} --shell /bin/bash --create-home codeontap && \
 
 # Install OS Packages
 # setup apt for different sources
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install --no-install-recommends -y \
      apt-transport-https \
      ca-certificates \
      curl \
@@ -47,7 +47,7 @@ RUN curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
     && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 
 # Install Packages
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install --no-install-recommends -y \
     apt-utils \
     curl wget \
     dos2unix \
@@ -64,7 +64,7 @@ RUN apt-get update && apt-get install -y \
 RUN echo "deb http://deb.debian.org/debian unstable main" | tee /etc/apt/sources.list.d/unstable.list
 RUN echo 'Package: * \n Pin: release o=Debian,a=unstable  \n Pin-Priority: 900' | tee /etc/apt/preferences.d/unstable
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install --no-install-recommends -y \
     openjdk-8-jdk
 
 # Setup PyEnv

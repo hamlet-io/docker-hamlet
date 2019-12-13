@@ -19,8 +19,9 @@ pipeline {
     triggers {
         GenericTrigger(
             genericVariables: [
-                [key: 'ref',  value: '$.ref'],
-                [key: 'repo', value: '$.repository.full_name' ]
+                [key: 'ref',    value: '$.ref'],
+                [key: 'repo',   value: '$.repository.full_name' ],
+                [key: 'commit', value: '$.after']
             ],
             genericHeaderVariables: [
                 [key: 'X-GitHub-Event', regexpFilter: 'push']
@@ -44,6 +45,7 @@ pipeline {
     parameters {
         string(name: 'ref', defaultValue: '/ref/heads/master', description: "The git ref to use for build" )
         string(name: 'repo', defaultValue: 'codeontap/docker-gen3', description: "The git repo" )
+        string(name: 'commit', defaultValue: '', description: "The tirgger commit")
     }
 
     stages {
@@ -74,18 +76,52 @@ pipeline {
             }
 
             stages {
-                stage('Setup') {
+                stage('BaseSetup') {
                     steps {
 
                         sh 'docker login --username ${DOCKERHUB_CREDENTIALS_USR} --password ${DOCKERHUB_CREDENTIALS_PSW}'
-                        script {
-                                env.SOURCE_COMMIT = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%H'").trim()
-                                env.SOURCE_BRANCH = sh(returnStdout: true, script: "echo ${env.GIT_BRANCH} | cut -d / -f 2").trim()
-                                env.DOCKER_TAG = "${env['TAG']}"
-                        }
-
-                        echo "Building Image - Commit: ${env.SOURCE_COMMIT} - Branch: ${env.SOURCE_BRANCH} - Tag ${env.DOCKER_TAG}"
                         sh 'cd "./images/stretch"'
+                    }
+                }
+
+                stage('Build-Latest-Setup') {
+                    when {
+                        environment name: 'TAG', value: 'master'
+                    }
+                    steps {
+                        script {
+                            env.CODEONTAP_VERSION = "${env['commit']}"
+                            env.DOCKER_IMAGE_VERSION =   sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%H'").trim()
+                            env.SOURCE_BRANCH = 'master'
+                            env.DOCKER_TAG = 'latest'
+                        }
+                    }
+                }
+
+                stage('Build-Tag-Setup') {
+                    when {
+                        not {
+                            environment name: 'TAG', value: 'master'
+                        }
+                    }
+
+                    steps {
+                        script {
+                            env.CODEONTAP_VERSION = "${env['TAG']}"
+                            env.DOCKER_IMAGE_VERSION = "${env['TAG'}"
+                            env.SOURCE_BRANCH = "${env['TAG']}"
+                            env.DOCKER_TAG = "${env['TAG']}"
+                        }
+                    }
+                }
+
+                stage('Setup')  {
+                    steps {
+                        echo "Runnig build..."
+                        echo "CodeOnTap Version: ${env['CODEONTAP_VERSION'}"
+                        echo "Docker Image Version: ${env['DOCKER_IMAGE_VERSION'}"
+                        echo "Source Branch: ${env['SOURCE_BRANCH']}"
+                        echo "Docker Tag: ${env['DOCKER_TAG']}"
                     }
                 }
 
@@ -102,8 +138,8 @@ pipeline {
                                         --no-cache \
                                         -t "${DOCKER_REPO}:${DOCKER_TAG%-*}-nocli" \
                                         -t "${DOCKER_REPO}:${DOCKER_TAG}-nocli"  \
-                                        --build-arg CODEONTAP_VERSION="${SOURCE_BRANCH}" \
-                                        --build-arg DOCKER_IMAGE_VERSION="${SOURCE_COMMIT}" \
+                                        --build-arg CODEONTAP_VERSION="${CODEONTAP_VERSION}" \
+                                        --build-arg DOCKER_IMAGE_VERSION="${DOCKER_IMAGE_VERSION}" \
                                         --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-base" \
                                         -f ./utilities/codeontap/Dockerfile . || exit $?
 
@@ -111,7 +147,7 @@ pipeline {
                                         --no-cache \
                                         -t "${DOCKER_REPO}:${DOCKER_TAG%-*}" \
                                         -t "${DOCKER_REPO}:${DOCKER_TAG}"  \
-                                        --build-arg CODEONTAP_VERSION="${SOURCE_BRANCH}" \
+                                        --build-arg CODEONTAP_VERSION="${CODEONTAP_VERSION}" \
                                         --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-nocli" \
                                         -f ./utilities/codeontap-cli/Dockerfile . || exit $?
                                 '''

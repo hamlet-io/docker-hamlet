@@ -18,12 +18,13 @@ pipeline {
     triggers {
         GenericTrigger(
             genericVariables: [
-                [key: 'ref',  value: '$.ref']
+                [key: 'ref',  value: '$.ref'],
+                [key: 'Trigger', value: 'WebhookTrigger'],
             ],
             genericHeaderVariables: [
                 [key: 'X-GitHub-Event', regexpFilter: '^push']
             ],
-            causeString: "Triggered by on $ref",
+            causeString: "Triggered by $ref",
             token: '14741357d69c4c5b767e538b495c1363',
             printContributedVariables: false,
             printPostContent: true,
@@ -40,18 +41,18 @@ pipeline {
     }
 
     parameters {
-        string(name: 'TAG', defaultValue: 'latest', description: "The ${env["DOCKER_REPO"]} git tag to build with" )
+        string(name: 'TAG', defaultValue: 'latest', description: "The git tag to build with" )
     }
 
     stages {
 
         stage('Webhook-Process') {
             when {
-                triggeredBy: 'GenericTrigger'
+                environment name: 'Trigger', value: 'WebhookTrigger'
             }
             steps {
                 script {
-                    env['TAG'] = env['ref'].split('/')[2]
+                    env['TAG'] = (env['ref'].split('/'))[2]
                 }
 
                 echo "My Tag is ${env['TAG']}"

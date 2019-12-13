@@ -1,7 +1,7 @@
 # -------------------------------------------------------
 # Base gen3 Image
 # -------------------------------------------------------
-FROM buildpack-deps:buster AS gen3
+FROM buildpack-deps:stretch-scm AS gen3
 
 USER root
 
@@ -18,22 +18,42 @@ ENV GENERATION_DIR=/opt/codeontap/generation/aws
 ENV GENERATION_STARTUP_DIR=/opt/codeontap/startup
 ENV GENERATION_PLUGIN_DIRS=/opt/codeontap/plugins
 
+# Setup PyEnv
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
+ENV PYTHON_VERSION 3.6.9
+ENV PYTHON2_VERSION 2.7.16
 
 RUN useradd -u ${COTUID} --shell /bin/bash --create-home codeontap && \
         mkdir /home/codeontap/cmdb
 
+#CMDB Mount point
+VOLUME /home/codeontap/cmdb
+
 # Install OS Packages
-# setup apt for different sources
 RUN apt-get update && apt-get install --no-install-recommends -y \
-     apt-transport-https \
-     ca-certificates \
-     curl \
-     gnupg2 \
-     software-properties-common \
+        # setup apt for different sources
+        apt-utils \
+        apt-transport-https \
+        ca-certificates \
+        gnupg2 \
+        software-properties-common \
+        # Standard linux tools
+        dos2unix \
+        tar zip unzip \
+        less vim tree \
+        jq \
+        groff \
+        # Freemarker Req
+        openjdk-8-jdk \
+        # Python/PyEnv Reqs
+        make build-essential \
+        libssl-dev zlib1g-dev libbz2-dev libreadline-dev \
+        libsqlite3-dev wget curl llvm libncurses5-dev xz-utils tk-dev \
+        libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev \
    && rm -rf /var/lib/apt/lists/*
 
+# -- Install extra library packages --
 # Add docker to apt-get
 RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - \
     && add-apt-repository \
@@ -48,47 +68,26 @@ RUN curl -sL https://deb.nodesource.com/setup_10.x |  bash -
 RUN curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
     && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 
-# Install Packages
+# Add Backports sources
+RUN echo "deb http://deb.debian.org/debian stretch-backports main" | tee /etc/apt/sources.list.d/backports.list
+RUN echo 'Package: * \n Pin: release a=stretch-backports \n Pin-Priority: 900' | tee /etc/apt/preferences.d/backports
+
 RUN apt-get update && apt-get install --no-install-recommends -y \
-    apt-utils \
-    curl wget \
-    dos2unix \
-    git \
-    tar zip unzip \
-    less vim tree \
-    jq \
-    groff \
     docker-ce-cli \
+    git-lfs \
     nodejs yarn \
- && rm -rf /var/lib/apt/lists/*
-
-# Add Unstable sources
-RUN echo "deb http://deb.debian.org/debian unstable main" | tee /etc/apt/sources.list.d/unstable.list
-RUN echo 'Package: * \n Pin: release o=Debian,a=unstable  \n Pin-Priority: 900' | tee /etc/apt/preferences.d/unstable
-
-RUN apt-get update && apt-get install --no-install-recommends -y \
-    openjdk-8-jdk
-
-# Setup PyEnv
-ENV PYTHON_VERSION=3.6.9
-ENV PYTHON2_VERSION=2.7.16
+    && rm -rf /var/lib/apt/lists/*
 
 # PyEnv requirements
-RUN apt-get update && apt-get install --no-install-recommends -y \
-    make build-essential \
-    libssl-dev zlib1g-dev libbz2-dev libreadline-dev \
-    libsqlite3-dev wget curl llvm libncurses5-dev xz-utils tk-dev \
-    libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
-
-ENV PYENV_ROOT=/usr/local/opt/pyenv
+ENV PYENV_ROOT /usr/local/opt/pyenv
 RUN curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
 RUN ln -s /usr/local/opt/pyenv/bin/pyenv /usr/local/bin/pyenv
 ENV PATH="${PYENV_ROOT}/shims:${PATH}"
 
-RUN pyenv install "${PYTHON_VERSION}" && pyenv install "${PYTHON2_VERSION}" && pyenv global "${PYTHON_VERSION}"
+RUN pyenv install "${PYTHON_VERSION}" && pyenv install "${PYTHON2_VERSION}" && \
+        pyenv global "${PYTHON_VERSION}" && python --version && python -m pip install --upgrade --no-cache-dir pip
 
 # Install Python Packages
-RUN python --version && python -m pip install --upgrade --no-cache-dir pip
 RUN python -m pip install --upgrade --no-cache-dir \
         setuptools \
         pipenv \

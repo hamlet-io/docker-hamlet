@@ -6,11 +6,10 @@ USER root
 
 # Install Basic build requirements
 RUN apt-get update && apt-get install -y \
-	make build-essential \
-    libbz2-dev libpq-dev \
-	libcurl4-openssl-dev libssl-dev libsqlite3-dev\
-	zlib1g-dev libbz2-dev libsqlite3-dev llvm libncurses5-dev libncursesw5-dev \
-	xz-utils libffi-dev liblzma-dev libedit-dev \
+    libpq-dev \
+	libcurl4-openssl-dev \
+	zlib1g-dev libbz2-dev libsqlite3-dev llvm libncursesw5-dev \
+    libedit-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python packages

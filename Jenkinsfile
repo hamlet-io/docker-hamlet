@@ -131,19 +131,29 @@ pipeline {
                     stages{
                         stage('Build-Base') {
                             steps {
+                                sh '''#!/user/bin/env bash
+                                    docker image pull "${DOCKER_REPO}:${DOCKER_TAG}"
+                                '''
+
                                 sh '''#!/usr/bin/env bash
                                     docker build \
-                                        -t "${DOCKER_REPO}:${DOCKER_TAG%-*}" \
-                                        -t "${DOCKER_REPO}:${DOCKER_TAG}"  \
+                                        --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
+                                        -t "${DOCKER_REPO}:${DOCKER_TAG}-base"  \
                                         --build-arg CODEONTAP_VERSION="${CODEONTAP_VERSION}" \
                                         --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-" \
                                         -f ./images/stretch/Dockerfile . || exit $?
                                 '''
+                                sh '''#!/usr/bin/env bash
+                                    docker build \
+                                        --no-cache
+                                        -t "${DOCKER_REPO}:${DOCKER_TAG}"  \
+                                        --build-arg CODEONTAP_VERSION="${CODEONTAP_VERSION}" \
+                                        --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-base" \
+                                        -f ./utilities/codeontap/Dockerfile . || exit $?
+                                '''
 
                                 sh '''#!/usr/bin/env bash
-                                    docker push "${DOCKER_REPO}:${DOCKER_TAG}-base" || exit $?
                                     docker push "${DOCKER_REPO}:${DOCKER_TAG}" || exit $?
-                                    docker push "${DOCKER_REPO}:${DOCKER_TAG%-*}" || exit $?
                                 '''
                             }
                         }
@@ -155,7 +165,6 @@ pipeline {
                                         sh '''#!/usr/bin/env bash
                                             docker build \
                                                 --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
-                                                -t "${DOCKER_REPO}:${DOCKER_TAG%-*}-jenkins" \
                                                 -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins" \
                                                 --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}" \
                                                 -f ./utilities/jenkins/agent-jnlp/Dockerfile . || exit $?
@@ -163,7 +172,6 @@ pipeline {
 
                                         sh '''#!/usr/bin/env bash
                                             docker push "${DOCKER_REPO}:${DOCKER_TAG}-jenkins" || exit $?
-                                            docker push "${DOCKER_REPO}:${DOCKER_TAG%-*}-jenkins" || exit $?
                                         '''
                                     }
                                 }
@@ -173,7 +181,6 @@ pipeline {
                                         sh '''#!/usr/bin/env bash
                                             docker build \
                                                 --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
-                                                -t "${DOCKER_REPO}:${DOCKER_TAG%-*}-azpipeline" \
                                                 -t "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline" \
                                                 --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}" \
                                                 -f ./utilities/azure-pipelines/agent/Dockerfile . || exit $?
@@ -181,7 +188,6 @@ pipeline {
 
                                         sh '''#!/usr/bin/env bash
                                             docker push "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline" || exit $?
-                                            docker push "${DOCKER_REPO}:${DOCKER_TAG%-*}-azpipeline" || exit $?
                                         '''
                                     }
                                 }
@@ -197,7 +203,6 @@ pipeline {
                                 sh '''#!/usr/bin/env bash
                                     docker build \
                                         --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
-                                        -t "${DOCKER_REPO}:${DOCKER_TAG%-*}-builder" \
                                         -t "${DOCKER_REPO}:${DOCKER_TAG}-builder" \
                                         --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}" \
                                         -f ./images/stretch/builder/Dockerfile . || exit $?
@@ -205,7 +210,6 @@ pipeline {
 
                                 sh '''#!/usr/bin/env bash
                                     docker push "${DOCKER_REPO}:${DOCKER_TAG}-builder" || exit $?
-                                    docker push "${DOCKER_REPO}:${DOCKER_TAG%-*}-builder" || exit $?
                                 '''
                             }
                         }
@@ -217,7 +221,6 @@ pipeline {
                                         sh '''#!/usr/bin/env bash
                                             docker build \
                                                 --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
-                                                -t "${DOCKER_REPO}:${DOCKER_TAG%-*}-jenkins-builder" \
                                                 -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-builder" \
                                                 --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-builder" \
                                                 -f ./utilities/jenkins/agent-jnlp/Dockerfile . || exit $?
@@ -225,7 +228,6 @@ pipeline {
 
                                         sh '''#!/usr/bin/env bash
                                             docker push "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-builder" || exit $?
-                                            docker push "${DOCKER_REPO}:${DOCKER_TAG%-*}-jenkins-builder" || exit $?
                                         '''
                                     }
                                 }
@@ -235,7 +237,6 @@ pipeline {
                                         sh '''#!/usr/bin/env bash
                                             docker build \
                                                 --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
-                                                -t "${DOCKER_REPO}:${DOCKER_TAG%-*}-azpipeline-builder" \
                                                 -t "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-builder" \
                                                 --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-builder" \
                                                 -f ./utilities/azure-pipelines/agent/Dockerfile . || exit $?
@@ -243,7 +244,6 @@ pipeline {
 
                                         sh '''#!/usr/bin/env bash
                                             docker push "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-builder" || exit $?
-                                            docker push "${DOCKER_REPO}:${DOCKER_TAG%-*}-azpipeline-builder" || exit $?
                                         '''
                                     }
                                 }
@@ -269,7 +269,6 @@ pipeline {
                                 sh '''#!/usr/bin/env bash
                                     docker build \
                                         --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
-                                        -t "${DOCKER_REPO}:${DOCKER_TAG%-*}-builder-meteor" \
                                         -t "${DOCKER_REPO}:${DOCKER_TAG}-builder-meteor" \
                                         --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-builder" \
                                         -f ./images/stretch/builder/meteor/Dockerfile . || exit $?
@@ -277,7 +276,6 @@ pipeline {
 
                                 sh '''#!/usr/bin/env bash
                                     docker push "${DOCKER_REPO}:${DOCKER_TAG}-builder-meteor" || exit $?
-                                    docker push "${DOCKER_REPO}:${DOCKER_TAG%-*}-builder-meteor" || exit $?
                                 '''
                             }
                         }
@@ -295,7 +293,6 @@ pipeline {
 
                                             docker build \
                                                 --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
-                                                -t "${DOCKER_REPO}:${DOCKER_TAG%-*}-jenkins-builder-meteor" \
                                                 -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-builder-meteor" \
                                                 --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-jenkins-agent-jnlp-builder-meteor-nocache" \
                                                 -f ./images/stretch/builder/meteor/cache-packages/Dockerfile . || exit $?
@@ -303,7 +300,6 @@ pipeline {
 
                                         sh '''#!/usr/bin/env bash
                                             docker push "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-builder-meteor" || exit $?
-                                            docker push "${DOCKER_REPO}:${DOCKER_TAG%-*}-jenkins-builder-meteor" || exit $?
                                         '''
                                     }
                                 }
@@ -319,7 +315,6 @@ pipeline {
 
                                             docker build \
                                                 --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
-                                                -t "${DOCKER_REPO}:${DOCKER_TAG%-*}-azpipeline-builder-meteor" \
                                                 -t "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-builder-meteor" \
                                                 --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-builder-meteor-nocache" \
                                                 -f ./images/stretch/builder/meteor/cache-packages/Dockerfile . || exit $?
@@ -327,7 +322,6 @@ pipeline {
 
                                         sh '''#!/usr/bin/env bash
                                             docker push "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-builder-meteor" || exit $?
-                                            docker push "${DOCKER_REPO}:${DOCKER_TAG%-*}-azpipeline-builder-meteor" || exit $?
                                         '''
                                     }
                                 }

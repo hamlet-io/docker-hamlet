@@ -5,19 +5,6 @@ FROM buildpack-deps:stretch-scm AS gen3
 
 USER root
 
-ARG COTUID=333
-
-# Install CodeOnTap
-ARG CODEONTAP_VERSION=master
-ARG DOCKER_IMAGE_VERSION=master
-
-ENV AUTOMATION_BASE_DIR=/opt/codeontap/automation
-ENV AUTOMATION_DIR=/opt/codeontap/automation/jenkins/aws
-ENV GENERATION_BASE_DIR=/opt/codeontap/generation
-ENV GENERATION_DIR=/opt/codeontap/generation/aws
-ENV GENERATION_STARTUP_DIR=/opt/codeontap/startup
-ENV GENERATION_PLUGIN_DIRS=/opt/codeontap/plugins
-
 # Setup PyEnv
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
@@ -26,12 +13,6 @@ ENV PYTHON2_VERSION 2.7.16
 
 #Docker user
 ARG DOCKERGID=497
-
-RUN useradd -u ${COTUID} --shell /bin/bash --create-home codeontap && \
-        mkdir /home/codeontap/cmdb
-
-#CMDB Mount point
-VOLUME /home/codeontap/cmdb
 
 # Install OS Packages
 RUN apt-get update && apt-get install --no-install-recommends -y \
@@ -108,27 +89,3 @@ RUN python -m pip install --upgrade --no-cache-dir \
 # Install NPM Packages
 RUN npm install -g \
     yamljs
-
-# Directory set up and file copying
-RUN mkdir -p /build/scripts &&  mkdir -p /opt/codeontap && mkdir -p /opt/codeontap/plugins
-
-COPY scripts/base/ /build/scripts/
-COPY config.json /build/config.json
-
-# Get CodeOnTap code
-RUN chmod -R u+rwx /build/scripts && \
-    chmod u+s /build/ && \
-    chmod -R ugo+rx /opt/codeontap
-
-RUN echo "Cloning images on $(date +%s)"
-RUN /build/scripts/build_codeontap.sh && \
-    /build/scripts/clone.sh
-
-# Install the cli
-WORKDIR /opt/codeontap/cli/gen3-cli
-RUN python setup.py bdist_wheel && \
-        pip install --no-index --find-links=dist codeontap-cli
-
-# change back to standard repo location
-USER codeontap
-WORKDIR /home/codeontap/cmdb

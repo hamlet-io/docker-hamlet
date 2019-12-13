@@ -52,7 +52,7 @@ pipeline {
             }
             steps {
                 script {
-                    env['TAG'] = (env['ref'].split('/'))[2]
+                    env['TAG'] = ("${env['ref']}".split('/'))[2]
                 }
 
                 echo "My Tag is ${env['TAG']}"

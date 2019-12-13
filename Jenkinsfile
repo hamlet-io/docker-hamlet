@@ -13,13 +13,14 @@ pipeline {
         buildDiscarder(
             logRotator(numToKeepStr: '20')
         )
+        quietPeriod(300)
     }
 
     triggers {
         GenericTrigger(
             genericVariables: [
                 [key: 'ref',  value: '$.ref'],
-                [key: 'Trigger', value: 'WebhookTrigger'],
+                [key: 'repo', value: '$.full_name' ]
             ],
             genericHeaderVariables: [
                 [key: 'X-GitHub-Event', regexpFilter: '^push']
@@ -41,7 +42,8 @@ pipeline {
     }
 
     parameters {
-        string(name: 'ref', defaultValue: '/ref/heads/master', description: "The git ref to build with" )
+        string(name: 'ref', defaultValue: '/ref/heads/master', description: "The git ref to build with" ),
+        string(name: 'repo', defaultValue: 'codeontap/docker-gen3', description: "The git ref to build with" )
     }
 
     stages {

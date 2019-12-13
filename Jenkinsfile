@@ -29,7 +29,7 @@ pipeline {
             token: '14741357d69c4c5b767e538b495c1363',
             printContributedVariables: false,
             printPostContent: true,
-            silentResponse: true,
+            silentResponse: false,
 
             regexpFilterText: '$ref',
             regexpFilterExpression: '^/refs/(heads|tags)/(master|v.*)'

@@ -1,9 +1,25 @@
 # -------------------------------------------------------
 # Base gen3 Image
 # -------------------------------------------------------
-FROM openjdk:8-jdk AS gen3
+FROM buildpack-deps:buster AS gen3
 
 USER root
+
+ARG COTUID=333
+
+# Install CodeOnTap
+ARG CODEONTAP_VERSION=master
+ARG DOCKER_IMAGE_VERSION=master
+
+ENV AUTOMATION_BASE_DIR=/opt/codeontap/automation
+ENV AUTOMATION_DIR=/opt/codeontap/automation/jenkins/aws
+ENV GENERATION_BASE_DIR=/opt/codeontap/generation
+ENV GENERATION_DIR=/opt/codeontap/generation/aws
+ENV GENERATION_STARTUP_DIR=/opt/codeontap/startup
+ENV GENERATION_PLUGIN_DIRS=/opt/codeontap/plugins
+
+RUN useradd -u ${COTUID} --shell /bin/bash --create-home codeontap && \
+        mkdir /home/codeontap/cmdb
 
 # Install OS Packages
 # setup apt for different sources
@@ -12,7 +28,9 @@ RUN apt-get update && apt-get install -y \
      ca-certificates \
      curl \
      gnupg2 \
+     openjdk-11-jdk \
      software-properties-common \
+     tk-dev \
    && rm -rf /var/lib/apt/lists/*
 
 # Add docker to apt-get
@@ -23,14 +41,11 @@ RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - \
    stable"
 
 # Add Node to apt-get
-RUN curl -sL https://deb.nodesource.com/setup_8.x |  bash -
+RUN curl -sL https://deb.nodesource.com/setup_10.x |  bash -
 
 # Add Yarn to apt-get
 RUN curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
     && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-
-RUN echo "deb http://deb.debian.org/debian stretch-backports main" | tee /etc/apt/sources.list.d/backports.list
-RUN echo 'Package: * \n Pin: release o=Debian,a=testing  \n Pin-Priority: 900' | tee /etc/apt/preferences.d/backports
 
 # Install Packages
 RUN apt-get update && apt-get install -y \
@@ -44,21 +59,22 @@ RUN apt-get update && apt-get install -y \
     groff \
     docker-ce \
     nodejs yarn \
-    python3 python3-pip \
  && rm -rf /var/lib/apt/lists/*
 
-# Install Backport packages
-RUN apt-get update && apt-get -t stretch-backports install -y \
-   git-lfs \
-   && rm -rf /var/lib/apt/lists/*
+# Setup PyEnv
+ENV PYTHON_VERSION=3.6.9
 
-# Make Python3 the default
-RUN update-alternatives --install /usr/bin/python python $(which python3) 10
-RUN update-alternatives --install /usr/bin/pip pip $(which pip3) 10
+ENV PYENV_ROOT=/usr/local/opt/pyenv
+RUN curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
+RUN ln -s /usr/local/opt/pyenv/bin/pyenv /usr/local/bin/pyenv
+ENV PATH="${PYENV_ROOT}/shims:${PATH}"
+
+RUN pyenv install "${PYTHON_VERSION}" && pyenv global "${PYTHON_VERSION}"
 
 # Install Python Packages
-RUN pip install --upgrade --no-cache-dir \
-        pip setuptools \
+RUN python -m pip install --upgrade --no-cache-dir \
+        setuptools \
+        pipenv \
         virtualenv \
         docker-compose \
         PyYAML==3.12 \
@@ -71,18 +87,6 @@ RUN pip install --upgrade --no-cache-dir \
 RUN npm install -g \
     bower \
     yamljs
-
-
-# Install CodeOnTap
-ARG CODEONTAP_VERSION=master
-ARG DOCKER_IMAGE_VERSION=master
-
-ENV AUTOMATION_BASE_DIR=/opt/codeontap/automation
-ENV AUTOMATION_DIR=/opt/codeontap/automation/jenkins/aws
-ENV GENERATION_BASE_DIR=/opt/codeontap/generation
-ENV GENERATION_DIR=/opt/codeontap/generation/aws
-ENV GENERATION_STARTUP_DIR=/opt/codeontap/startup
-ENV GENERATION_PLUGIN_DIRS=/opt/codeontap/plugins
 
 # Directory set up and file copying
 RUN mkdir -p /build/scripts &&  mkdir -p /opt/codeontap && mkdir -p /opt/codeontap/plugins
@@ -100,8 +104,10 @@ RUN /build/scripts/build_codeontap.sh && \
     /build/scripts/clone.sh
 
 # Install the cli
-WORKDIR /opt/codeontap/cli
-RUN python setup.py bdist_wheel && pip install --no-index --find-links=dist codeontap-cli
+WORKDIR /opt/codeontap/cli/gen3-cli
+RUN python setup.py bdist_wheel && \
+        pip install --no-index --find-links=dist codeontap-cli
 
 # change back to standard repo location
-WORKDIR /root/cmdb
+USER codeontap
+WORKDIR /home/codeontap/cmdb

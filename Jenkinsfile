@@ -24,7 +24,7 @@ pipeline {
             genericHeaderVariables: [
                 [key: 'X-GitHub-Event', regexpFilter: '^push']
             ],
-            causeString: "Triggered by $ref",
+            causeString: "Triggered by webhook",
             token: '14741357d69c4c5b767e538b495c1363',
             printContributedVariables: false,
             printPostContent: true,

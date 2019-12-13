@@ -30,7 +30,7 @@ pipeline {
             silentResponse: true,
 
             regexpFilterText: '$ref',
-            regexpFilterExpression: '/refs/(heads|tags)/(master|v.*)'
+            regexpFilterExpression: '^/refs/(heads|tags)/(master|v.*)'
         )
     }
 

@@ -16,7 +16,7 @@ pipeline {
         quietPeriod(0)
         disableConcurrentBuilds()
         parallelsAlwaysFailFast()
-        options { timeout(time: 3, unit: 'HOURS') }
+        timeout(time: 3, unit: 'HOURS')
     }
 
     triggers {

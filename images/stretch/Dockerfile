@@ -89,3 +89,5 @@ RUN python -m pip install --upgrade --no-cache-dir \
 # Install NPM Packages
 RUN npm install -g \
     yamljs
+
+ENTRYPOINT [ "/bin/bash" ]

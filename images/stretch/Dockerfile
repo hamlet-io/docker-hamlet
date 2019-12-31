@@ -78,7 +78,6 @@ RUN pyenv install "${PYTHON_VERSION}" && pyenv install "${PYTHON2_VERSION}" && \
 
 # rbenv install
 ENV RBENV_ROOT /usr/local/opt/rbenv
-RUN chmod ugo+
 RUN git clone https://github.com/rbenv/rbenv.git "/usr/local/opt/rbenv/" && git clone https://github.com/rbenv/ruby-build.git "${RBENV_ROOT}/plugins/ruby-build"
 RUN ln -s /usr/local/opt/rbenv/bin/rbenv /usr/local/bin/rbenv
 ENV PATH="${RBENV_ROOT}/shims:${PATH}"

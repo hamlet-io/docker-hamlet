@@ -11,6 +11,8 @@ ENV LC_ALL C.UTF-8
 ENV PYTHON_VERSION 3.6.9
 ENV PYTHON2_VERSION 2.7.16
 
+ENV RUBY_VERSION 2.5.1
+
 #Docker user
 ARG DOCKERGID=497
 
@@ -73,6 +75,15 @@ ENV PATH="${PYENV_ROOT}/shims:${PATH}"
 
 RUN pyenv install "${PYTHON_VERSION}" && pyenv install "${PYTHON2_VERSION}" && \
         pyenv global "${PYTHON_VERSION}" && python --version && python -m pip install --upgrade --no-cache-dir pip
+
+# rbenv install
+ENV RBENV_ROOT /usr/local/opt/rbenv
+RUN chmod ugo+
+RUN git clone https://github.com/rbenv/rbenv.git "/usr/local/opt/rbenv/" && git clone https://github.com/rbenv/ruby-build.git "${RBENV_ROOT}/plugins/ruby-build"
+RUN ln -s /usr/local/opt/rbenv/bin/rbenv /usr/local/bin/rbenv
+ENV PATH="${RBENV_ROOT}/shims:${PATH}"
+
+RUN rbenv install "${RUBY_VERSION}" && rbenv global "${RUBY_VERSION}" && ruby --version
 
 # Install Python Packages
 RUN python -m pip install --upgrade --no-cache-dir \

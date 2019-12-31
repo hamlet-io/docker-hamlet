@@ -81,7 +81,7 @@ ENV PYENV_ROOT /usr/local/opt/pyenv
 RUN curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
 RUN ln -s /usr/local/opt/pyenv/bin/pyenv /usr/local/bin/pyenv
 ENV PATH "${PYENV_ROOT}/shims:${PATH}"
-RUN printf 'if command -v pyenv 1>/dev/null 2>&1; then  eval "$(pyenv init -)"\nfi' | tee /etc/profile.d/pyenv.sh
+RUN printf 'if command -v pyenv 1>/dev/null 2>&1; then  eval "$(pyenv init - --no-rehash)"\nfi' | tee /etc/profile.d/pyenv.sh
 
 RUN pyenv install "${PYTHON_VERSION}" && \
         pyenv global "${PYTHON_VERSION}" && python --version && python -m pip install --upgrade --no-cache-dir pip

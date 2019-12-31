@@ -140,7 +140,6 @@ pipeline {
                                         --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
                                         -t "${DOCKER_REPO}:${DOCKER_TAG}-base"  \
                                         --build-arg CODEONTAP_VERSION="${CODEONTAP_VERSION}" \
-                                        --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-" \
                                         -f ./images/stretch/Dockerfile . || exit $?
                                 '''
                                 sh '''#!/usr/bin/env bash

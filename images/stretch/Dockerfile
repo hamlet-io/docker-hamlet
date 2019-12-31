@@ -67,22 +67,24 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 # Add docker user for docker bind mount
 RUN groupadd -g "${DOCKERGID}" docker
 
-# PyEnv requirements
-ENV PYENV_ROOT /usr/local/opt/pyenv
-RUN curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
-RUN ln -s /usr/local/opt/pyenv/bin/pyenv /usr/local/bin/pyenv
-ENV PATH="${PYENV_ROOT}/shims:${PATH}"
-
-RUN pyenv install "${PYTHON_VERSION}" && pyenv install "${PYTHON2_VERSION}" && \
-        pyenv global "${PYTHON_VERSION}" && python --version && python -m pip install --upgrade --no-cache-dir pip
-
 # rbenv install
 ENV RBENV_ROOT /usr/local/opt/rbenv
 RUN git clone https://github.com/rbenv/rbenv.git "/usr/local/opt/rbenv/" && git clone https://github.com/rbenv/ruby-build.git "${RBENV_ROOT}/plugins/ruby-build"
 RUN ln -s /usr/local/opt/rbenv/bin/rbenv /usr/local/bin/rbenv
-ENV PATH="${RBENV_ROOT}/shims:${PATH}"
+ENV PATH "${RBENV_ROOT}/shims:${PATH}"
+RUN printf 'if command -v rbenv 1>/dev/null 2>&1; then  eval "$(rbenv init -)"\nfi' | tee /etc/profile.d/rbenv.sh
 
 RUN rbenv install "${RUBY_VERSION}" && rbenv global "${RUBY_VERSION}" && ruby --version
+
+# PyEnv requirements
+ENV PYENV_ROOT /usr/local/opt/pyenv
+RUN curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
+RUN ln -s /usr/local/opt/pyenv/bin/pyenv /usr/local/bin/pyenv
+ENV PATH "${PYENV_ROOT}/shims:${PATH}"
+RUN printf 'if command -v pyenv 1>/dev/null 2>&1; then  eval "$(pyenv init -)"\nfi' | tee /etc/profile.d/pyenv.sh
+
+RUN pyenv install "${PYTHON_VERSION}" && \
+        pyenv global "${PYTHON_VERSION}" && python --version && python -m pip install --upgrade --no-cache-dir pip
 
 # Install Python Packages
 RUN python -m pip install --upgrade --no-cache-dir \
@@ -100,4 +102,4 @@ RUN python -m pip install --upgrade --no-cache-dir \
 RUN npm install -g \
     yamljs
 
-ENTRYPOINT [ "/bin/bash" ]
+ENTRYPOINT [ "/bin/bash", "-l" ]

@@ -38,7 +38,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
         libsqlite3-dev wget curl llvm libncurses5-dev xz-utils tk-dev \
         libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev \
         # Ruby
-        ruby \
+        ruby ruby-dev \
    && rm -rf /var/lib/apt/lists/*
 
 # -- Install extra library packages --

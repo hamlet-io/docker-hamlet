@@ -37,6 +37,8 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
         libssl-dev zlib1g-dev libbz2-dev libreadline-dev \
         libsqlite3-dev wget curl llvm libncurses5-dev xz-utils tk-dev \
         libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev \
+        # Ruby
+        ruby \
    && rm -rf /var/lib/apt/lists/*
 
 # -- Install extra library packages --
@@ -66,15 +68,6 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 
 # Add docker user for docker bind mount
 RUN groupadd -g "${DOCKERGID}" docker
-
-# rbenv install
-ENV RBENV_ROOT /usr/local/opt/rbenv
-RUN git clone https://github.com/rbenv/rbenv.git "/usr/local/opt/rbenv/" && git clone https://github.com/rbenv/ruby-build.git "${RBENV_ROOT}/plugins/ruby-build"
-RUN ln -s /usr/local/opt/rbenv/bin/rbenv /usr/local/bin/rbenv
-ENV PATH "${RBENV_ROOT}/shims:${PATH}"
-RUN printf 'if command -v rbenv 1>/dev/null 2>&1; then  eval "$(rbenv init -)"\nfi' | tee /etc/profile.d/rbenv.sh
-
-RUN rbenv install "${RUBY_VERSION}" && rbenv global "${RUBY_VERSION}" && ruby --version
 
 # PyEnv requirements
 ENV PYENV_ROOT /usr/local/opt/pyenv

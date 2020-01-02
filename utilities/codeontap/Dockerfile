@@ -4,7 +4,7 @@ FROM ${BASE_IMAGE} AS codeontap
 
 USER root
 
-ARG COTUID=333
+ARG COTUID=1003
 
 # Install CodeOnTap
 ARG CODEONTAP_VERSION=master

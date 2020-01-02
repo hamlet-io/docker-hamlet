@@ -29,6 +29,8 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
         libssl-dev zlib1g-dev libbz2-dev libreadline-dev \
         libsqlite3-dev wget curl llvm libncurses5-dev xz-utils tk-dev \
         libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev \
+        # System Python
+        python3 python3-dev python3-pip \
    && rm -rf /var/lib/apt/lists/*
 
 # -- Install extra library packages --
@@ -70,7 +72,10 @@ RUN git clone --branch "v1.2.15" --depth 1 https://github.com/pyenv/pyenv.git "$
         git clone --branch "v0.0.2" --depth 1 https://github.com/pyenv/pyenv-which-ext.git "${PYENV_ROOT}/plugins/pyenv-which-ext"
 
 # Allow anyone to install a python version for builds
-RUN chown ugo+rwx /usr/local/opt/pyenv/versions/
+RUN mkdir "${PYENV_ROOT}/versions/" && chmod go+w --recursive "${PYENV_ROOT}/versions/" && \
+        mkdir "${PYENV_ROOT}/shims/" && chmod go+w --recursive "${PYENV_ROOT}/shims/" && \
+        touch "${PYENV_ROOT}/version" && chmod go+w "${PYENV_ROOT}/version"
+
 RUN ln -s /usr/local/opt/pyenv/bin/pyenv /usr/local/bin/pyenv
 ENV PATH="${PYENV_ROOT}/shims:${PATH}"
 RUN pyenv install "${PYTHON_VERSION}" && eval "$(pyenv init -)" && \
@@ -95,6 +100,12 @@ ENV RBENV_ROOT /usr/local/opt/rbenv
 RUN git clone --branch "v1.1.2" --depth 1 https://github.com/rbenv/rbenv.git "${RBENV_ROOT}" && \
         git clone --branch "v20191225" --depth 1 https://github.com/rbenv/ruby-build.git "${RBENV_ROOT}/plugins/ruby-build"
 RUN ln -s /usr/local/opt/rbenv/bin/rbenv /usr/local/bin/rbenv
+
+# Allow anyone to install a ruby version for builds
+RUN mkdir "${RBENV_ROOT}/versions/" && chmod go+w --recursive "${RBENV_ROOT}/versions/" && \
+        mkdir "${RBENV_ROOT}/shims/" && chmod go+w --recursive "${RBENV_ROOT}/shims/" && \
+        touch "${RBENV_ROOT}/version" && chmod go+w "${RBENV_ROOT}/version"
+
 ENV PATH="${RBENV_ROOT}/shims:${PATH}"
 RUN rbenv install "${RUBY_VERSION}" && eval "$(rbenv init -)" && \
         rbenv global "${RUBY_VERSION}" && ruby --version

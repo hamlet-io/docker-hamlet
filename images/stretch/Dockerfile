@@ -5,14 +5,6 @@ FROM buildpack-deps:stretch-scm AS gen3
 
 USER root
 
-# Setup PyEnv
-ENV LANG C.UTF-8
-ENV LC_ALL C.UTF-8
-ENV PYTHON_VERSION 3.6.9
-ENV PYTHON2_VERSION 2.7.16
-
-ENV RUBY_VERSION 2.5.1
-
 #Docker user
 ARG DOCKERGID=497
 
@@ -70,29 +62,42 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 RUN groupadd -g "${DOCKERGID}" docker
 
 # PyEnv requirements
-ENV PYENV_ROOT /usr/local/opt/pyenv
-RUN curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
-RUN ln -s /usr/local/opt/pyenv/bin/pyenv /usr/local/bin/pyenv
-ENV PATH "${PYENV_ROOT}/shims:${PATH}"
-RUN printf 'if command -v pyenv 1>/dev/null 2>&1; then  eval "$(pyenv init - --no-rehash)"\nfi' | tee /etc/profile.d/pyenv.sh
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
+ENV PYTHON_VERSION 3.8.0
 
-RUN pyenv install "${PYTHON_VERSION}" && \
-        pyenv global "${PYTHON_VERSION}" && python --version && python -m pip install --upgrade --no-cache-dir pip
+ENV PYENV_ROOT /usr/local/opt/pyenv
+RUN git clone --branch "v1.2.15" https://github.com/pyenv/pyenv.git "${PYENV_ROOT}" && \
+        git clone --branch "v1.1.5" https://github.com/pyenv/pyenv-virtualenv.git "${PYENV_ROOT}/plugins/pyenv-virtualenv" && \
+        git clone --branch "v0.0.2" https://github.com/pyenv/pyenv-which-ext.git "${PYENV_ROOT}/plugins/pyenv-which-ext"
+RUN ln -s /usr/local/opt/pyenv/bin/pyenv /usr/local/bin/pyenv
+ENV PATH="${PYENV_ROOT}/shims:${PATH}"
+RUN pyenv install "${PYTHON_VERSION}" && eval "$(pyenv init -)" && \
+        pyenv global "${PYTHON_VERSION}" && python --version && pip install --upgrade --no-cache-dir pip
 
 # Install Python Packages
-RUN python -m pip install --upgrade --no-cache-dir \
+RUN pip install --upgrade --no-cache-dir \
         setuptools \
         pipenv \
         virtualenv \
         docker-compose \
-        PyYAML==3.12 \
+        PyYAML \
         awscli \
         azure-cli \
         requests \
         cookiecutter
 
+# rbenv requirements
+ENV RUBY_VERSION 2.5.1
+
+ENV RBENV_ROOT /usr/local/opt/rbenv
+RUN git clone --branch "v1.1.2" https://github.com/rbenv/rbenv.git "${RBENV_ROOT}" && \
+        git clone --branch "v20191225" https://github.com/rbenv/ruby-build.git "${RBENV_ROOT}/plugins/ruby-build"
+RUN ln -s /usr/local/opt/rbenv/bin/rbenv /usr/local/bin/rbenv
+ENV PATH="${RBENV_ROOT}/shims:${PATH}"
+RUN rbenv install "${RUBY_VERSION}" && eval "$(rbenv init -)" && \
+        rbenv global "${RUBY_VERSION}" && ruby --version
+
 # Install NPM Packages
 RUN npm install -g \
     yamljs
-
-ENTRYPOINT [ "/bin/bash", "-l" ]

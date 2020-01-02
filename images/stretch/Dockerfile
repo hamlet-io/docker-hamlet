@@ -62,12 +62,15 @@ RUN groupadd -g "${DOCKERGID}" docker
 # PyEnv requirements
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
-ENV PYTHON_VERSION 3.8.0
+ENV PYTHON_VERSION 3.6.8
 
 ENV PYENV_ROOT /usr/local/opt/pyenv
 RUN git clone --branch "v1.2.15" --depth 1 https://github.com/pyenv/pyenv.git "${PYENV_ROOT}" && \
         git clone --branch "v1.1.5" --depth 1 https://github.com/pyenv/pyenv-virtualenv.git "${PYENV_ROOT}/plugins/pyenv-virtualenv" && \
         git clone --branch "v0.0.2" --depth 1 https://github.com/pyenv/pyenv-which-ext.git "${PYENV_ROOT}/plugins/pyenv-which-ext"
+
+# Allow anyone to install a python version for builds
+RUN chown ugo+rwx /usr/local/opt/pyenv/versions/
 RUN ln -s /usr/local/opt/pyenv/bin/pyenv /usr/local/bin/pyenv
 ENV PATH="${PYENV_ROOT}/shims:${PATH}"
 RUN pyenv install "${PYTHON_VERSION}" && eval "$(pyenv init -)" && \

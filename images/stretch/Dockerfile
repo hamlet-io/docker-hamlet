@@ -65,9 +65,9 @@ ENV LC_ALL C.UTF-8
 ENV PYTHON_VERSION 3.8.0
 
 ENV PYENV_ROOT /usr/local/opt/pyenv
-RUN git clone --branch "v1.2.15" https://github.com/pyenv/pyenv.git "${PYENV_ROOT}" && \
-        git clone --branch "v1.1.5" https://github.com/pyenv/pyenv-virtualenv.git "${PYENV_ROOT}/plugins/pyenv-virtualenv" && \
-        git clone --branch "v0.0.2" https://github.com/pyenv/pyenv-which-ext.git "${PYENV_ROOT}/plugins/pyenv-which-ext"
+RUN git clone --branch "v1.2.15" --depth 1 https://github.com/pyenv/pyenv.git "${PYENV_ROOT}" && \
+        git clone --branch "v1.1.5" --depth 1 https://github.com/pyenv/pyenv-virtualenv.git "${PYENV_ROOT}/plugins/pyenv-virtualenv" && \
+        git clone --branch "v0.0.2" --depth 1 https://github.com/pyenv/pyenv-which-ext.git "${PYENV_ROOT}/plugins/pyenv-which-ext"
 RUN ln -s /usr/local/opt/pyenv/bin/pyenv /usr/local/bin/pyenv
 ENV PATH="${PYENV_ROOT}/shims:${PATH}"
 RUN pyenv install "${PYTHON_VERSION}" && eval "$(pyenv init -)" && \
@@ -89,8 +89,8 @@ RUN pip install --upgrade --no-cache-dir \
 ENV RUBY_VERSION 2.5.1
 
 ENV RBENV_ROOT /usr/local/opt/rbenv
-RUN git clone --branch "v1.1.2" https://github.com/rbenv/rbenv.git "${RBENV_ROOT}" && \
-        git clone --branch "v20191225" https://github.com/rbenv/ruby-build.git "${RBENV_ROOT}/plugins/ruby-build"
+RUN git clone --branch "v1.1.2" --depth 1 https://github.com/rbenv/rbenv.git "${RBENV_ROOT}" && \
+        git clone --branch "v20191225" --depth 1 https://github.com/rbenv/ruby-build.git "${RBENV_ROOT}/plugins/ruby-build"
 RUN ln -s /usr/local/opt/rbenv/bin/rbenv /usr/local/bin/rbenv
 ENV PATH="${RBENV_ROOT}/shims:${PATH}"
 RUN rbenv install "${RUBY_VERSION}" && eval "$(rbenv init -)" && \

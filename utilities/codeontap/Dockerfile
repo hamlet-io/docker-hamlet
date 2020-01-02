@@ -40,8 +40,7 @@ RUN /build/scripts/build_codeontap.sh && \
 
 # Install the cli
 WORKDIR /opt/codeontap/cli/gen3-cli
-RUN python setup.py bdist_wheel && \
-        pip install codeontap-cli
+RUN pip install --find-links=dist --no-index codeontap-cli
 
 RUN gem install cfn-nag
 

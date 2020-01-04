@@ -113,3 +113,5 @@ RUN rbenv install "${RUBY_VERSION}" && eval "$(rbenv init -)" && \
 # Install NPM Packages
 RUN npm install -g \
     yamljs
+
+ENTRYPOINT [ "/bin/bash" ]

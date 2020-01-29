@@ -93,6 +93,9 @@ RUN pip install --upgrade --no-cache-dir \
         requests \
         cookiecutter
 
+# Install Azure CLI Extensions
+RUN az extension add --name front-door
+
 # rbenv requirements
 ENV RUBY_VERSION 2.5.1
 

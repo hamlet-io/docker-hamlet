@@ -10,315 +10,265 @@ pipeline {
     options {
         timestamps()
         durabilityHint('PERFORMANCE_OPTIMIZED')
-        buildDiscarder(
-            logRotator(numToKeepStr: '20')
-        )
         quietPeriod(0)
         disableConcurrentBuilds()
         parallelsAlwaysFailFast()
         timeout(time: 6, unit: 'HOURS')
     }
 
-    triggers {
-        GenericTrigger(
-            genericVariables: [
-                [key: 'ref',    value: '$.ref'],
-                [key: 'repo',   value: '$.repository.full_name' ],
-                [key: 'commit', value: '$.after']
-            ],
-            genericHeaderVariables: [
-                [key: 'X-GitHub-Event', regexpFilter: 'push']
-            ],
-            causeString: "Push event trigger",
-            token: '14741357d69c4c5b767e538b495c1363',
-
-            printContributedVariables: false,
-            printPostContent: false,
-            silentResponse: true,
-
-            regexpFilterText: '$ref',
-            regexpFilterExpression: '^refs/(heads|tags)/(master|v.*)'
-        )
-    }
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub')
         DOCKER_REPO = 'codeontap/gen3'
     }
 
-    parameters {
-        string(name: 'ref', defaultValue: 'ref/heads/master', description: "The git ref to use for build" )
-        string(name: 'repo', defaultValue: 'codeontap/docker-gen3', description: "The git repo" )
-        string(name: 'commit', defaultValue: '', description: "The tirgger commit")
-    }
 
     stages {
+        stage('BaseSetup') {
+            steps {
+                sh 'docker login --username ${DOCKERHUB_CREDENTIALS_USR} --password ${DOCKERHUB_CREDENTIALS_PSW}'
+                sh 'cd "./images/stretch"'
+            }
+        }
 
-        stage('Webhook-Process') {
+        stage('Build-Latest-Setup') {
+            when {
+                allOf{
+                    environment name: 'BRANCH_NAME', value: 'master'
+                    not {
+                        tag "^v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-([a-z-][\da-z-]+|[\da-z-]+[a-z-][\da-z-]*|0|[1-9]\d*)(\.([a-z-][\da-z-]+|[\da-z-]+[a-z-][\da-z-]*|0|[1-9]\d*))*)?(\+[\da-z-]+(\.[\da-z-]+)*)?$"
+                    }
+                }
+            }
             steps {
                 script {
-                    env['TAG'] = ("${env['ref']}".split('/'))[2]
+                    env.CODEONTAP_VERSION = 'master'
+                    env.DOCKER_IMAGE_VERSION = "${env['repo']}-${env['commit']}"
+                    env.SOURCE_BRANCH = 'master'
+                    env.DOCKER_TAG = 'latest'
                 }
             }
         }
 
-        stage('Image build') {
+        stage('Build-Tag-Setup') {
             when {
-                anyOf {
-                    allOf{
-                        environment name: 'TAG', value: 'master'
-                    }
-                    allOf{
-                        not {
-                            environment name: 'TAG', value: 'master'
-                        }
-                        environment name: 'repo', value: 'codeontap/docker-gen3'
-                    }
+                allOf {
+                    environment name: 'BRANCH_NAME', value: 'master'
+                    tag "^v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-([a-z-][\da-z-]+|[\da-z-]+[a-z-][\da-z-]*|0|[1-9]\d*)(\.([a-z-][\da-z-]+|[\da-z-]+[a-z-][\da-z-]*|0|[1-9]\d*))*)?(\+[\da-z-]+(\.[\da-z-]+)*)?$"
                 }
             }
 
-            stages {
-                stage('BaseSetup') {
+            steps {
+                script {
+                    env.CODEONTAP_VERSION = "${env['TAG']}"
+                    env.DOCKER_IMAGE_VERSION = "${env['TAG']}"
+                    env.SOURCE_BRANCH = "${env['TAG']}"
+                    env.DOCKER_TAG = "${env['TAG']}"
+                }
+            }
+        }
+
+        stage('Setup')  {
+            steps {
+                echo "Runnig build..."
+                echo "CodeOnTap Version: ${env['CODEONTAP_VERSION']}"
+                echo "Docker Image Version: ${env['DOCKER_IMAGE_VERSION']}"
+                echo "Source Branch: ${env['SOURCE_BRANCH']}"
+                echo "Docker Tag: ${env['DOCKER_TAG']}"
+            }
+        }
+
+        stage('Base') {
+            stages{
+                stage('Build-Base') {
                     steps {
+                        sh '''#!/usr/bin/env bash
+                            docker image pull "${DOCKER_REPO}:${DOCKER_TAG}"
+                        '''
 
-                        sh 'docker login --username ${DOCKERHUB_CREDENTIALS_USR} --password ${DOCKERHUB_CREDENTIALS_PSW}'
-                        sh 'cd "./images/stretch"'
+                        sh '''#!/usr/bin/env bash
+                            docker build \
+                                --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
+                                -t "${DOCKER_REPO}:${DOCKER_TAG}-base"  \
+                                --build-arg CODEONTAP_VERSION="${CODEONTAP_VERSION}" \
+                                -f ./images/stretch/Dockerfile . || exit $?
+                        '''
+                        sh '''#!/usr/bin/env bash
+                            docker build \
+                                --no-cache \
+                                -t "${DOCKER_REPO}:${DOCKER_TAG}"  \
+                                --build-arg CODEONTAP_VERSION="${CODEONTAP_VERSION}" \
+                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-base" \
+                                -f ./utilities/codeontap/Dockerfile . || exit $?
+                        '''
+
+                        sh '''#!/usr/bin/env bash
+                            docker push "${DOCKER_REPO}:${DOCKER_TAG}" || exit $?
+                        '''
                     }
                 }
 
-                stage('Build-Latest-Setup') {
-                    when {
-                        environment name: 'TAG', value: 'master'
-                    }
+                stage('Base-Jenkins') {
                     steps {
-                        script {
-                            env.CODEONTAP_VERSION = 'master'
-                            env.DOCKER_IMAGE_VERSION = "${env['repo']}-${env['commit']}"
-                            env.SOURCE_BRANCH = 'master'
-                            env.DOCKER_TAG = 'latest'
-                        }
+                        sh '''#!/usr/bin/env bash
+                            docker build \
+                                --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
+                                -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins" \
+                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}" \
+                                -f ./utilities/jenkins/agent-jnlp/Dockerfile . || exit $?
+                        '''
+
+                        sh '''#!/usr/bin/env bash
+                            docker push "${DOCKER_REPO}:${DOCKER_TAG}-jenkins" || exit $?
+                        '''
                     }
                 }
 
-                stage('Build-Tag-Setup') {
-                    when {
-                        not {
-                            environment name: 'TAG', value: 'master'
-                        }
-                    }
-
+                stage('Base-AzPipeline') {
                     steps {
-                        script {
-                            env.CODEONTAP_VERSION = "${env['TAG']}"
-                            env.DOCKER_IMAGE_VERSION = "${env['TAG']}"
-                            env.SOURCE_BRANCH = "${env['TAG']}"
-                            env.DOCKER_TAG = "${env['TAG']}"
-                        }
+                        sh '''#!/usr/bin/env bash
+                            docker build \
+                                --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
+                                -t "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline" \
+                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}" \
+                                -f ./utilities/azure-pipelines/agent/Dockerfile . || exit $?
+                        '''
+
+                        sh '''#!/usr/bin/env bash
+                            docker push "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline" || exit $?
+                        '''
                     }
                 }
+            }
+        }
 
-                stage('Setup')  {
+        stage('Builder') {
+            stages{
+                stage('Build-Builder') {
                     steps {
-                        echo "Runnig build..."
-                        echo "CodeOnTap Version: ${env['CODEONTAP_VERSION']}"
-                        echo "Docker Image Version: ${env['DOCKER_IMAGE_VERSION']}"
-                        echo "Source Branch: ${env['SOURCE_BRANCH']}"
-                        echo "Docker Tag: ${env['DOCKER_TAG']}"
+                        sh '''#!/usr/bin/env bash
+                            docker build \
+                                --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
+                                -t "${DOCKER_REPO}:${DOCKER_TAG}-builder" \
+                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}" \
+                                -f ./images/stretch/builder/Dockerfile . || exit $?
+                        '''
+
+                        sh '''#!/usr/bin/env bash
+                            docker push "${DOCKER_REPO}:${DOCKER_TAG}-builder" || exit $?
+                        '''
                     }
                 }
 
-                stage('Base') {
-                    stages{
-                        stage('Build-Base') {
-                            steps {
-                                sh '''#!/usr/bin/env bash
-                                    docker image pull "${DOCKER_REPO}:${DOCKER_TAG}"
-                                '''
+                stage('Builder-Jenkins') {
+                    steps {
+                        sh '''#!/usr/bin/env bash
+                            docker build \
+                                --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
+                                -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-builder" \
+                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-builder" \
+                                -f ./utilities/jenkins/agent-jnlp/Dockerfile . || exit $?
+                        '''
 
-                                sh '''#!/usr/bin/env bash
-                                    docker build \
-                                        --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
-                                        -t "${DOCKER_REPO}:${DOCKER_TAG}-base"  \
-                                        --build-arg CODEONTAP_VERSION="${CODEONTAP_VERSION}" \
-                                        -f ./images/stretch/Dockerfile . || exit $?
-                                '''
-                                sh '''#!/usr/bin/env bash
-                                    docker build \
-                                        --no-cache \
-                                        -t "${DOCKER_REPO}:${DOCKER_TAG}"  \
-                                        --build-arg CODEONTAP_VERSION="${CODEONTAP_VERSION}" \
-                                        --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-base" \
-                                        -f ./utilities/codeontap/Dockerfile . || exit $?
-                                '''
-
-                                sh '''#!/usr/bin/env bash
-                                    docker push "${DOCKER_REPO}:${DOCKER_TAG}" || exit $?
-                                '''
-                            }
-                        }
-
-                        stage('Base-Jenkins') {
-                            steps {
-                                sh '''#!/usr/bin/env bash
-                                    docker build \
-                                        --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
-                                        -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins" \
-                                        --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}" \
-                                        -f ./utilities/jenkins/agent-jnlp/Dockerfile . || exit $?
-                                '''
-
-                                sh '''#!/usr/bin/env bash
-                                    docker push "${DOCKER_REPO}:${DOCKER_TAG}-jenkins" || exit $?
-                                '''
-                            }
-                        }
-
-                        stage('Base-AzPipeline') {
-                            steps {
-                                sh '''#!/usr/bin/env bash
-                                    docker build \
-                                        --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
-                                        -t "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline" \
-                                        --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}" \
-                                        -f ./utilities/azure-pipelines/agent/Dockerfile . || exit $?
-                                '''
-
-                                sh '''#!/usr/bin/env bash
-                                    docker push "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline" || exit $?
-                                '''
-                            }
-                        }
+                        sh '''#!/usr/bin/env bash
+                            docker push "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-builder" || exit $?
+                        '''
                     }
                 }
 
-                stage('Builder') {
-                    stages{
-                        stage('Build-Builder') {
-                            steps {
-                                sh '''#!/usr/bin/env bash
-                                    docker build \
-                                        --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
-                                        -t "${DOCKER_REPO}:${DOCKER_TAG}-builder" \
-                                        --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}" \
-                                        -f ./images/stretch/builder/Dockerfile . || exit $?
-                                '''
+                stage('Builder-AzPipeline') {
+                    steps {
+                        sh '''#!/usr/bin/env bash
+                            docker build \
+                                --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
+                                -t "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-builder" \
+                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-builder" \
+                                -f ./utilities/azure-pipelines/agent/Dockerfile . || exit $?
+                        '''
 
-                                sh '''#!/usr/bin/env bash
-                                    docker push "${DOCKER_REPO}:${DOCKER_TAG}-builder" || exit $?
-                                '''
-                            }
-                        }
-
-                        stage('Builder-Jenkins') {
-                            steps {
-                                sh '''#!/usr/bin/env bash
-                                    docker build \
-                                        --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
-                                        -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-builder" \
-                                        --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-builder" \
-                                        -f ./utilities/jenkins/agent-jnlp/Dockerfile . || exit $?
-                                '''
-
-                                sh '''#!/usr/bin/env bash
-                                    docker push "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-builder" || exit $?
-                                '''
-                            }
-                        }
-
-                        stage('Builder-AzPipeline') {
-                            steps {
-                                sh '''#!/usr/bin/env bash
-                                    docker build \
-                                        --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
-                                        -t "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-builder" \
-                                        --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-builder" \
-                                        -f ./utilities/azure-pipelines/agent/Dockerfile . || exit $?
-                                '''
-
-                                sh '''#!/usr/bin/env bash
-                                    docker push "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-builder" || exit $?
-                                '''
-                            }
-                        }
-
-                        stage('Notify') {
-                            steps{
-                                slackSend (
-                                    message: "DockerImageBuild - *${env["DOCKER_REPO"]} - ${env["DOCKER_TAG"]}* - Builder Image Pushed - #${BUILD_NUMBER} (<${BUILD_URL}|Open>)",
-                                    channel: "${slackChannel}",
-                                    color: "${slackColours['good']}"
-                                )
-                            }
-                        }
+                        sh '''#!/usr/bin/env bash
+                            docker push "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-builder" || exit $?
+                        '''
                     }
                 }
 
-                stage('Builder-Meteor') {
-                    stages{
-                        stage('Builder-Metoer-Base') {
-                            steps {
-                                sh '''#!/usr/bin/env bash
-                                    docker build \
-                                        --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
-                                        -t "${DOCKER_REPO}:${DOCKER_TAG}-builder-meteor" \
-                                        --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-builder" \
-                                        -f ./images/stretch/builder/meteor/Dockerfile . || exit $?
-                                '''
+                stage('Notify') {
+                    steps{
+                        slackSend (
+                            message: "DockerImageBuild - *${env["DOCKER_REPO"]} - ${env["DOCKER_TAG"]}* - Builder Image Pushed - #${BUILD_NUMBER} (<${BUILD_URL}|Open>)",
+                            channel: "${slackChannel}",
+                            color: "${slackColours['good']}"
+                        )
+                    }
+                }
+            }
+        }
 
-                                sh '''#!/usr/bin/env bash
-                                    docker push "${DOCKER_REPO}:${DOCKER_TAG}-builder-meteor" || exit $?
-                                '''
-                            }
-                        }
+        stage('Builder-Meteor') {
+            stages{
+                stage('Builder-Metoer-Base') {
+                    steps {
+                        sh '''#!/usr/bin/env bash
+                            docker build \
+                                --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
+                                -t "${DOCKER_REPO}:${DOCKER_TAG}-builder-meteor" \
+                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-builder" \
+                                -f ./images/stretch/builder/meteor/Dockerfile . || exit $?
+                        '''
 
-                        stage('Builder-Meteor-Jenkins') {
-                            steps {
-                                sh '''#!/usr/bin/env bash
-                                    docker build  \
-                                        --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
-                                        -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-agent-jnlp-builder-meteor-nocache"  \
-                                        --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-builder-meteor" \
-                                        -f ./utilities/jenkins/agent-jnlp/Dockerfile . || exit $?
+                        sh '''#!/usr/bin/env bash
+                            docker push "${DOCKER_REPO}:${DOCKER_TAG}-builder-meteor" || exit $?
+                        '''
+                    }
+                }
 
-                                    docker build \
-                                        --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
-                                        -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-builder-meteor" \
-                                        --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-jenkins-agent-jnlp-builder-meteor-nocache" \
-                                        -f ./images/stretch/builder/meteor/cache-packages/Dockerfile . || exit $?
-                                '''
+                stage('Builder-Meteor-Jenkins') {
+                    steps {
+                        sh '''#!/usr/bin/env bash
+                            docker build  \
+                                --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
+                                -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-agent-jnlp-builder-meteor-nocache"  \
+                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-builder-meteor" \
+                                -f ./utilities/jenkins/agent-jnlp/Dockerfile . || exit $?
 
-                                sh '''#!/usr/bin/env bash
-                                    docker push "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-builder-meteor" || exit $?
-                                '''
-                            }
-                        }
+                            docker build \
+                                --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
+                                -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-builder-meteor" \
+                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-jenkins-agent-jnlp-builder-meteor-nocache" \
+                                -f ./images/stretch/builder/meteor/cache-packages/Dockerfile . || exit $?
+                        '''
 
-                        stage('Builder-Meteor-AzPipeline') {
-                            steps {
-                                sh '''#!/usr/bin/env bash
-                                    docker build  \
-                                        --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
-                                        -t "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-builder-meteor-nocache"  \
-                                        --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-builder-meteor" \
-                                        -f ./utilities/azure-pipelines/agent/Dockerfile . || exit $?
+                        sh '''#!/usr/bin/env bash
+                            docker push "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-builder-meteor" || exit $?
+                        '''
+                    }
+                }
 
-                                    docker build \
-                                        --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
-                                        -t "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-builder-meteor" \
-                                        --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-builder-meteor-nocache" \
-                                        -f ./images/stretch/builder/meteor/cache-packages/Dockerfile . || exit $?
-                                '''
+                stage('Builder-Meteor-AzPipeline') {
+                    steps {
+                        sh '''#!/usr/bin/env bash
+                            docker build  \
+                                --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
+                                -t "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-builder-meteor-nocache"  \
+                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-builder-meteor" \
+                                -f ./utilities/azure-pipelines/agent/Dockerfile . || exit $?
 
-                                sh '''#!/usr/bin/env bash
-                                    docker push "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-builder-meteor" || exit $?
-                                '''
-                            }
-                        }
+                            docker build \
+                                --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
+                                -t "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-builder-meteor" \
+                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-builder-meteor-nocache" \
+                                -f ./images/stretch/builder/meteor/cache-packages/Dockerfile . || exit $?
+                        '''
+
+                        sh '''#!/usr/bin/env bash
+                            docker push "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-builder-meteor" || exit $?
+                        '''
                     }
                 }
             }
         }
     }
+
 
     post {
         failure {

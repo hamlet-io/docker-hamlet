@@ -323,7 +323,7 @@ pipeline {
     post {
         failure {
             slackSend (
-                message: "DockerImageBuild - *${env["DOCKER_REPO"]} - ${env["DOCKER_TAG"]}* - A error occurred during the iamge build - #${BUILD_NUMBER} (<${BUILD_URL}|Open>)",
+                message: "DockerImageBuild - *${env["DOCKER_REPO"]} - ${env["DOCKER_TAG"]}* - A error occurred during the image build - #${BUILD_NUMBER} (<${BUILD_URL}|Open>)",
                 channel: "${slackChannel}",
                 color: "${slackColours['bad']}"
             )

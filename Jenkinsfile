@@ -152,7 +152,7 @@ pipeline {
                     }
                 }
 
-                stage('Push-Base-Jenkins') {
+                stage('Push-Base-AzPipeline') {
                     when {
                         branch 'master'
                     }
@@ -300,7 +300,7 @@ pipeline {
                     }
                 }
 
-                stage('Push-Builder-Meteor-Base') {
+                stage('Push-Builder-Meteor-Jenkins') {
                     when {
                         branch 'master'
                     }
@@ -329,7 +329,7 @@ pipeline {
                     }
                 }
 
-                stage('Push-Builder-Meteor-Base') {
+                stage('Push-Builder-Meteor-AzPipeline') {
                     when {
                         branch 'master'
                     }

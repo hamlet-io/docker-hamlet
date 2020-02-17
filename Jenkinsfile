@@ -244,6 +244,9 @@ pipeline {
                 }
 
                 stage('Notify') {
+                    when {
+                        branch 'master'
+                    }
                     steps{
                         slackSend (
                             message: "DockerImageBuild - *${env["DOCKER_REPO"]} - ${env["DOCKER_TAG"]}* - Builder Image Pushed - #${BUILD_NUMBER} (<${BUILD_URL}|Open>)",

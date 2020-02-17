@@ -32,17 +32,17 @@ pipeline {
         }
 
         stage('Build-Latest-Setup') {
+            when {
+                not {
+                    buildingTag()
+                }
+            }
             steps {
                 script {
                     env.CODEONTAP_VERSION = 'master'
                     env.DOCKER_IMAGE_VERSION = "${env['repo']}-${env['commit']}"
                     env.SOURCE_BRANCH = 'master'
                     env.DOCKER_TAG = 'latest'
-                }
-
-                environment {
-                    CODEONTAP_VERSION = 'master'
-                    DOCKER_IMAGE_VERSION =
                 }
             }
         }

@@ -18,7 +18,7 @@ ENV GENERATION_STARTUP_DIR=/opt/codeontap/startup
 ENV GENERATION_PLUGIN_DIRS=/opt/codeontap/plugins
 
 RUN useradd -u ${COTUID} --shell /bin/bash --create-home codeontap && \
-        mkdir /home/codeontap/cmdb
+        mkdir /home/codeontap/cmdb && chown codeontap:codeontap /home/codeontap/cmdb
 
 #CMDB Mount point
 VOLUME /home/codeontap/cmdb

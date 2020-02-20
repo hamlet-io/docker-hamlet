@@ -10,12 +10,11 @@ pipeline {
     options {
         timestamps()
         durabilityHint('PERFORMANCE_OPTIMIZED')
-        quietPeriod(0)
+        quietPeriod(300)
         disableConcurrentBuilds()
         parallelsAlwaysFailFast()
         timeout(time: 6, unit: 'HOURS')
     }
-
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub')

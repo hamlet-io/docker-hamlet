@@ -52,7 +52,7 @@ RUN python setup.py bdist_wheel && \
 RUN gem install cfn-nag
 
 # change back to standard repo location
-USER codeontap
+USER hamlet
 
 VOLUME /home/hamlet/cmdb
 WORKDIR /home/hamlet/cmdb

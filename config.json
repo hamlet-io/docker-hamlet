@@ -1,32 +1,32 @@
 {
     "Repositories" :[
         {
-            "Repository" : "https://github.com/codeontap/gen3-cli.git",
-            "Directory" : "/opt/codeontap/cli"
+            "Repository" : "https://github.com/hamlet-io/executor-python.git",
+            "Directory" : "/opt/hamlet/cli"
         },
         {
-            "Repository" : "https://github.com/codeontap/executor-bash.git",
-            "Directory" : "/opt/codeontap/executor"
+            "Repository" : "https://github.com/hamlet-io/executor-bash.git",
+            "Directory" : "/opt/hamlet/executor"
         },
         {
-            "Repository" : "https://github.com/codeontap/gen3-startup.git",
-            "Directory" : "/opt/codeontap/startup"
+            "Repository" : "https://github.com/hamlet-io/cloudinit-aws.git",
+            "Directory" : "/opt/hamlet/startup"
         },
         {
-            "Repository" : "https://github.com/codeontap/gen3-patterns.git",
-            "Directory" : "/opt/codeontap/patterns"
+            "Repository" : "https://github.com/hamlet-io/executor-cookiecutter.git",
+            "Directory" : "/opt/hamlet/patterns"
         },
         {
-            "Repository" : "https://github.com/codeontap/gen3.git",
-            "Directory" : "/opt/codeontap/engine/core"
+            "Repository" : "https://github.com/hamlet-io/engine.git",
+            "Directory" : "/opt/hamlet/engine/core"
         },
         {
-            "Repository" : "https://github.com/codeontap/gen3-azure.git",
-            "Directory" : "/opt/codeontap/engine/plugins/azure"
+            "Repository" : "https://github.com/hamlet-io/engine-plugin-azure.git",
+            "Directory" : "/opt/hamlet/engine/plugins/azure"
         },
         {
-            "Repository" : "https://github.com/codeontap/gen3-aws.git",
-            "Directory" : "/opt/codeontap/engine/plugins/aws"
+            "Repository" : "https://github.com/hamlet-io/engine-plugin-aws.git",
+            "Directory" : "/opt/hamlet/engine/plugins/aws"
         }
     ]
 }

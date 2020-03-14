@@ -1,51 +1,47 @@
-ARG BASE_IMAGE=codeontap/gen3:latest
+ARG BASE_IMAGE=hamletio/hamlet:latest
 
-FROM ${BASE_IMAGE} AS codeontap
+FROM ${BASE_IMAGE} AS hamlet
 
 USER root
 
-ARG COTUID=1003
+ARG HAMLETUID=1003
 
-# Install CodeOnTap
-ARG CODEONTAP_VERSION=master
+# Install Hamlet
+ARG HAMLET_VERSION=master
 ARG DOCKER_IMAGE_VERSION=master
 
 ## bash based executor setup
-ENV AUTOMATION_BASE_DIR=/opt/codeontap/executor/automation
-ENV AUTOMATION_DIR=/opt/codeontap/executor/automation/jenkins/aws
-ENV GENERATION_BASE_DIR=/opt/codeontap/executor
-ENV GENERATION_DIR=/opt/codeontap/executor/cli
+ENV AUTOMATION_BASE_DIR=/opt/hamlet/executor/automation
+ENV AUTOMATION_DIR=/opt/hamlet/executor/automation/jenkins/aws
+ENV GENERATION_BASE_DIR=/opt/hamlet/executor
+ENV GENERATION_DIR=/opt/hamlet/executor/cli
 
 # Engine Setup
-ENV GENERATION_ENGINE_DIR=/opt/codeontap/engine/core
-ENV GENERATION_PLUGIN_DIRS=/opt/codeontap/engine/plugins/aws;/opt/codeontap/engine/plugins/azure
+ENV GENERATION_ENGINE_DIR=/opt/hamlet/engine/core
+ENV GENERATION_PLUGIN_DIRS=/opt/hamlet/engine/plugins/aws;/opt/hamlet/engine/plugins/azure
 
-ENV GENERATION_STARTUP_DIR=/opt/codeontap/startup
+ENV GENERATION_STARTUP_DIR=/opt/hamlet/startup
 
-
-RUN useradd -u ${COTUID} --shell /bin/bash --create-home codeontap && \
-        mkdir /home/codeontap/cmdb && chown codeontap:codeontap /home/codeontap/cmdb
-
-#CMDB Mount point
-VOLUME /home/codeontap/cmdb
+RUN useradd -u ${HAMLETUID} --shell /bin/bash --create-home hamlet && \
+        mkdir /home/hamlet/cmdb && chown hamlet:hamlet /home/hamlet/cmdb
 
 # Directory set up and file copying
-RUN mkdir -p /build/scripts &&  mkdir -p /opt/codeontap && mkdir -p /opt/codeontap/plugins
+RUN mkdir -p /build/scripts &&  mkdir -p /opt/hamlet && mkdir -p /opt/hamlet/plugins
 
 COPY scripts/base/ /build/scripts/
 COPY config.json /build/config.json
 
-# Get CodeOnTap code
+# Get Hamlet code
 RUN chmod -R u+rwx /build/scripts && \
     chmod u+s /build/ && \
-    chmod -R ugo+rx /opt/codeontap
+    chmod -R ugo+rx /opt/hamlet
 
 RUN echo "Cloning images on $(date +%s)"
-RUN /build/scripts/build_codeontap.sh && \
+RUN /build/scripts/build_hamlet.sh && \
     /build/scripts/clone.sh
 
 # Install the cli
-WORKDIR /opt/codeontap/cli/gen3-cli
+WORKDIR /opt/hamlet/cli/gen3-cli
 RUN python setup.py bdist_wheel && \
         pip install -r requirements/prod.txt -r requirements/dev.txt && \
         pip install --find-links=dist --no-index codeontap-cli
@@ -54,4 +50,6 @@ RUN gem install cfn-nag
 
 # change back to standard repo location
 USER codeontap
-WORKDIR /home/codeontap/cmdb
+
+VOLUME /home/hamlet/cmdb
+WORKDIR /home/hamlet/cmdb

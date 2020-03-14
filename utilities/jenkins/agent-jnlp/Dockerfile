@@ -1,7 +1,7 @@
 # -------------------------------------------------------
 # Jenkins JNLP Agent
 # -------------------------------------------------------
-ARG BASE_IMAGE=codeontap/gen3:latest
+ARG BASE_IMAGE=hamletio/hamlet:latest
 
 FROM ${BASE_IMAGE} AS jenkins-jnlp-agent
 

@@ -1,7 +1,11 @@
 {
     "Repositories" :[
         {
-            "Repository" : "https://github.com/codeontap/gen3.git",
+            "Repository" : "https://github.com/codeontap/gen3-cli.git",
+            "Directory" : "/opt/codeontap/cli"
+        },
+        {
+            "Repository" : "https://github.com/codeontap/executor-bash.git",
             "Directory" : "/opt/codeontap/generation"
         },
         {
@@ -17,16 +21,16 @@
             "Directory" : "/opt/codeontap/patterns"
         },
         {
+            "Repository" : "https://github.com/codeontap/gen3.git",
+            "Directory" : "/opt/codeontap/engine/core"
+        },
+        {
             "Repository" : "https://github.com/codeontap/gen3-azure.git",
-            "Directory" : "/opt/codeontap/plugins/azure"
+            "Directory" : "/opt/codeontap/engine/plugins/azure"
         },
         {
             "Repository" : "https://github.com/codeontap/gen3-aws.git",
-            "Directory" : "/opt/codeontap/plugins/aws"
-        },
-        {
-            "Repository" : "https://github.com/codeontap/gen3-cli.git",
-            "Directory" : "/opt/codeontap/cli"
+            "Directory" : "/opt/codeontap/engine/plugins/aws"
         }
     ]
 }

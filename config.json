@@ -6,11 +6,7 @@
         },
         {
             "Repository" : "https://github.com/codeontap/executor-bash.git",
-            "Directory" : "/opt/codeontap/generation"
-        },
-        {
-            "Repository" : "https://github.com/codeontap/gen3-automation.git",
-            "Directory" : "/opt/codeontap/automation"
+            "Directory" : "/opt/codeontap/executor"
         },
         {
             "Repository" : "https://github.com/codeontap/gen3-startup.git",

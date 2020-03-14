@@ -10,12 +10,13 @@ ARG COTUID=1003
 ARG CODEONTAP_VERSION=master
 ARG DOCKER_IMAGE_VERSION=master
 
-ENV AUTOMATION_BASE_DIR=/opt/codeontap/automation
-ENV AUTOMATION_DIR=/opt/codeontap/automation/jenkins/aws
+## bash based executor setup
+ENV AUTOMATION_BASE_DIR=/opt/codeontap/executor/automation
+ENV AUTOMATION_DIR=/opt/codeontap/executor/automation/jenkins/aws
+ENV GENERATION_BASE_DIR=/opt/codeontap/executor
+ENV GENERATION_DIR=/opt/codeontap/executor/cli
 
-ENV GENERATION_BASE_DIR=/opt/codeontap/generation
-ENV GENERATION_DIR=/opt/codeontap/generation/cli
-
+# Engine Setup
 ENV GENERATION_ENGINE_DIR=/opt/codeontap/engine/core
 ENV GENERATION_PLUGIN_DIRS=/opt/codeontap/engine/plugins/aws;/opt/codeontap/engine/plugins/azure
 

@@ -5,7 +5,7 @@ def slackChannel = '#devops-framework'
 
 pipeline {
     agent {
-        label 'codeontaplatest'
+        label 'hamletlatest'
     }
     options {
         timestamps()
@@ -18,7 +18,7 @@ pipeline {
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub')
-        DOCKER_REPO = 'codeontap/gen3'
+        DOCKER_REPO = 'hamletio/hamlet'
     }
 
 
@@ -38,7 +38,7 @@ pipeline {
             }
             steps {
                 script {
-                    env.CODEONTAP_VERSION = 'master'
+                    env.HAMLET_VERSION = 'master'
                     env.DOCKER_IMAGE_VERSION = "${env['repo']}-${env['commit']}"
                     env.SOURCE_BRANCH = 'master'
                     env.DOCKER_TAG = 'latest'
@@ -56,7 +56,7 @@ pipeline {
 
             steps {
                 script {
-                    env.CODEONTAP_VERSION = "${env['BRANCH_NAME']}"
+                    env.HAMLET_VERSION = "${env['BRANCH_NAME']}"
                     env.DOCKER_IMAGE_VERSION = "${env['BRANCH_NAME']}"
                     env.SOURCE_BRANCH = "${env['BRANCH_NAME']}"
                     env.DOCKER_TAG = "${env['BRANCH_NAME']}"
@@ -67,7 +67,7 @@ pipeline {
         stage('Setup')  {
             steps {
                 echo "Runnig build..."
-                echo "CodeOnTap Version: ${env['CODEONTAP_VERSION']}"
+                echo "Hamlet Version: ${env['HAMLET_VERSION']}"
                 echo "Docker Image Version: ${env['DOCKER_IMAGE_VERSION']}"
                 echo "Source Branch: ${env['SOURCE_BRANCH']}"
                 echo "Docker Tag: ${env['DOCKER_TAG']}"
@@ -86,16 +86,16 @@ pipeline {
                             docker build \
                                 --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
                                 -t "${DOCKER_REPO}:${DOCKER_TAG}-base"  \
-                                --build-arg CODEONTAP_VERSION="${CODEONTAP_VERSION}" \
+                                --build-arg HAMLET_VERSION="${HAMLET_VERSION}" \
                                 -f ./images/stretch/Dockerfile . || exit $?
                         '''
                         sh '''#!/usr/bin/env bash
                             docker build \
                                 --no-cache \
                                 -t "${DOCKER_REPO}:${DOCKER_TAG}"  \
-                                --build-arg CODEONTAP_VERSION="${CODEONTAP_VERSION}" \
+                                --build-arg HAMLET_VERSION="${HAMLET_VERSION}" \
                                 --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-base" \
-                                -f ./utilities/codeontap/Dockerfile . || exit $?
+                                -f ./utilities/hamlet/Dockerfile . || exit $?
                         '''
                     }
                 }

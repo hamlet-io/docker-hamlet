@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=codeontap/gen3:latest
+ARG BASE_IMAGE=hamletio/hamlet:latest
 
 FROM ${BASE_IMAGE} AS builder
 
@@ -22,4 +22,4 @@ RUN npm install -g \
     grunt-cli \
     gulp-cli
 
-USER codeontap
+USER hamlet

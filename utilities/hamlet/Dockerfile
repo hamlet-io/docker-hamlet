@@ -26,7 +26,10 @@ RUN useradd -u ${HAMLETUID} --shell /bin/bash --create-home hamlet && \
         mkdir /home/hamlet/cmdb && chown hamlet:hamlet /home/hamlet/cmdb
 
 # Directory set up and file copying
-RUN mkdir -p /build/scripts &&  mkdir -p /opt/hamlet && mkdir -p /opt/hamlet/plugins
+RUN mkdir -p /build/scripts && \
+      mkdir -p /opt/hamlet/ && \
+      mkdir -p /opt/hamlet/engine && \
+      mkdir -p /opt/hamlet/engine/plugins
 
 COPY scripts/base/ /build/scripts/
 COPY config.json /build/config.json

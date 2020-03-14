@@ -79,12 +79,8 @@ pipeline {
                 stage('Build-Base') {
                     steps {
                         sh '''#!/usr/bin/env bash
-                            docker image pull "${DOCKER_REPO}:${DOCKER_TAG}"
-                        '''
-
-                        sh '''#!/usr/bin/env bash
                             docker build \
-                                --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
+                                --no-cache \
                                 -t "${DOCKER_REPO}:${DOCKER_TAG}-base"  \
                                 --build-arg HAMLET_VERSION="${HAMLET_VERSION}" \
                                 -f ./images/stretch/Dockerfile . || exit $?

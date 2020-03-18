@@ -1,7 +1,7 @@
 # -------------------------------------------------------
-# Base gen3 Image
+# Base engine Image
 # -------------------------------------------------------
-FROM buildpack-deps:stretch-scm AS gen3
+FROM buildpack-deps:stretch-scm AS engine
 
 USER root
 

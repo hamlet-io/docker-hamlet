@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=hamletio/engine:latest
+ARG BASE_IMAGE=hamletio/base:latest
 
 FROM ${BASE_IMAGE} AS hamlet
 

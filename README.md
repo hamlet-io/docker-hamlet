@@ -35,4 +35,4 @@ Each image has the following tags:
 
 ## Configuration
 
-This docker containers main process is to clone specific versions of the hamlet framework repositories. The config.json file sets the repositories to clone and which branches/tags that the container requires. It also sets a framework version in /opt/hamlet/version.json to identify what version of gen3 you are using.
+This docker containers main process is to clone specific versions of the hamlet framework repositories. The config.json file sets the repositories to clone and which branches/tags that the container requires. It also sets a framework version in /opt/hamlet/version.json to identify what version of engine you are using.

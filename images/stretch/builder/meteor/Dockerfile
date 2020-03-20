@@ -1,6 +1,6 @@
-ARG BASE_IMAGE=hamletio/hamlet:latest-builder
+ARG BASE_IMAGE=hamletio/hamlet:base
 
-FROM ${BASE_IMAGE} AS meteor
+FROM ${BASE_IMAGE} AS builder-meteor
 
 USER root
 

@@ -1,7 +1,7 @@
 # -------------------------------------------------------
 # Base gen3 Image
 # -------------------------------------------------------
-FROM buildpack-deps:stretch-scm AS gen3
+FROM buildpack-deps:stretch-scm AS base
 
 USER root
 
@@ -39,6 +39,9 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
         libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev \
         # System Python
         python3 python3-dev python3-pip \
+        # Builder Req
+        libpq-dev libcurl4-openssl-dev \
+        libncursesw5-dev libedit-dev \
    && rm -rf /var/lib/apt/lists/*
 
 # -- Install extra library packages --
@@ -99,7 +102,13 @@ RUN pip install --upgrade --no-cache-dir \
         awscli \
         azure-cli \
         requests \
-        cookiecutter
+        cookiecutter \
+        zappa \
+        pytest \
+        pytest-sugar \
+        pytest-django \
+        coverage \
+        flake8
 
 # Install Azure CLI Extensions
 RUN az extension add --name front-door
@@ -123,6 +132,8 @@ RUN rbenv install "${RUBY_VERSION}" && eval "$(rbenv init -)" && \
 
 # Install NPM Packages
 RUN npm install -g \
-    yamljs
+    yamljs \
+    grunt-cli \
+    gulp-cli
 
 ENTRYPOINT "/bin/bash"

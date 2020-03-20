@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=hamletio/hamlet:latest-builder-meteor
+ARG BASE_IMAGE=hamletio/hamlet:builder-meteor
 
 FROM ${BASE_IMAGE} AS jenkins-jnlp-agent
 

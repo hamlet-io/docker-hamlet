@@ -1,7 +1,7 @@
 # -------------------------------------------------------
 # Azure Pipelines Agent Dockerfile
 # -------------------------------------------------------
-ARG BASE_IMAGE=hamletio/hamlet:base
+ARG BASE_IMAGE=hamletio/hamlet:latest-base
 
 FROM ${BASE_IMAGE} AS azpipeline-agent
 

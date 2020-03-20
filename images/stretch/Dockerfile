@@ -8,14 +8,6 @@ USER root
 #Docker user
 ARG DOCKERGID=497
 
-# Implement Prettier Bash Prompt /w tidy up
-RUN mkdir -p /build/scripts
-COPY scripts/base/shellprompt.sh /build/scripts/shellprompt.sh
-RUN chmod -R u+rwx /build/scripts && \
-    echo "Updating Shell Prompt" && \
-    /build/scripts/shellprompt.sh && \
-    rm -rf /build
-
 # Install OS Packages
 RUN apt-get update && apt-get install --no-install-recommends -y \
         # setup apt for different sources

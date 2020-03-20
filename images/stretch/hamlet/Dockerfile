@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=hamletio/hamlet:base
+ARG BASE_IMAGE=hamletio/hamlet:latest-base
 
 FROM ${BASE_IMAGE} AS hamlet
 
@@ -41,7 +41,10 @@ RUN chmod -R u+rwx /build/scripts && \
 
 RUN echo "Cloning images on $(date +%s)"
 RUN /build/scripts/build_hamlet.sh && \
-    /build/scripts/clone.sh
+    /build/scripts/clone.sh \
+    echo "Updating Shell Prompt" && \
+    /build/scripts/shellprompt.sh && \
+    rm -rf /build
 
 # Install the cli
 WORKDIR /opt/hamlet/cli/gen3-cli

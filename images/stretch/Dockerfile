@@ -128,4 +128,22 @@ RUN npm install -g \
     grunt-cli \
     gulp-cli
 
+# Directory set up and file copying
+RUN mkdir -p /build/scripts && \
+      mkdir -p /opt/hamlet/ && \
+      mkdir -p /opt/hamlet/engine && \
+      mkdir -p /opt/hamlet/engine/plugins
+
+# Get Hamlet code
+COPY scripts/base/ /build/scripts/
+COPY config.json /build/config.json
+
+RUN chmod -R u+rwx /build/scripts && \
+    chmod u+s /build/ && \
+    chmod -R ugo+rx /opt/hamlet
+
+RUN echo "Cloning images on $(date +%s)" && \
+	/build/scripts/build_hamlet.sh && \
+    /build/scripts/clone.sh
+
 ENTRYPOINT "/bin/bash"

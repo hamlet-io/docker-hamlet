@@ -25,24 +25,12 @@ ENV GENERATION_STARTUP_DIR=/opt/hamlet/startup
 RUN useradd -u ${HAMLETUID} --shell /bin/bash --create-home hamlet && \
         mkdir /home/hamlet/cmdb && chown hamlet:hamlet /home/hamlet/cmdb
 
-# Directory set up and file copying
-RUN mkdir -p /build/scripts && \
-      mkdir -p /opt/hamlet/ && \
-      mkdir -p /opt/hamlet/engine && \
-      mkdir -p /opt/hamlet/engine/plugins
+# Run Hamlet Support Scripts
+COPY scripts/hamlet/ /build/scripts/
 
-COPY scripts/base/ /build/scripts/
-COPY config.json /build/config.json
+RUN chmod -R u+rwx /build/scripts
 
-# Get Hamlet code
-RUN chmod -R u+rwx /build/scripts && \
-    chmod u+s /build/ && \
-    chmod -R ugo+rx /opt/hamlet
-
-RUN echo "Cloning images on $(date +%s)"
-RUN /build/scripts/build_hamlet.sh && \
-    /build/scripts/clone.sh \
-    echo "Updating Shell Prompt" && \
+RUN echo "Updating Shell Prompt" && \
     /build/scripts/shellprompt.sh && \
     rm -rf /build
 

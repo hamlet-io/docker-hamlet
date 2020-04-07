@@ -21,7 +21,6 @@ pipeline {
         DOCKER_REPO = 'hamletio/hamlet'
     }
 
-
     stages {
         stage('BaseSetup') {
             steps {
@@ -30,7 +29,7 @@ pipeline {
             }
         }
 
-        stage('Build-Latest-Setup') {
+        stage('Build-Base-Setup') {
             when {
                 not {
                     buildingTag()
@@ -76,6 +75,7 @@ pipeline {
 
         stage('Base') {
             stages{
+
                 stage('Build-Base') {
                     steps {
                         sh '''#!/usr/bin/env bash
@@ -85,21 +85,35 @@ pipeline {
                                 --build-arg HAMLET_VERSION="${HAMLET_VERSION}" \
                                 -f ./images/stretch/Dockerfile . || exit $?
                         '''
-                        sh '''#!/usr/bin/env bash
-                            docker build \
-                                --no-cache \
-                                -t "${DOCKER_REPO}:${DOCKER_TAG}"  \
-                                --build-arg HAMLET_VERSION="${HAMLET_VERSION}" \
-                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-base" \
-                                -f ./utilities/hamlet/Dockerfile . || exit $?
-                        '''
                     }
                 }
-
                 stage('Push-Base') {
                     when {
                         branch 'master'
                     }
+                    steps {
+                        sh '''#!/usr/bin/env bash
+                            docker push "${DOCKER_REPO}:${DOCKER_TAG}-base" || exit $?
+                        '''
+                    }
+                }
+
+                stage('Build-Base-Hamlet') {
+                    steps {
+                        sh '''#!/usr/bin/env bash
+                            docker build \
+                                --cache-from "${DOCKER_REPO}:${DOCKER_TAG}-base" \
+                                -t "${DOCKER_REPO}:${DOCKER_TAG}"  \
+                                --build-arg HAMLET_VERSION="${HAMLET_VERSION}" \
+                                -f ./images/stretch/hamlet/Dockerfile . || exit $?
+                        '''
+                    }
+                }
+                stage('Push-Base-Hamlet') {
+                    when {
+                        branch 'master'
+                    }
+
                     steps {
                         sh '''#!/usr/bin/env bash
                             docker push "${DOCKER_REPO}:${DOCKER_TAG}" || exit $?
@@ -107,22 +121,16 @@ pipeline {
                     }
                 }
 
-                stage('Base-Jenkins') {
+                stage('Build-Base-Jenkins') {
                     steps {
                         sh '''#!/usr/bin/env bash
                             docker build \
-                                --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
+                                --cache-from "${DOCKER_REPO}:${DOCKER_TAG}-base" \
                                 -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins" \
-                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}" \
-                                -f ./utilities/jenkins/agent-jnlp/Dockerfile . || exit $?
-                        '''
-
-                        sh '''#!/usr/bin/env bash
-                            docker push "${DOCKER_REPO}:${DOCKER_TAG}-jenkins" || exit $?
+                                -f ./images/stretch/jenkins/agent-jnlp/Dockerfile . || exit $?
                         '''
                     }
                 }
-
                 stage('Push-Base-Jenkins') {
                     when {
                         branch 'master'
@@ -135,18 +143,16 @@ pipeline {
                     }
                 }
 
-                stage('Base-AzPipeline') {
+                stage('Build-Base-AzPipeline') {
                     steps {
                         sh '''#!/usr/bin/env bash
                             docker build \
-                                --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
+                                --cache-from "${DOCKER_REPO}:${DOCKER_TAG}-base" \
                                 -t "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline" \
-                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}" \
-                                -f ./utilities/azure-pipelines/agent/Dockerfile . || exit $?
+                                -f ./images/stretch/azure-pipelines/agent/Dockerfile . || exit $?
                         '''
                     }
                 }
-
                 stage('Push-Base-AzPipeline') {
                     when {
                         branch 'master'
@@ -159,115 +165,17 @@ pipeline {
                     }
                 }
 
-            }
-        }
-
-        stage('Builder') {
-            stages{
-                stage('Build-Builder') {
+                stage('Build-Base-Meteor') {
                     steps {
                         sh '''#!/usr/bin/env bash
                             docker build \
-                                --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
-                                -t "${DOCKER_REPO}:${DOCKER_TAG}-builder" \
-                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}" \
-                                -f ./images/stretch/builder/Dockerfile . || exit $?
-                        '''
-
-
-                    }
-                }
-
-                stage('Push-Builder') {
-                    when {
-                        branch 'master'
-                    }
-
-                    steps {
-                        sh '''#!/usr/bin/env bash
-                            docker push "${DOCKER_REPO}:${DOCKER_TAG}-builder" || exit $?
-                        '''
-                    }
-                }
-
-                stage('Builder-Jenkins') {
-                    steps {
-                        sh '''#!/usr/bin/env bash
-                            docker build \
-                                --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
-                                -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-builder" \
-                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-builder" \
-                                -f ./utilities/jenkins/agent-jnlp/Dockerfile . || exit $?
-                        '''
-                    }
-                }
-
-                stage('Push-Builder-Jenkins') {
-                    when {
-                        branch 'master'
-                    }
-
-                    steps {
-                        sh '''#!/usr/bin/env bash
-                            docker push "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-builder" || exit $?
-                        '''
-                    }
-                }
-
-                stage('Builder-AzPipeline') {
-                    steps {
-                        sh '''#!/usr/bin/env bash
-                            docker build \
-                                --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
-                                -t "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-builder" \
-                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-builder" \
-                                -f ./utilities/azure-pipelines/agent/Dockerfile . || exit $?
-                        '''
-                    }
-                }
-
-                stage('Push-Builder-AzPipeline') {
-                    when {
-                        branch 'master'
-                    }
-
-                    steps {
-                        sh '''#!/usr/bin/env bash
-                            docker push "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-builder" || exit $?
-                        '''
-                    }
-                }
-
-                stage('Notify') {
-                    when {
-                        branch 'master'
-                    }
-                    steps{
-                        slackSend (
-                            message: "DockerImageBuild - *${env["DOCKER_REPO"]} - ${env["DOCKER_TAG"]}* - Builder Image Pushed - #${BUILD_NUMBER} (<${BUILD_URL}|Open>)",
-                            channel: "${slackChannel}",
-                            color: "${slackColours['good']}"
-                        )
-                    }
-                }
-            }
-        }
-
-        stage('Builder-Meteor') {
-            stages{
-                stage('Builder-Metoer-Base') {
-                    steps {
-                        sh '''#!/usr/bin/env bash
-                            docker build \
-                                --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
+                                --cache-from "${DOCKER_REPO}:${DOCKER_TAG}-base" \
                                 -t "${DOCKER_REPO}:${DOCKER_TAG}-builder-meteor" \
-                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-builder" \
                                 -f ./images/stretch/builder/meteor/Dockerfile . || exit $?
                         '''
                     }
                 }
-
-                stage('Push-Builder-Meteor-Base') {
+                stage('Push-Base-Meteor') {
                     when {
                         branch 'master'
                     }
@@ -279,26 +187,30 @@ pipeline {
                     }
                 }
 
+            }
+        }
 
-                stage('Builder-Meteor-Jenkins') {
+        stage('Builder-Meteor') {
+            stages{
+
+                stage('Build-Meteor-Jenkins') {
                     steps {
                         sh '''#!/usr/bin/env bash
                             docker build  \
-                                --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
+                                --cache-from "${DOCKER_REPO}:${DOCKER_TAG}-base" \
                                 -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-agent-jnlp-builder-meteor-nocache"  \
                                 --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-builder-meteor" \
-                                -f ./utilities/jenkins/agent-jnlp/Dockerfile . || exit $?
+                                -f ./images/stretch/jenkins/agent-jnlp/Dockerfile . || exit $?
 
                             docker build \
-                                --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
+                                --cache-from "${DOCKER_REPO}:${DOCKER_TAG}-base" \
                                 -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-builder-meteor" \
                                 --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-jenkins-agent-jnlp-builder-meteor-nocache" \
                                 -f ./images/stretch/builder/meteor/cache-packages/Dockerfile . || exit $?
                         '''
                     }
                 }
-
-                stage('Push-Builder-Meteor-Jenkins') {
+                stage('Push-Meteor-Jenkins') {
                     when {
                         branch 'master'
                     }
@@ -309,25 +221,24 @@ pipeline {
                     }
                 }
 
-                stage('Builder-Meteor-AzPipeline') {
+                stage('Build-Meteor-AzPipeline') {
                     steps {
                         sh '''#!/usr/bin/env bash
                             docker build  \
-                                --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
+                                --cache-from "${DOCKER_REPO}:${DOCKER_TAG}-base" \
                                 -t "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-builder-meteor-nocache"  \
                                 --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-builder-meteor" \
-                                -f ./utilities/azure-pipelines/agent/Dockerfile . || exit $?
+                                -f ./images/stretch/azure-pipelines/agent/Dockerfile . || exit $?
 
                             docker build \
-                                --cache-from "${DOCKER_REPO}:${DOCKER_TAG}" \
+                                --cache-from "${DOCKER_REPO}:${DOCKER_TAG}-base" \
                                 -t "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-builder-meteor" \
                                 --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-builder-meteor-nocache" \
                                 -f ./images/stretch/builder/meteor/cache-packages/Dockerfile . || exit $?
                         '''
                     }
                 }
-
-                stage('Push-Builder-Meteor-AzPipeline') {
+                stage('Push-Meteor-AzPipeline') {
                     when {
                         branch 'master'
                     }
@@ -338,10 +249,10 @@ pipeline {
                         '''
                     }
                 }
+            
             }
         }
     }
-
 
     post {
         failure {

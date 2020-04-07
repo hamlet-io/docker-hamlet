@@ -13,6 +13,7 @@ RUN useradd -u ${HAMLETUID} --shell /bin/bash --create-home hamlet && \
 
 # Run Hamlet Support Scripts
 COPY scripts/hamlet/ /build/scripts/
+RUN chmod u+rx -R /build/scripts
 
 RUN echo "Updating Shell Prompt" && \
     /build/scripts/shellprompt.sh && \

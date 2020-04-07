@@ -8,6 +8,19 @@ USER root
 #Docker user
 ARG DOCKERGID=497
 
+# Hamlet Version Control
+ARG HAMLET_VERSION=master
+ARG DOCKER_IMAGE_VERSION=master
+
+## Standard Hamlet Env vars
+ENV AUTOMATION_BASE_DIR=/opt/hamlet/executor/automation
+ENV AUTOMATION_DIR=/opt/hamlet/executor/automation/jenkins/aws
+ENV GENERATION_BASE_DIR=/opt/hamlet/executor
+ENV GENERATION_DIR=/opt/hamlet/executor/cli
+ENV GENERATION_ENGINE_DIR=/opt/hamlet/engine/core
+ENV GENERATION_PLUGIN_DIRS=/opt/hamlet/engine/plugins/aws;/opt/hamlet/engine/plugins/azure
+ENV GENERATION_STARTUP_DIR=/opt/hamlet/startup
+
 # Install OS Packages
 RUN apt-get update && apt-get install --no-install-recommends -y \
         # setup apt for different sources
@@ -29,8 +42,6 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
         libssl-dev zlib1g-dev libbz2-dev libreadline-dev \
         libsqlite3-dev wget curl llvm libncurses5-dev xz-utils tk-dev \
         libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev \
-        # System Python
-        python3 python3-dev python3-pip \
         # Builder Req
         libpq-dev libcurl4-openssl-dev \
         libncursesw5-dev libedit-dev \
@@ -44,13 +55,6 @@ RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - \
    $(lsb_release -cs) \
    stable"
 
-# Add Node to apt-get
-RUN curl -sL https://deb.nodesource.com/setup_10.x |  bash -
-
-# Add Yarn to apt-get
-RUN curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
-    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-
 # Add Backports sources
 RUN echo "deb http://deb.debian.org/debian stretch-backports main" | tee /etc/apt/sources.list.d/backports.list
 RUN echo 'Package: * \n Pin: release a=stretch-backports \n Pin-Priority: 900' | tee /etc/apt/preferences.d/backports
@@ -58,7 +62,6 @@ RUN echo 'Package: * \n Pin: release a=stretch-backports \n Pin-Priority: 900' |
 RUN apt-get update && apt-get install --no-install-recommends -y \
     docker-ce-cli \
     git-lfs \
-    nodejs yarn \
     && rm -rf /var/lib/apt/lists/*
 
 # Add docker user for docker bind mount
@@ -122,11 +125,34 @@ ENV PATH="${RBENV_ROOT}/shims:${PATH}"
 RUN rbenv install "${RUBY_VERSION}" && eval "$(rbenv init -)" && \
         rbenv global "${RUBY_VERSION}" && ruby --version
 
-# Install NPM Packages
+# Install Ruby Packages
+RUN gem install \
+        cfn-nag
+
+# nodenv requirements
+ENV NODE_VERSION 10.19.0
+
+ENV NODENV_ROOT /usr/local/opt/nodenv
+RUN git clone --branch "v1.3.2" --depth 1 https://github.com/nodenv/nodenv.git "${NODENV_ROOT}" && \
+        git clone --branch "v4.8.0" --depth 1 https://github.com/nodenv/node-build.git "${NODENV_ROOT}/plugins/node-build"
+RUN ln -s /usr/local/opt/nodenv/bin/nodenv /usr/local/bin/nodenv
+
+# Allow anyone to install a ruby version for builds
+RUN mkdir "${NODENV_ROOT}/versions/" && chmod go+w --recursive "${NODENV_ROOT}/versions/" && \
+        mkdir "${NODENV_ROOT}/shims/" && chmod go+w --recursive "${NODENV_ROOT}/shims/" && \
+        touch "${NODENV_ROOT}/version" && chmod go+w "${NODENV_ROOT}/version"
+
+ENV PATH="${NODENV_ROOT}/shims:${NODENV_ROOT}/versions/${NODE_VERSION}/bin:${PATH}"
+
+RUN nodenv install "${NODE_VERSION}" && eval "$(nodenv init -)" && \
+        nodenv global "${NODE_VERSION}" && node --version
+
+# Install Global NPM Packages
 RUN npm install -g \
     yamljs \
     grunt-cli \
-    gulp-cli
+    gulp-cli \
+    yarn
 
 # Directory set up and file copying
 RUN mkdir -p /build/scripts && \
@@ -145,5 +171,13 @@ RUN chmod -R u+rwx /build/scripts && \
 RUN echo "Cloning images on $(date +%s)" && \
 	/build/scripts/build_hamlet.sh && \
     /build/scripts/clone.sh
+
+# Install the hamlet cli
+WORKDIR /opt/hamlet/cli/gen3-cli
+RUN python setup.py bdist_wheel && \
+        pip install -r requirements/prod.txt -r requirements/dev.txt && \
+        pip install --find-links=dist --no-index codeontap-cli
+
+WORKDIR /root
 
 ENTRYPOINT "/bin/bash"

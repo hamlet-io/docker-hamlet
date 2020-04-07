@@ -5,7 +5,7 @@ def slackChannel = '#devops-framework'
 
 pipeline {
     agent {
-        label 'codeontaplatest'
+        label 'hamlet-latest'
     }
     options {
         timestamps()
@@ -249,7 +249,7 @@ pipeline {
                         '''
                     }
                 }
-            
+
             }
         }
     }

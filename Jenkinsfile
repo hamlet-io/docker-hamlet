@@ -47,10 +47,7 @@ pipeline {
 
         stage('Build-Tag-Setup') {
             when {
-                allOf {
-                    branch 'master'
-                    buildingTag()
-                }
+                buildingTag()
             }
 
             steps {

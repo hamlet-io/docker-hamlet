@@ -55,10 +55,10 @@ pipeline {
 
             steps {
                 script {
-                    env.HAMLET_VERSION = "${env['BRANCH_NAME']}"
-                    env.DOCKER_IMAGE_VERSION = "${env['BRANCH_NAME']}"
+                    env.HAMLET_VERSION = "${env['TAG_NAME']}"
+                    env.DOCKER_IMAGE_VERSION = "${env['TAG_NAME']}"
                     env.SOURCE_BRANCH = "${env['BRANCH_NAME']}"
-                    env.DOCKER_TAG = "${env['BRANCH_NAME']}"
+                    env.DOCKER_TAG = "${env['TAG_NAME']}"
                 }
             }
         }

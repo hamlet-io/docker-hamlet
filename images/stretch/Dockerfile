@@ -20,6 +20,7 @@ ENV GENERATION_DIR=/opt/hamlet/executor/cli
 ENV GENERATION_ENGINE_DIR=/opt/hamlet/engine/core
 ENV GENERATION_PLUGIN_DIRS=/opt/hamlet/engine/plugins/aws;/opt/hamlet/engine/plugins/azure
 ENV GENERATION_STARTUP_DIR=/opt/hamlet/startup
+ENV GENERATION_PATTERNS_DIR=/opt/hamlet/patterns
 
 # Install OS Packages
 RUN apt-get update && apt-get install --no-install-recommends -y \

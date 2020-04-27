@@ -171,13 +171,13 @@ RUN chmod -R u+rwx /build/scripts && \
 
 RUN echo "Cloning images on $(date +%s)" && \
 	/build/scripts/build_hamlet.sh && \
-    /build/scripts/clone.sh
+        /build/scripts/clone.sh
 
 # Install the hamlet cli
-WORKDIR /opt/hamlet/cli/gen3-cli
+WORKDIR /opt/hamlet/cli/hamlet-cli
 RUN python setup.py bdist_wheel && \
         pip install -r requirements/prod.txt -r requirements/dev.txt && \
-        pip install --find-links=dist --no-index codeontap-cli
+        pip install --find-links=dist --no-index hamlet-cli
 
 WORKDIR /root
 

@@ -17,11 +17,11 @@ RUN useradd -u ${JENKINSUID} --shell /bin/bash --create-home jenkins \
   && echo '#Allow Jenkins user to install extra packages' \
   && echo 'jenkins ALL = NOPASSWD : /usr/bin/apt-get' >> /etc/sudoers
 
-# See https://github.com/jenkinsci/docker-slave/blob/master/Dockerfile#L31
+# See https://github.com/jenkinsci/docker-inbound-agent/blob/master/jenkins-agent
 ARG JENKINS_REMOTING_VERSION=4.2.1
-RUN curl --create-dirs -sSLo /usr/share/jenkins/slave.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/$JENKINS_REMOTING_VERSION/remoting-$JENKINS_REMOTING_VERSION.jar \
+RUN curl --create-dirs -sSLo /usr/share/jenkins/agent.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/$JENKINS_REMOTING_VERSION/remoting-$JENKINS_REMOTING_VERSION.jar \
   && chmod 755 /usr/share/jenkins \
-  && chmod 644 /usr/share/jenkins/slave.jar
+  && chmod 644 /usr/share/jenkins/agent.jar
 
 COPY scripts/jenkins-jnlp-agent/jenkins-agent /usr/local/bin/jenkins-agent
 COPY scripts/jenkins-jnlp-agent/wait-for-it /usr/local/bin/wait-for-it

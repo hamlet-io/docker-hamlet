@@ -19,6 +19,7 @@ pipeline {
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub')
         DOCKER_REPO = 'hamletio/hamlet'
+        DOCKER_API_VERSION = '1.39'
     }
 
     stages {

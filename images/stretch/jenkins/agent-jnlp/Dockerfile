@@ -10,6 +10,8 @@ USER root
 ARG JENKINSUID=1000
 ARG DOCKERGID=497
 
+ENV DOCKER_API_VERSION=1.39
+
 # Workaround for docker in docker permissions - ECS seems to use 497 for the group Id
 RUN useradd -u ${JENKINSUID} --shell /bin/bash --create-home jenkins \
   && groupmod -g "${DOCKERGID}" docker \

@@ -106,8 +106,11 @@ RUN pip install --upgrade --no-cache-dir \
         coverage \
         flake8
 
-# Install Azure CLI Extensions
+# Install Azure CLI Extensions (default location is in $HOME)
+ENV AZURE_EXTENSION_DIR=/opt/azcliextensions
+RUN mkdir /opt/azcliextensions
 RUN az extension add --name front-door
+RUN chmod 0755 --recursive /opt/azcliextensions
 
 # rbenv requirements
 ENV RUBY_VERSION 2.5.1

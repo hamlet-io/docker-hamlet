@@ -1,6 +1,5 @@
 #!groovy
 
-def slackColours = [ 'good' : '#50C878', 'bad' : '#B22222', 'info' : '#62B1F6' ]
 def slackChannel = '#devops-framework'
 
 pipeline {
@@ -23,57 +22,59 @@ pipeline {
     }
 
     stages {
-        stage('BaseSetup') {
-            steps {
-                sh 'docker login --username ${DOCKERHUB_CREDENTIALS_USR} --password ${DOCKERHUB_CREDENTIALS_PSW}'
-                sh 'cd "./images/stretch"'
-            }
-        }
-
-        stage('Build-Base-Setup') {
-            when {
-                not {
-                    buildingTag()
-                }
-            }
-            steps {
-                script {
-                    env.HAMLET_VERSION = 'master'
-                    env.DOCKER_IMAGE_VERSION = "${env['repo']}-${env['commit']}"
-                    env.SOURCE_BRANCH = 'master'
-                    env.DOCKER_TAG = 'latest'
-                }
-            }
-        }
-
-        stage('Build-Tag-Setup') {
-            when {
-                buildingTag()
-            }
-
-            steps {
-                script {
-                    env.HAMLET_VERSION = "${env['TAG_NAME']}"
-                    env.DOCKER_IMAGE_VERSION = "${env['TAG_NAME']}"
-                    env.SOURCE_BRANCH = "${env['BRANCH_NAME']}"
-                    env.DOCKER_TAG = "${env['TAG_NAME']}"
-                }
-            }
-        }
-
         stage('Setup')  {
-            steps {
-                echo "Runnig build..."
-                echo "Hamlet Version: ${env['HAMLET_VERSION']}"
-                echo "Docker Image Version: ${env['DOCKER_IMAGE_VERSION']}"
-                echo "Source Branch: ${env['SOURCE_BRANCH']}"
-                echo "Docker Tag: ${env['DOCKER_TAG']}"
+            stages {
+                stage('BaseSetup') {
+                    steps {
+                        sh 'docker login --username ${DOCKERHUB_CREDENTIALS_USR} --password ${DOCKERHUB_CREDENTIALS_PSW}'
+                    }
+                }
+
+                stage('Build-Base-Setup') {
+                    when {
+                        not {
+                            buildingTag()
+                        }
+                    }
+                    steps {
+                        script {
+                            env.HAMLET_VERSION = 'master'
+                            env.DOCKER_IMAGE_VERSION = "${env['repo']}-${env['commit']}"
+                            env.SOURCE_BRANCH = 'master'
+                            env.DOCKER_TAG = 'latest'
+                        }
+                    }
+                }
+
+                stage('Build-Tag-Setup') {
+                    when {
+                        buildingTag()
+                    }
+
+                    steps {
+                        script {
+                            env.HAMLET_VERSION = "${env['TAG_NAME']}"
+                            env.DOCKER_IMAGE_VERSION = "${env['TAG_NAME']}"
+                            env.SOURCE_BRANCH = "${env['BRANCH_NAME']}"
+                            env.DOCKER_TAG = "${env['TAG_NAME']}"
+                        }
+                    }
+                }
+
+                stage('Notify') {
+                    steps {
+                        echo "Runnig build..."
+                        echo "Hamlet Version: ${env['HAMLET_VERSION']}"
+                        echo "Docker Image Version: ${env['DOCKER_IMAGE_VERSION']}"
+                        echo "Source Branch: ${env['SOURCE_BRANCH']}"
+                        echo "Docker Tag: ${env['DOCKER_TAG']}"
+                    }
+                }
             }
         }
 
         stage('Base') {
             stages{
-
                 stage('Build-Base') {
                     steps {
                         sh '''#!/usr/bin/env bash
@@ -118,7 +119,11 @@ pipeline {
                         '''
                     }
                 }
+            }
+        }
 
+        stage('Basic-CI-Agents') {
+            stages{
                 stage('Build-Base-Jenkins') {
                     steps {
                         sh '''#!/usr/bin/env bash
@@ -129,6 +134,7 @@ pipeline {
                         '''
                     }
                 }
+
                 stage('Push-Base-Jenkins') {
                     when {
                         branch 'master'
@@ -162,7 +168,21 @@ pipeline {
                         '''
                     }
                 }
+            }
 
+            post {
+                success {
+                    slackSend (
+                        message: "*Success* | <${BUILD_URL}|${JOB_NAME}> \n CI Agents - ${env["DOCKER_REPO"]} - ${env["DOCKER_TAG"]}",
+                        channel: "${slackChannel}",
+                        color: "#50C878"
+                    )
+                }
+            }
+        }
+
+        stage('Builder-Meteor') {
+            stages{
                 stage('Build-Base-Meteor') {
                     steps {
                         sh '''#!/usr/bin/env bash
@@ -184,12 +204,6 @@ pipeline {
                         '''
                     }
                 }
-
-            }
-        }
-
-        stage('Builder-Meteor') {
-            stages{
 
                 stage('Build-Meteor-Jenkins') {
                     steps {
@@ -253,18 +267,18 @@ pipeline {
     }
 
     post {
-        failure {
-            slackSend (
-                message: "DockerImageBuild - *${env["DOCKER_REPO"]} - ${env["DOCKER_TAG"]}* - A error occurred during the image build - #${BUILD_NUMBER} (<${BUILD_URL}|Open>)",
-                channel: "${slackChannel}",
-                color: "${slackColours['bad']}"
-            )
-        }
         success {
             slackSend (
-                message: "DockerImageBuild - *${env["DOCKER_REPO"]} - ${env["DOCKER_TAG"]}* - Was successful - #${BUILD_NUMBER} (<${BUILD_URL}|Open>)",
+                message: "*Success* | <${BUILD_URL}|${JOB_NAME}> \n Image Build - ${env["DOCKER_REPO"]} - ${env["DOCKER_TAG"]}",
                 channel: "${slackChannel}",
-                color: "${slackColours['good']}"
+                color: "#50C878"
+            )
+        }
+        failure {
+            slackSend (
+                message: "*Failure* | <${BUILD_URL}|${JOB_NAME}> \n Image Build - ${env["DOCKER_REPO"]} - ${env["DOCKER_TAG"]}",
+                channel: "${slackChannel}",
+                color: "#D20F2A"
             )
         }
     }

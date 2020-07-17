@@ -13,6 +13,7 @@ pipeline {
         disableConcurrentBuilds()
         parallelsAlwaysFailFast()
         timeout(time: 6, unit: 'HOURS')
+        autocancelConsecutiveBuilds()
     }
 
     environment {

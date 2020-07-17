@@ -10,7 +10,6 @@ pipeline {
         timestamps()
         durabilityHint('PERFORMANCE_OPTIMIZED')
         quietPeriod(300)
-        disableConcurrentBuilds()
         parallelsAlwaysFailFast()
         timeout(time: 6, unit: 'HOURS')
     }

@@ -13,7 +13,6 @@ pipeline {
         disableConcurrentBuilds()
         parallelsAlwaysFailFast()
         timeout(time: 6, unit: 'HOURS')
-        autocancelConsecutiveBuilds()
     }
 
     environment {
@@ -27,6 +26,7 @@ pipeline {
             stages {
                 stage('BaseSetup') {
                     steps {
+                        autocancelConsecutiveBuilds()
                         sh 'docker login --username ${DOCKERHUB_CREDENTIALS_USR} --password ${DOCKERHUB_CREDENTIALS_PSW}'
                     }
                 }

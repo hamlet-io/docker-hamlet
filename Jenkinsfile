@@ -9,7 +9,7 @@ pipeline {
     options {
         timestamps()
         durabilityHint('PERFORMANCE_OPTIMIZED')
-        quietPeriod(300)
+        quietPeriod(30)
         parallelsAlwaysFailFast()
         timeout(time: 6, unit: 'HOURS')
     }

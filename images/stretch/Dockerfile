@@ -134,11 +134,14 @@ RUN gem install \
         cfn-nag
 
 # nodenv requirements
-ENV NODE_VERSION 10.19.0
+ENV NODE_VERSION 10.22.0
 
 ENV NODENV_ROOT /usr/local/opt/nodenv
-RUN git clone --branch "v1.3.2" --depth 1 https://github.com/nodenv/nodenv.git "${NODENV_ROOT}" && \
-        git clone --branch "v4.8.0" --depth 1 https://github.com/nodenv/node-build.git "${NODENV_ROOT}/plugins/node-build"
+RUN git clone --depth 1 https://github.com/nodenv/nodenv.git "${NODENV_ROOT}" && \
+        git clone --depth 1 https://github.com/nodenv/node-build.git "${NODENV_ROOT}/plugins/node-build" && \
+        git clone --depth 1 https://github.com/nodenv/nodenv-aliases.git "${NODENV_ROOT}/plugins/nodenv-aliases" && \
+        git clone --depth 1 https://github.com/nodenv/node-build-update-defs.git "${NODENV_ROOT}/plugins/node-build-update-defs"
+
 RUN ln -s /usr/local/opt/nodenv/bin/nodenv /usr/local/bin/nodenv
 
 # Allow anyone to install a ruby version for builds
@@ -148,7 +151,8 @@ RUN mkdir "${NODENV_ROOT}/versions/" && chmod go+w --recursive "${NODENV_ROOT}/v
 
 ENV PATH="${NODENV_ROOT}/shims:${NODENV_ROOT}/versions/${NODE_VERSION}/bin:${PATH}"
 
-RUN nodenv install "${NODE_VERSION}" && eval "$(nodenv init -)" && \
+RUN eval "$(nodenv init -)" && \
+        nodenv install "${NODE_VERSION}" && nodenv update-version-defs && \
         nodenv global "${NODE_VERSION}" && node --version
 
 # Install Global NPM Packages
@@ -179,7 +183,7 @@ RUN echo "Cloning images on $(date +%s)" && \
 # Install the hamlet cli
 WORKDIR /opt/hamlet/cli/hamlet-cli
 RUN python setup.py bdist_wheel && \
-        pip install -r requirements/prod.txt -r requirements/dev.txt && \
+        pip install -r requirements/prod.txt && \
         pip install --find-links=dist --no-index hamlet-cli
 
 WORKDIR /root

@@ -20,7 +20,7 @@ RUN useradd -u ${JENKINSUID} --shell /bin/bash --create-home jenkins \
   && echo 'jenkins ALL = NOPASSWD : /usr/bin/apt-get' >> /etc/sudoers
 
 # See https://github.com/jenkinsci/docker-inbound-agent/blob/master/jenkins-agent
-ARG JENKINS_REMOTING_VERSION=4.2.1
+ARG JENKINS_REMOTING_VERSION=4.5
 RUN curl --create-dirs -fsSLo /usr/share/jenkins/agent.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${JENKINS_REMOTING_VERSION}/remoting-${JENKINS_REMOTING_VERSION}.jar \
   && chmod 755 /usr/share/jenkins \
   && chmod 644 /usr/share/jenkins/agent.jar

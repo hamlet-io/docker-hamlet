@@ -46,6 +46,8 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
         # Builder Req
         libpq-dev libcurl4-openssl-dev \
         libncursesw5-dev libedit-dev \
+        # Diagram Generation
+        graphviz \
    && rm -rf /var/lib/apt/lists/*
 
 # -- Install extra library packages --
@@ -188,4 +190,4 @@ RUN python setup.py bdist_wheel && \
 
 WORKDIR /root
 
-ENTRYPOINT "/bin/bash"
+ENTRYPOINT [ "/bin/bash" "-c "$@"" ]

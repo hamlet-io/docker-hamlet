@@ -1,6 +1,15 @@
 # [0.0.0](https://github.com/hamlet-io/engine-plugin-aws/compare/v8.0.0...v0.0.0) (2021-01-11)
 
 
+### Features
+
+* changelog generation ([cdbf2b8](https://github.com/hamlet-io/engine-plugin-aws/commit/cdbf2b87e058f02f4044a99d73d40b4e1a02655d))
+
+
+
+# [0.0.0](https://github.com/hamlet-io/engine-plugin-aws/compare/v8.0.0...v0.0.0) (2021-01-11)
+
+
 
 # [0.0.0](https://github.com/hamlet-io/engine-plugin-aws/compare/v7.0.0...v0.0.0) (2021-01-11)
 

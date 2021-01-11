@@ -1,17 +1,8 @@
 # [0.0.0](https://github.com/hamlet-io/engine-plugin-aws/compare/v8.0.0...v0.0.0) (2021-01-11)
 
 
-### Features
 
-* changelog generation ([cdbf2b8](https://github.com/hamlet-io/engine-plugin-aws/commit/cdbf2b87e058f02f4044a99d73d40b4e1a02655d))
-
-
-
-# [0.0.0](https://github.com/hamlet-io/engine-plugin-aws/compare/v8.0.0...v0.0.0) (2021-01-11)
-
-
-
-# [0.0.0](https://github.com/hamlet-io/engine-plugin-aws/compare/v7.0.0...v0.0.0) (2021-01-11)
+# [8.0.0](https://github.com/hamlet-io/engine-plugin-aws/compare/v7.0.0...v8.0.0) (2021-01-11)
 
 
 ### Bug Fixes
@@ -32,7 +23,33 @@
 
 * add graphviz to package deps ([532bb81](https://github.com/hamlet-io/engine-plugin-aws/commit/532bb81cb1fec8612ae0312c48bbcd949bd1c8b9))
 * add slack notification on ci build ([#31](https://github.com/hamlet-io/engine-plugin-aws/issues/31)) ([c76e769](https://github.com/hamlet-io/engine-plugin-aws/commit/c76e769338aa4594a7158ef0af1e950571d398e1))
+* changelog generation ([cdbf2b8](https://github.com/hamlet-io/engine-plugin-aws/commit/cdbf2b87e058f02f4044a99d73d40b4e1a02655d))
+* changelog generation ([c87ba94](https://github.com/hamlet-io/engine-plugin-aws/commit/c87ba94c3df2488ada12d3ddac0c8f1b9709148a))
 * support startup commands as env vars ([#29](https://github.com/hamlet-io/engine-plugin-aws/issues/29)) ([ef16c52](https://github.com/hamlet-io/engine-plugin-aws/commit/ef16c5282d1d89dc434cf7b098cbedc36d717920))
+
+
+
+# [7.0.0](https://github.com/hamlet-io/engine-plugin-aws/compare/v6.1.0-rc1...v7.0.0) (2020-04-26)
+
+
+
+# [6.1.0-rc1](https://github.com/hamlet-io/engine-plugin-aws/compare/v6.0.0...v6.1.0-rc1) (2019-12-13)
+
+
+
+# [6.0.0](https://github.com/hamlet-io/engine-plugin-aws/compare/v5.5.8...v6.0.0) (2019-09-09)
+
+
+
+## [5.5.8](https://github.com/hamlet-io/engine-plugin-aws/compare/v5.5.7...v5.5.8) (2019-07-30)
+
+
+
+## [5.5.7](https://github.com/hamlet-io/engine-plugin-aws/compare/v5.5.6...v5.5.7) (2019-06-13)
+
+
+
+## [5.4.1](https://github.com/hamlet-io/engine-plugin-aws/compare/v5.4.0...v5.4.1) (2019-04-12)
 
 
 

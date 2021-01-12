@@ -88,7 +88,10 @@ pipeline {
                 }
                 stage('Push-Base') {
                     when {
-                        branch 'master'
+                        anyOf{
+                            branch 'master'
+                            buildingTag()
+                        }
                     }
                     steps {
                         sh '''#!/usr/bin/env bash
@@ -110,7 +113,10 @@ pipeline {
                 }
                 stage('Push-Base-Hamlet') {
                     when {
-                        branch 'master'
+                        anyOf{
+                            branch 'master'
+                            buildingTag()
+                        }
                     }
 
                     steps {
@@ -137,7 +143,10 @@ pipeline {
 
                 stage('Push-Base-Jenkins') {
                     when {
-                        branch 'master'
+                        anyOf{
+                            branch 'master'
+                            buildingTag()
+                        }
                     }
 
                     steps {
@@ -159,7 +168,10 @@ pipeline {
                 }
                 stage('Push-Base-AzPipeline') {
                     when {
-                        branch 'master'
+                        anyOf{
+                            branch 'master'
+                            buildingTag()
+                        }
                     }
 
                     steps {
@@ -195,7 +207,10 @@ pipeline {
                 }
                 stage('Push-Base-Meteor') {
                     when {
-                        branch 'master'
+                        anyOf{
+                            branch 'master'
+                            buildingTag()
+                        }
                     }
 
                     steps {
@@ -224,7 +239,10 @@ pipeline {
                 }
                 stage('Push-Meteor-Jenkins') {
                     when {
-                        branch 'master'
+                        anyOf{
+                            branch 'master'
+                            buildingTag()
+                        }
                     }
                     steps {
                         sh '''#!/usr/bin/env bash
@@ -252,7 +270,10 @@ pipeline {
                 }
                 stage('Push-Meteor-AzPipeline') {
                     when {
-                        branch 'master'
+                        anyOf{
+                            branch 'master'
+                            buildingTag()
+                        }
                     }
 
                     steps {

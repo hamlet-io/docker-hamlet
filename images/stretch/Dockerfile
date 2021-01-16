@@ -190,4 +190,4 @@ RUN python setup.py bdist_wheel && \
 
 WORKDIR /root
 
-ENTRYPOINT [ "/bin/bash" "-c "$@"" ]
+ENTRYPOINT [ "/bin/bash" ]

@@ -178,6 +178,8 @@ RUN chmod -R u+rwx /build/scripts && \
     chmod u+s /build/ && \
     chmod -R ugo+rx /opt/hamlet
 
+RUN mv /build/scripts/entrypoint.sh /entrypoint.sh
+
 RUN echo "Cloning images on $(date +%s)" && \
 	/build/scripts/build_hamlet.sh && \
         /build/scripts/clone.sh
@@ -190,4 +192,5 @@ RUN python setup.py bdist_wheel && \
 
 WORKDIR /root
 
-ENTRYPOINT [ "/bin/bash" ]
+ENTRYPOINT [ "/entrypoint.sh" ]
+CMD [ "/bin/bash" ]

@@ -27,6 +27,10 @@
         {
             "Repository" : "https://github.com/hamlet-io/engine-plugin-aws.git",
             "Directory" : "/opt/hamlet/engine/plugins/aws"
+        },
+        {
+            "Repository" : "https://github.com/hamlet-io/engine-plugin-diagrams.git",
+            "Directory" : "/opt/hamlet/engine/plugins/diagrams"
         }
     ]
 }

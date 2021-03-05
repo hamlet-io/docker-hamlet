@@ -10,11 +10,12 @@ For more information see https://docs.hamlet.io
 
 #### ```hamletio/hamlet:<version>```
 
-This is the standard debian buster based image with Hamlet Deploy installed and preconfigured.
+This is our base docker image which includes all the requiremets for running hamlet and basic build tooling. This image can be used as a general purpose CI image
+The image also includes common application runtimes for application builds 
 
-#### ```hamletio/hamlet:<version>-builder```
-
-This image is used of building application code as part of a Hamlet Deploy build process. It should contain the required OS software packages to build and test application code
+- python (pyenv for version management)
+- node (nodenv for version management)
+- ruby (rbenv for version management)
 
 #### ```hamletio/hamlet:<version>-builder-meteor```
 
@@ -27,6 +28,10 @@ The CI/CD Tool images are extensions of the base images with support for a speci
 #### ```hamletio/hamlet:<version>-jenkins-<base>```
 
 This image extends the base image with the Jenkins JNLP based remoting agent installed and configured to run as the entrypoint. This is designed to work with container-based cloud agents.
+
+#### ```hamletio/hamlet:<version>-azpipeline-<base>```
+
+This image extends the base image with the Azure Pipelines agent, this allows for the use of container based agents for local builds
 
 ## Versions
 

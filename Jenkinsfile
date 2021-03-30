@@ -7,10 +7,6 @@ pipeline {
         label 'hamlet-latest'
     }
     options {
-        timestamps()
-        durabilityHint('PERFORMANCE_OPTIMIZED')
-        quietPeriod(30)
-        parallelsAlwaysFailFast()
         timeout(time: 6, unit: 'HOURS')
     }
 
@@ -21,6 +17,15 @@ pipeline {
     }
 
     stages {
+
+        // If a new job comes along at the same time as an existing job, cancel oldest job and replace with the new one
+        stage('Cancel running builds') {
+            steps {
+                milestone label: '', ordinal:  Integer.parseInt(env.BUILD_ID) - 1
+                milestone label: '', ordinal:  Integer.parseInt(env.BUILD_ID)
+            }
+        }
+
         stage('Setup')  {
             stages {
                 stage('BaseSetup') {

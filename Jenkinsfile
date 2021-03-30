@@ -35,7 +35,6 @@ pipeline {
                     steps {
                         script {
                             env.HAMLET_VERSION = 'latest'
-                            env.DOCKER_TAG = 'latest'
                             env.DOCKER_IMAGE_VERSION = "${env['repo']}-${env['commit']}"
                         }
                     }
@@ -49,7 +48,6 @@ pipeline {
                     steps {
                         script {
                             env.HAMLET_VERSION = "${env['TAG_NAME']}"
-                            env.DOCKER_TAG = "${env['TAG_NAME']}"
                             env.DOCKER_IMAGE_VERSION = "${env['TAG_NAME']}"
                         }
                     }
@@ -57,10 +55,9 @@ pipeline {
 
                 stage('Notify') {
                     steps {
-                        echo "Runnig build..."
+                        echo "Running build..."
                         echo "Hamlet Version: ${env['HAMLET_VERSION']}"
                         echo "Docker Image Version: ${env['DOCKER_IMAGE_VERSION']}"
-                        echo "Docker Tag: ${env['DOCKER_TAG']}"
                     }
                 }
             }
@@ -73,7 +70,7 @@ pipeline {
                         sh '''#!/usr/bin/env bash
                             docker build \
                                 --no-cache \
-                                -t "${DOCKER_REPO}:${DOCKER_TAG}-base"  \
+                                -t "${DOCKER_REPO}:${HAMLET_VERSION}-base"  \
                                 --build-arg HAMLET_VERSION="${HAMLET_VERSION}" \
                                 -f ./images/stretch/Dockerfile . || exit $?
                         '''
@@ -88,7 +85,7 @@ pipeline {
                     }
                     steps {
                         sh '''#!/usr/bin/env bash
-                            docker push "${DOCKER_REPO}:${DOCKER_TAG}-base" || exit $?
+                            docker push "${DOCKER_REPO}:${HAMLET_VERSION}-base" || exit $?
                         '''
                     }
                 }
@@ -97,10 +94,10 @@ pipeline {
                     steps {
                         sh '''#!/usr/bin/env bash
                             docker build \
-                                --cache-from "${DOCKER_REPO}:${DOCKER_TAG}-base" \
-                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-base" \
-                                -t "${DOCKER_REPO}:${DOCKER_TAG}"  \
+                                --cache-from "${DOCKER_REPO}:${HAMLET_VERSION}-base" \
+                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${HAMLET_VERSION}-base" \
                                 --build-arg HAMLET_VERSION="${HAMLET_VERSION}" \
+                                -t "${DOCKER_REPO}:${HAMLET_VERSION}"  \
                                 -f ./images/stretch/hamlet/Dockerfile . || exit $?
                         '''
                     }
@@ -115,7 +112,7 @@ pipeline {
 
                     steps {
                         sh '''#!/usr/bin/env bash
-                            docker push "${DOCKER_REPO}:${DOCKER_TAG}" || exit $?
+                            docker push "${DOCKER_REPO}:${HAMLET_VERSION}" || exit $?
                         '''
                     }
                 }
@@ -128,9 +125,9 @@ pipeline {
                     steps {
                         sh '''#!/usr/bin/env bash
                             docker build \
-                                --cache-from "${DOCKER_REPO}:${DOCKER_TAG}-base" \
-                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}" \
-                                -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins" \
+                                --cache-from "${DOCKER_REPO}:${HAMLET_VERSION}-base" \
+                                --build-arg BASE_IMAGE="${HAMLET_VERSION}:${HAMLET_VERSION}" \
+                                -t "${DOCKER_REPO}:${HAMLET_VERSION}-jenkins" \
                                 -f ./images/stretch/jenkins/agent-jnlp/Dockerfile . || exit $?
                         '''
                     }
@@ -146,7 +143,7 @@ pipeline {
 
                     steps {
                         sh '''#!/usr/bin/env bash
-                            docker push "${DOCKER_REPO}:${DOCKER_TAG}-jenkins" || exit $?
+                            docker push "${DOCKER_REPO}:${HAMLET_VERSION}-jenkins" || exit $?
                         '''
                     }
                 }
@@ -155,9 +152,9 @@ pipeline {
                     steps {
                         sh '''#!/usr/bin/env bash
                             docker build \
-                                --cache-from "${DOCKER_REPO}:${DOCKER_TAG}-base" \
-                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}" \
-                                -t "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline" \
+                                --cache-from "${DOCKER_REPO}:${HAMLET_VERSION}-base" \
+                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${HAMLET_VERSION}" \
+                                -t "${DOCKER_REPO}:${HAMLET_VERSION}-azpipeline" \
                                 -f ./images/stretch/azure-pipelines/agent/Dockerfile . || exit $?
                         '''
                     }
@@ -172,7 +169,7 @@ pipeline {
 
                     steps {
                         sh '''#!/usr/bin/env bash
-                            docker push "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline" || exit $?
+                            docker push "${DOCKER_REPO}:${HAMLET_VERSION}-azpipeline" || exit $?
                         '''
                     }
                 }
@@ -181,7 +178,7 @@ pipeline {
             post {
                 success {
                     slackSend (
-                        message: "*Success* | <${BUILD_URL}|${JOB_NAME}> \n CI Agents - ${env["DOCKER_REPO"]} - ${env["DOCKER_TAG"]}",
+                        message: "*Success* | <${BUILD_URL}|${JOB_NAME}> \n CI Agents - ${env["DOCKER_REPO"]} - ${env["HAMLET_VERSION"]}",
                         channel: "${slackChannel}",
                         color: "#50C878"
                     )
@@ -195,9 +192,9 @@ pipeline {
                     steps {
                         sh '''#!/usr/bin/env bash
                             docker build \
-                                --cache-from "${DOCKER_REPO}:${DOCKER_TAG}-base" \
-                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}" \
-                                -t "${DOCKER_REPO}:${DOCKER_TAG}-builder-meteor" \
+                                --cache-from "${DOCKER_REPO}:${HAMLET_VERSION}-base" \
+                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${HAMLET_VERSION}" \
+                                -t "${DOCKER_REPO}:${HAMLET_VERSION}-builder-meteor" \
                                 -f ./images/stretch/builder/meteor/Dockerfile . || exit $?
                         '''
                     }
@@ -212,7 +209,7 @@ pipeline {
 
                     steps {
                         sh '''#!/usr/bin/env bash
-                            docker push "${DOCKER_REPO}:${DOCKER_TAG}-builder-meteor" || exit $?
+                            docker push "${DOCKER_REPO}:${HAMLET_VERSION}-builder-meteor" || exit $?
                         '''
                     }
                 }
@@ -221,15 +218,15 @@ pipeline {
                     steps {
                         sh '''#!/usr/bin/env bash
                             docker build  \
-                                --cache-from "${DOCKER_REPO}:${DOCKER_TAG}-base" \
-                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-builder-meteor" \
-                                -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-agent-jnlp-builder-meteor-nocache"  \
+                                --cache-from "${DOCKER_REPO}:${HAMLET_VERSION}-base" \
+                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${HAMLET_VERSION}-builder-meteor" \
+                                -t "${DOCKER_REPO}:${HAMLET_VERSION}-jenkins-agent-jnlp-builder-meteor-nocache"  \
                                 -f ./images/stretch/jenkins/agent-jnlp/Dockerfile . || exit $?
 
                             docker build \
-                                --cache-from "${DOCKER_REPO}:${DOCKER_TAG}-base" \
-                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-jenkins-agent-jnlp-builder-meteor-nocache" \
-                                -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-builder-meteor" \
+                                --cache-from "${DOCKER_REPO}:${HAMLET_VERSION}-base" \
+                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${HAMLET_VERSION}-jenkins-agent-jnlp-builder-meteor-nocache" \
+                                -t "${DOCKER_REPO}:${HAMLET_VERSION}-jenkins-builder-meteor" \
                                 -f ./images/stretch/builder/meteor/cache-packages/Dockerfile . || exit $?
                         '''
                     }
@@ -243,7 +240,7 @@ pipeline {
                     }
                     steps {
                         sh '''#!/usr/bin/env bash
-                            docker push "${DOCKER_REPO}:${DOCKER_TAG}-jenkins-builder-meteor" || exit $?
+                            docker push "${DOCKER_REPO}:${HAMLET_VERSION}-jenkins-builder-meteor" || exit $?
                         '''
                     }
                 }
@@ -252,15 +249,15 @@ pipeline {
                     steps {
                         sh '''#!/usr/bin/env bash
                             docker build  \
-                                --cache-from "${DOCKER_REPO}:${DOCKER_TAG}-base" \
-                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-builder-meteor" \
-                                -t "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-builder-meteor-nocache"  \
+                                --cache-from "${DOCKER_REPO}:${HAMLET_VERSION}-base" \
+                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${HAMLET_VERSION}-builder-meteor" \
+                                -t "${DOCKER_REPO}:${HAMLET_VERSION}-azpipeline-builder-meteor-nocache"  \
                                 -f ./images/stretch/azure-pipelines/agent/Dockerfile . || exit $?
 
                             docker build \
-                                --cache-from "${DOCKER_REPO}:${DOCKER_TAG}-base" \
-                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-builder-meteor-nocache" \
-                                -t "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-builder-meteor" \
+                                --cache-from "${DOCKER_REPO}:${HAMLET_VERSION}-base" \
+                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${HAMLET_VERSION}-azpipeline-builder-meteor-nocache" \
+                                -t "${DOCKER_REPO}:${HAMLET_VERSION}-azpipeline-builder-meteor" \
                                 -f ./images/stretch/builder/meteor/cache-packages/Dockerfile . || exit $?
                         '''
                     }
@@ -275,7 +272,7 @@ pipeline {
 
                     steps {
                         sh '''#!/usr/bin/env bash
-                            docker push "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline-builder-meteor" || exit $?
+                            docker push "${DOCKER_REPO}:${HAMLET_VERSION}-azpipeline-builder-meteor" || exit $?
                         '''
                     }
                 }
@@ -287,14 +284,14 @@ pipeline {
     post {
         success {
             slackSend (
-                message: "*Success* | <${BUILD_URL}|${JOB_NAME}> \n Image Build - ${env["DOCKER_REPO"]} - ${env["DOCKER_TAG"]}",
+                message: "*Success* | <${BUILD_URL}|${JOB_NAME}> \n Image Build - ${env["DOCKER_REPO"]} - ${env["HAMLET_VERSION"]}",
                 channel: "${slackChannel}",
                 color: "#50C878"
             )
         }
         failure {
             slackSend (
-                message: "*Failure* | <${BUILD_URL}|${JOB_NAME}> \n Image Build - ${env["DOCKER_REPO"]} - ${env["DOCKER_TAG"]}",
+                message: "*Failure* | <${BUILD_URL}|${JOB_NAME}> \n Image Build - ${env["DOCKER_REPO"]} - ${env["HAMLET_VERSION"]}",
                 channel: "${slackChannel}",
                 color: "#D20F2A"
             )

@@ -27,7 +27,7 @@ function clone_repo() {
     echo "repo: ${repository_url}"
 
     git ls-remote --heads --tags --exit-code ${repository_url} ${git_ref} || return $?
-    git clone --depth=1 "${repository_url}" "${local_directory}" || return $?
+    git clone  --branch "${git_ref}" --depth 1 --single-branch "${repository_url}" "${local_directory}" || return $?
 }
 
 # Look through the repos we've been asked for and call clone as required

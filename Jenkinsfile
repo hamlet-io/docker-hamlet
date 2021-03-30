@@ -38,10 +38,9 @@ pipeline {
                     }
                     steps {
                         script {
-                            env.HAMLET_VERSION = 'master'
-                            env.DOCKER_IMAGE_VERSION = "${env['repo']}-${env['commit']}"
-                            env.SOURCE_BRANCH = 'master'
+                            env.HAMLET_VERSION = 'latest'
                             env.DOCKER_TAG = 'latest'
+                            env.DOCKER_IMAGE_VERSION = "${env['repo']}-${env['commit']}"
                         }
                     }
                 }
@@ -54,9 +53,8 @@ pipeline {
                     steps {
                         script {
                             env.HAMLET_VERSION = "${env['TAG_NAME']}"
-                            env.DOCKER_IMAGE_VERSION = "${env['TAG_NAME']}"
-                            env.SOURCE_BRANCH = "${env['BRANCH_NAME']}"
                             env.DOCKER_TAG = "${env['TAG_NAME']}"
+                            env.DOCKER_IMAGE_VERSION = "${env['TAG_NAME']}"
                         }
                     }
                 }
@@ -66,7 +64,6 @@ pipeline {
                         echo "Runnig build..."
                         echo "Hamlet Version: ${env['HAMLET_VERSION']}"
                         echo "Docker Image Version: ${env['DOCKER_IMAGE_VERSION']}"
-                        echo "Source Branch: ${env['SOURCE_BRANCH']}"
                         echo "Docker Tag: ${env['DOCKER_TAG']}"
                     }
                 }

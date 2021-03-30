@@ -9,8 +9,8 @@ USER root
 ARG DOCKERGID=497
 
 # Hamlet Version Control
-ARG HAMLET_VERSION=master
-ARG DOCKER_IMAGE_VERSION=master
+ARG HAMLET_VERSION=latest
+ARG DOCKER_IMAGE_VERSION=latest
 
 ## Standard Hamlet Env vars
 ENV AUTOMATION_BASE_DIR=/opt/hamlet/executor/automation \

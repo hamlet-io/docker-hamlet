@@ -105,7 +105,7 @@ pipeline {
                         sh '''#!/usr/bin/env bash
                             docker build \
                                 --cache-from "${DOCKER_REPO}:${DOCKER_TAG}-base" \
-                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-base \
+                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}-base" \
                                 -t "${DOCKER_REPO}:${DOCKER_TAG}"  \
                                 --build-arg HAMLET_VERSION="${HAMLET_VERSION}" \
                                 -f ./images/stretch/hamlet/Dockerfile . || exit $?
@@ -136,7 +136,7 @@ pipeline {
                         sh '''#!/usr/bin/env bash
                             docker build \
                                 --cache-from "${DOCKER_REPO}:${DOCKER_TAG}-base" \
-                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG} \
+                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}" \
                                 -t "${DOCKER_REPO}:${DOCKER_TAG}-jenkins" \
                                 -f ./images/stretch/jenkins/agent-jnlp/Dockerfile . || exit $?
                         '''
@@ -163,7 +163,7 @@ pipeline {
                         sh '''#!/usr/bin/env bash
                             docker build \
                                 --cache-from "${DOCKER_REPO}:${DOCKER_TAG}-base" \
-                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG} \
+                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}" \
                                 -t "${DOCKER_REPO}:${DOCKER_TAG}-azpipeline" \
                                 -f ./images/stretch/azure-pipelines/agent/Dockerfile . || exit $?
                         '''
@@ -203,7 +203,7 @@ pipeline {
                         sh '''#!/usr/bin/env bash
                             docker build \
                                 --cache-from "${DOCKER_REPO}:${DOCKER_TAG}-base" \
-                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}
+                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${DOCKER_TAG}" \
                                 -t "${DOCKER_REPO}:${DOCKER_TAG}-builder-meteor" \
                                 -f ./images/stretch/builder/meteor/Dockerfile . || exit $?
                         '''

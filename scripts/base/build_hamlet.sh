@@ -1,18 +1,41 @@
 #!/usr/bin/env bash
 
 # Override docker latest for git repo latest
-HAMLET_VERSION="${HAMLET_VERSION}"
-if [[ "${HAMLET_VERSION}" == "latest" ]]; then
-    HAMLET_VERSION="master"
-fi
+HAMLET_VERSION="${HAMLET_VERSION:-"latest"}"
 
-# Create the Git clone commands to get the Repositories
-# note: original hamlet-io repositories use "master" as default branch
-#       whilst the modern approach is to use "main" as default.
-#       This checks for the existence of the HAMLET_VERSION branch and
-#       if it does not exist, it attempts "main" instead.
-jq -r '.Repositories[] | "git ls-remote --heads \(.Repository) \(env.HAMLET_VERSION) && git clone --depth 1 --branch \(env.HAMLET_VERSION) \(.Repository) \(.Directory) || git ls-remote --heads \(.Repository) main && git clone --depth 1 --branch main \(.Repository) \(.Directory)" ' </build/config.json > /build/scripts/clone.sh
+function clone_repo() {
+    local repository_url="$1"; shift
+    local local_directory="$1"; shift
+    local version="${1}"; shift
+
+    git_ref=""
+
+    if [[ "${version}" == "latest" ]]; then
+
+        if [[ -n "$(git ls-remote --heads ${repository_url} main)" ]]; then
+            git_ref="main"
+        fi
+
+        if [[ -n "$(git ls-remote --heads ${repository_url} master)" ]]; then
+            git_ref="master"
+        fi
+
+    else
+        git_ref="${version}"
+    fi
+
+    echo "repo: ${repository_url}"
+
+    git ls-remote --heads --tags --exit-code ${repository_url} ${git_ref} || return $?
+    git clone --depth=1 "${repository_url}" "${local_directory}" || return $?
+}
+
+# Look through the repos we've been asked for and call clone as required
+jq -r '.Repositories[] | "clone_repo \(.Repository) \(.Directory) ${HAMLET_VERSION} || exit $?"' </build/config.json > /build/scripts/clone.sh
+
 chmod u+rwx /build/scripts/clone.sh
+
+. /build/scripts/clone.sh
 
 # Create the Version file from the config
 echo "{}" | jq  '{ "FrameworkVersion" : env.HAMLET_VERSION, "ContainerVersion" : env.DOCKER_IMAGE_VERSION  }' > /opt/hamlet/version.json

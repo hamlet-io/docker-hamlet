@@ -174,8 +174,7 @@ RUN mv /build/scripts/entrypoint.sh /entrypoint.sh && \
         chmod ugo+rx /entrypoint.sh
 
 RUN echo "Cloning images on $(date +%s)" && \
-	/build/scripts/build_hamlet.sh && \
-        /build/scripts/clone.sh
+	/build/scripts/build_hamlet.sh
 
 # Install the hamlet cli
 WORKDIR /opt/hamlet/cli/hamlet-cli

@@ -126,7 +126,7 @@ pipeline {
                         sh '''#!/usr/bin/env bash
                             docker build \
                                 --cache-from "${DOCKER_REPO}:${HAMLET_VERSION}-base" \
-                                --build-arg BASE_IMAGE="${HAMLET_VERSION}:${HAMLET_VERSION}" \
+                                --build-arg BASE_IMAGE="${DOCKER_REPO}:${HAMLET_VERSION}" \
                                 -t "${DOCKER_REPO}:${HAMLET_VERSION}-jenkins" \
                                 -f ./images/stretch/jenkins/agent-jnlp/Dockerfile . || exit $?
                         '''

@@ -71,12 +71,12 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 # PyEnv requirements
 ENV LANG=C.UTF-8 \
         LC_ALL=C.UTF-8 \
-        PYTHON_VERSION=3.6.8 \
+        PYTHON_VERSION=3.8.8 \
         PYENV_ROOT=/usr/local/opt/pyenv
 
-RUN git clone --branch "v1.2.15" --depth 1 https://github.com/pyenv/pyenv.git "${PYENV_ROOT}" && \
-        git clone --branch "v1.1.5" --depth 1 https://github.com/pyenv/pyenv-virtualenv.git "${PYENV_ROOT}/plugins/pyenv-virtualenv" && \
-        git clone --branch "v0.0.2" --depth 1 https://github.com/pyenv/pyenv-which-ext.git "${PYENV_ROOT}/plugins/pyenv-which-ext" && \
+RUN git clone --depth 1 https://github.com/pyenv/pyenv.git "${PYENV_ROOT}" && \
+        git clone --depth 1 https://github.com/pyenv/pyenv-virtualenv.git "${PYENV_ROOT}/plugins/pyenv-virtualenv" && \
+        git clone --depth 1 https://github.com/pyenv/pyenv-which-ext.git "${PYENV_ROOT}/plugins/pyenv-which-ext" && \
         mkdir "${PYENV_ROOT}/versions/" && chmod go+w --recursive "${PYENV_ROOT}/versions/" && \
         mkdir "${PYENV_ROOT}/shims/" && chmod go+w --recursive "${PYENV_ROOT}/shims/" && \
         touch "${PYENV_ROOT}/version" && chmod go+w "${PYENV_ROOT}/version" && \
@@ -111,11 +111,11 @@ RUN mkdir /opt/azcliextensions && \
         chmod 0755 --recursive /opt/azcliextensions
 
 # rbenv requirements
-ENV RUBY_VERSION=2.5.1 \
+ENV RUBY_VERSION=2.7.2 \
         RBENV_ROOT=/usr/local/opt/rbenv
 
-RUN git clone --branch "v1.1.2" --depth 1 https://github.com/rbenv/rbenv.git "${RBENV_ROOT}" && \
-        git clone --branch "v20191225" --depth 1 https://github.com/rbenv/ruby-build.git "${RBENV_ROOT}/plugins/ruby-build" && \
+RUN git clone --depth 1 https://github.com/rbenv/rbenv.git "${RBENV_ROOT}" && \
+        git clone --depth 1 https://github.com/rbenv/ruby-build.git "${RBENV_ROOT}/plugins/ruby-build" && \
         ln -s /usr/local/opt/rbenv/bin/rbenv /usr/local/bin/rbenv
 
 # Allow anyone to install a ruby version for builds
@@ -132,7 +132,7 @@ RUN gem install \
         cfn-nag
 
 # nodenv requirements
-ENV NODE_VERSION=10.22.0 \
+ENV NODE_VERSION=12.21.0 \
         NODENV_ROOT=/usr/local/opt/nodenv
 RUN git clone --depth 1 https://github.com/nodenv/nodenv.git "${NODENV_ROOT}" && \
         git clone --depth 1 https://github.com/nodenv/node-build.git "${NODENV_ROOT}/plugins/node-build" && \

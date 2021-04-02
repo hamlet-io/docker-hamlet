@@ -19,7 +19,6 @@ ENV AUTOMATION_BASE_DIR=/opt/hamlet/executor/automation \
         GENERATION_DIR=/opt/hamlet/executor/cli \
         GENERATION_ENGINE_DIR=/opt/hamlet/engine/core \
         GENERATION_PLUGIN_DIRS=/opt/hamlet/engine/plugins/aws;/opt/hamlet/engine/plugins/azure;/opt/hamlet/engine/plugins/diagrams \
-        GENERATION_STARTUP_DIR=/opt/hamlet/startup \
         GENERATION_PATTERNS_DIR=/opt/hamlet/patterns
 
 # Install OS Packages

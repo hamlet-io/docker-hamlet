@@ -9,10 +9,6 @@
             "Directory" : "/opt/hamlet/executor"
         },
         {
-            "Repository" : "https://github.com/hamlet-io/cloudinit-aws.git",
-            "Directory" : "/opt/hamlet/startup"
-        },
-        {
             "Repository" : "https://github.com/hamlet-io/executor-cookiecutter.git",
             "Directory" : "/opt/hamlet/patterns"
         },

@@ -177,9 +177,7 @@ RUN echo "Cloning images on $(date +%s)" && \
 
 # Install the hamlet cli
 WORKDIR /opt/hamlet/cli/hamlet-cli
-RUN python setup.py bdist_wheel && \
-        pip install -r requirements/prod.txt && \
-        pip install --find-links=dist --no-index hamlet-cli
+RUN pip install /opt/hamlet/cli/hamlet-cli
 
 WORKDIR /root
 

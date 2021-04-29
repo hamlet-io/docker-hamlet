@@ -27,6 +27,10 @@
         {
             "Repository" : "https://github.com/hamlet-io/engine-plugin-diagrams.git",
             "Directory" : "/opt/hamlet/engine/plugins/diagrams"
+        },
+        {
+            "Repository" : "https://github.com/hamlet-io/engine-plugin-cmdb.git",
+            "Directory" : "/opt/hamlet/engine/plugins/cmdb"
         }
     ]
 }

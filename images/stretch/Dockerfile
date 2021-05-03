@@ -175,10 +175,6 @@ RUN mv /build/scripts/entrypoint.sh /entrypoint.sh && \
 RUN echo "Cloning images on $(date +%s)" && \
 	/build/scripts/build_hamlet.sh
 
-# Install the hamlet cli
-WORKDIR /opt/hamlet/cli/hamlet-cli
-RUN pip install /opt/hamlet/cli/hamlet-cli
-
 WORKDIR /root
 
 ENTRYPOINT [ "/entrypoint.sh" ]

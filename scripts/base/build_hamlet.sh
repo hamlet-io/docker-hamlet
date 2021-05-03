@@ -38,7 +38,7 @@ chmod u+rwx /build/scripts/clone.sh
 . /build/scripts/clone.sh
 
 # Use pypi to install the cli
-if [[ "${HAMLET_VERSION}" == "latest" ]];
+if [[ "${HAMLET_VERSION}" == "latest" ]]; then
     pip install --pre hamlet-cli
 else
     pip install "hamlet-cli=${HAMLET_VERSION}"

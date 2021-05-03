@@ -37,5 +37,12 @@ chmod u+rwx /build/scripts/clone.sh
 
 . /build/scripts/clone.sh
 
+# Use pypi to install the cli
+if [[ "${HAMLET_VERSION}" == "latest" ]];
+    pip install --pre hamlet-cli
+else
+    pip install "hamlet-cli=${HAMLET_VERSION}"
+fi
+
 # Create the Version file from the config
 echo "{}" | jq  '{ "FrameworkVersion" : env.HAMLET_VERSION, "ContainerVersion" : env.DOCKER_IMAGE_VERSION  }' > /opt/hamlet/version.json

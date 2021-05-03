@@ -1,10 +1,6 @@
 {
     "Repositories" :[
         {
-            "Repository" : "https://github.com/hamlet-io/executor-python.git",
-            "Directory" : "/opt/hamlet/cli"
-        },
-        {
             "Repository" : "https://github.com/hamlet-io/executor-bash.git",
             "Directory" : "/opt/hamlet/executor"
         },

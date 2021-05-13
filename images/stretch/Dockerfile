@@ -18,8 +18,7 @@ ENV AUTOMATION_BASE_DIR=/opt/hamlet/executor/automation \
         GENERATION_BASE_DIR=/opt/hamlet/executor \
         GENERATION_DIR=/opt/hamlet/executor/cli \
         GENERATION_ENGINE_DIR=/opt/hamlet/engine/core \
-        GENERATION_PLUGIN_DIRS=/opt/hamlet/engine/plugins/aws;/opt/hamlet/engine/plugins/azure;/opt/hamlet/engine/plugins/diagrams \
-        GENERATION_PATTERNS_DIR=/opt/hamlet/patterns
+        GENERATION_PLUGIN_DIRS=/opt/hamlet/engine/plugins/aws;/opt/hamlet/engine/plugins/azure;/opt/hamlet/engine/plugins/diagrams
 
 # Install OS Packages
 RUN apt-get update && apt-get install --no-install-recommends -y \
@@ -95,7 +94,6 @@ RUN pip install --upgrade --no-cache-dir \
         awscli \
         azure-cli \
         requests \
-        cookiecutter \
         zappa \
         pytest \
         pytest-sugar \

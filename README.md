@@ -10,8 +10,8 @@ For more information see https://docs.hamlet.io
 
 #### ```hamletio/hamlet:<version>```
 
-This is our base docker image which includes all the requiremets for running hamlet and basic build tooling. This image can be used as a general purpose CI image
-The image also includes common application runtimes for application builds 
+This is our base docker image which includes all the requirements for running hamlet and basic build tooling. This image can be used as a general purpose CI image
+The image also includes common application runtimes for application builds
 
 - python (pyenv for version management)
 - node (nodenv for version management)
@@ -19,11 +19,11 @@ The image also includes common application runtimes for application builds
 
 #### ```hamletio/hamlet:<version>-builder-meteor```
 
-An extension for the builder image which but also includes Meteor (https://www.meteor.com/ ) installed along with a pre-cached package repository. *This is only supported on buster based images*
+An extension of the base image which also includes Meteor (https://www.meteor.com/ ) installed along with a pre-cached package repository
 
-### CI/CD Tools
+### Pipeline Agents
 
-The CI/CD Tool images are extensions of the base images with support for a specific CI/CD Tooling service
+The Pipeline agent images are extensions of the base images with support for running as a pipeline agent
 
 #### ```hamletio/hamlet:<version>-jenkins-<base>```
 

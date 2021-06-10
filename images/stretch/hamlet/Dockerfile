@@ -22,5 +22,8 @@ USER hamlet
 
 RUN mkdir /home/hamlet/cmdb && chown hamlet:hamlet /home/hamlet/cmdb
 
+RUN echo "Setting up hamlet on $(date +%s)" && \
+	/build/scripts/install_hamlet.sh
+
 VOLUME /home/hamlet/cmdb
 WORKDIR /home/hamlet/cmdb

@@ -1,5 +1,5 @@
 # -------------------------------------------------------
-# Base gen3 Image
+# Base agent build
 # -------------------------------------------------------
 FROM buildpack-deps:stretch-scm AS base
 
@@ -161,6 +161,7 @@ RUN mkdir -p /build/scripts && \
 
 # Get Hamlet code
 COPY scripts/base/ /build/scripts/
+RUN chmod -R +x /build/scripts
 COPY config.json /build/config.json
 
 RUN chmod -R u+rwx /build/scripts && \
@@ -170,8 +171,8 @@ RUN chmod -R u+rwx /build/scripts && \
 RUN mv /build/scripts/entrypoint.sh /entrypoint.sh && \
         chmod ugo+rx /entrypoint.sh
 
-RUN echo "Cloning images on $(date +%s)" && \
-	/build/scripts/build_hamlet.sh
+RUN echo "Setting up hamlet on $(date +%s)" && \
+	/build/scripts/install_hamlet.sh
 
 WORKDIR /root
 

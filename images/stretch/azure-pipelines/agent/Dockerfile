@@ -39,4 +39,7 @@ RUN chmod 755 /usr/local/bin/start \
 WORKDIR /home/azp
 USER azp
 
+RUN echo "Setting up hamlet on $(date +%s)" && \
+	/build/scripts/install_hamlet.sh
+
 ENTRYPOINT [ "/usr/local/bin/start" ]

@@ -35,4 +35,7 @@ USER jenkins
 # Create the workspace directory so we can mount volumes to it and maintain user permissions
 RUN mkdir -p /home/jenkins/workspace
 
+RUN echo "Setting up hamlet on $(date +%s)" && \
+	/build/scripts/install_hamlet.sh
+
 ENTRYPOINT [ "/usr/local/bin/jenkins-agent"]

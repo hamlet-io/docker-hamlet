@@ -235,16 +235,19 @@ ENTRYPOINT [ "/usr/local/bin/start" ]
 FROM hamlet as meteor-hamlet
 
 COPY scripts/meteor /opt/tools/scripts/meteor
+ENV PATH=$HOME/.meteor:$PATH
 RUN /opt/tools/scripts/meteor/setup_meteor.sh
 
 
 FROM jenkins-jnlp-agent AS meteor-jenkins-jnlp-agent
 
 COPY scripts/meteor /opt/tools/scripts/meteor
+ENV PATH=$HOME/.meteor:$PATH
 RUN /opt/tools/scripts/meteor/setup_meteor.sh
 
 
 FROM azure-pipelines-agent AS meteor-azure-pipelines-agent
 
 COPY scripts/meteor /opt/tools/scripts/meteor
+ENV PATH=$HOME/.meteor:$PATH
 RUN /opt/tools/scripts/meteor/setup_meteor.sh

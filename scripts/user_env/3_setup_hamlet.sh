@@ -8,4 +8,4 @@ mkdir -p "${HOME}/.hamlet/config"
 
 pip install --pre hamlet-cli
 hamlet engine install-engine ${HAMLET_ENGINE}
-hamlet engien set-engine ${HAMLET_ENGINE}
+hamlet engine set-engine ${HAMLET_ENGINE}

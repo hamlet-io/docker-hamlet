@@ -1,6 +1,9 @@
 on:
   push:
   workflow_dispatch:
+
+  # The schedule covers the current process for the hamlet engine
+  # This can be removed once we have support for engine updates in the cli
   schedule:
     - cron: 0 */3 * * *
 
@@ -12,6 +15,10 @@ jobs:
     strategy:
       matrix:
         include:
+
+          # The docker_target is a stage within the multistage pipeline
+          # The tag is what we push to dockerhub under the hamletio/hamlet image
+
           - docker_target: hamlet
             image_tag: ''
           - docker_target: jenkins-jnlp-agent
@@ -19,11 +26,11 @@ jobs:
           - docker_target: azure-pipelines-agent
             image_tag: -azpipeline
 
-          - docker_target: hamlet
+          - docker_target: meteor-hamlet
             image_tag: -builder-meteor
-          - docker_target: jenkins-jnlp-agent
+          - docker_target: meteor-jenkins-jnlp-agent
             image_tag: -jenkins-builder-meteor
-          - docker_target: azure-pipelines-agent
+          - docker_target: meteor-azure-pipelines-agent
             image_tag: -azpipeline-builder-meteor
 
     steps:
@@ -67,9 +74,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /tmp/.buildx-cache
-          key: ${{ github.ref }}-buildx-${{ github.sha }}
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
           restore-keys: |
-            ${{ github.ref }}-buildx-
+            ${{ runner.os }}-buildx-
 
       - name: Login to DockerHub
         uses: docker/login-action@v1

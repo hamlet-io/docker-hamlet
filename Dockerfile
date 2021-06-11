@@ -1,6 +1,7 @@
-# ----------------------------
-# Base image
-# ----------------------------
+# -------------------------------------------------------------------
+# Base CI image
+# This image is a general purpose CI image that also includes hamlet
+# -------------------------------------------------------------------
 FROM buildpack-deps:stretch-scm AS base
 
 USER root

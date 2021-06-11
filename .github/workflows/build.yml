@@ -1,0 +1,79 @@
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+
+  build_images:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        include:
+          - docker_stage: hamlet
+            image_tag: ''
+          - docker_stage: jenkins-jnlp-agent
+            image_tag: -jenkins
+          - docker_stage: azure-pipelines-agent
+            image_tag: -azpipeline
+
+          - docker_stage: hamlet
+            image_tag: -builder-meteor
+          - docker_stage: jenkins-jnlp-agent
+            image_tag: -jenkins-builder-meteor
+          - docker_stage: azure-pipelines-agent
+            image_tag: -azpipeline-builder-meteor
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - id: get_tag_name
+        name: image tag prefix
+        if: github.ref == 'refs/heads/master'
+        working-directory: ./hamlet-cli
+        run: |
+          if [[ ${{ github.ref }} == 'refs/heads/master' ]]; then
+            echo ::set-output name=TAG_PREFIX::latest
+            echo ::set-output name=PUSH_IMAGE::true
+
+          elif [[ ${{ github.ref }} == 'refs/tags/'* ]]; then
+            echo ::set-output name=TAG_PREFIX::${GITHUB_REF#refs/tags/}
+            echo ::set-output name=PUSH_IMAGE::true
+
+          else
+            echo ::set-output name=TAG_PREFIX::test
+            echo ::set-output name=PUSH_IMAGE::false
+          fi
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: contains(github.event.issue.labels.*.name, 'bug')
+          tags: hamletio/hamlet:${{ steps.get_tag_name.outputs.TAG_PREFIX }}${{ matrix.image_tag }}
+          target: startsWith(steps.get_tag_name.outputs.PUSH_IMAGE, 'true')
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new
+
+      - name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache

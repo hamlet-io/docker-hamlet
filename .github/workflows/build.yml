@@ -1,11 +1,12 @@
 on:
   push:
+    - 'master'
+  pull_request:
   workflow_dispatch:
 
-  # The schedule covers the current process for the hamlet engine
-  # This can be removed once we have support for engine updates in the cli
+  # Make a latest update build to keep things in shape
   schedule:
-    - cron: 0 9 * * *
+    - cron: 0 7 * * 0
 
 jobs:
 

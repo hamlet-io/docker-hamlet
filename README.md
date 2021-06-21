@@ -1,6 +1,6 @@
 # Hamlet Deploy Docker Image
 
-This repo contains the docker build process to create docker containers for the Hamlet Deploy application.
+Ths repo contains the docker image build process for the Hamlet Deploy CI Container
 
 For more information see https://docs.hamlet.io
 
@@ -10,7 +10,7 @@ For more information see https://docs.hamlet.io
 
 #### ```hamletio/hamlet:<version>```
 
-This is our base docker image which includes all the requirements for running hamlet and basic build tooling. This image can be used as a general purpose CI image
+This is our base docker image which includes all the requirements for running hamlet and build tooling. This image can be used as a general purpose CI image
 The image also includes common application runtimes for application builds
 
 - python (pyenv for version management)
@@ -35,17 +35,7 @@ This image extends the base image with the Azure Pipelines agent, this allows fo
 
 ## Versions
 
-Each image has the following tags:
+The versions of the docker image do not reflect the latest version of hamlet. The installation of the hamlet cli will be the latest at the time of build for the container. The cli then manages the installation of the engine parts of hamlet deploy.
+The image does include caches of the latest images to get you up and running
 
-- latest - the latest version of Hamlet Deploy - Images are built using the master/main branch of this repo and the master/default branch of each component of the Hamlet Deploy application
-- x.x.x - A specific release of the Hamlet Deploy framework - Images are built based on tags on this repo
-
-You can identify the version for a given container by reviewing the _/opt/hamlet/version.json_ file.
-
-```bash
-cat /opt/hamlet/version.json
-```
-
-## Configuration
-
-This docker containers main process is to clone specific versions of the Hamlet Deploy repositories. The _./config.json_ file determines which repositories to clone and their unique branch/tags.
+The `latest` tag is the latest build of this repository and we will generate regular tagged updates this container with changes included in the [CHANGELOG](./CHANGELOG.md)

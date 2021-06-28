@@ -212,13 +212,13 @@ ENV PATH=$HOME/.pyenv/bin:$HOME/.pyenv/versions:$HOME/.pyenv/shims:$PATH
 ENV PATH=$HOME/.rbenv/bin:$HOME/.rbenv/versions:$HOME/.rbenv/shims:$PATH
 ENV PYENV_ROOT=$HOME/.pyenv NODENV_ROOT=$HOME/.nodenv RBENV_ROOT=$HOME/.rbenv
 
-ENV GENERATION_ENGINE_DIR=$HOME/.hamlet/engine/engines/_global/shim/engine-core \
-        GENERATION_PLUGIN_DIRS=$HOME/.hamlet/engine/engines/_global/shim/engine-plugin-aws;$HOME/.hamlet/engine/engines/_global/shim/engine-plugin-azure \
-        GENERATION_BIN_DIR=$HOME/.hamlet/engine/engines/_global/shim/engine-binary \
-        GENERATION_BASE_DIR=$HOME/.hamlet/engine/engines/_global/shim/executor-bash \
-        GENERATION_DIR=$HOME/.hamlet/engine/engines/_global/shim/executor-bash/cli \
-        AUTOMATION_DIR=$HOME/.hamlet/engine/engines/_global/shim/executor-bash/automation/jenkins/aws \
-        AUTOMATION_BASE_DIR=$HOME/.hamlet/engine/engines/_global/shim/executor-bash/automation
+ENV GENERATION_ENGINE_DIR="$HOME/.hamlet/engine/engines/_global/shim/engine-core" \
+        GENERATION_PLUGIN_DIRS="$HOME/.hamlet/engine/engines/_global/shim/engine-plugin-aws;$HOME/.hamlet/engine/engines/_global/shim/engine-plugin-azure" \
+        GENERATION_BIN_DIR="$HOME/.hamlet/engine/engines/_global/shim/engine-binary" \
+        GENERATION_BASE_DIR="$HOME/.hamlet/engine/engines/_global/shim/executor-bash" \
+        GENERATION_DIR="$HOME/.hamlet/engine/engines/_global/shim/executor-bash/cli" \
+        AUTOMATION_DIR="$HOME/.hamlet/engine/engines/_global/shim/executor-bash/automation/jenkins/aws"\
+        AUTOMATION_BASE_DIR="$HOME/.hamlet/engine/engines/_global/shim/executor-bash/automation"
 
 ## Setup the user specific tooling
 RUN /opt/tools/scripts/setup_user_env.sh

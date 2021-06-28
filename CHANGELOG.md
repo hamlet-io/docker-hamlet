@@ -1,12 +1,17 @@
 # Changelog
 
-## Unreleased (2021-06-21)
+## Unreleased (2021-06-28)
 
 #### New Features
 
+* add smoke tests for hamlet engine setup
 * use the cli engine process for the latest hamlet image
 #### Fixes
 
+* set default engine to tram
+* remove docker layer caching
+* changelog typo
+* workflow syntax and name
 * include plugins for global node packages
 * minor updates
 * schedule and path for meteor
@@ -15,8 +20,11 @@
 #### Refactorings
 
 * rebuild and update the docker image container
+#### Docs
 
-Full set of changes: [`8.1.2...f7b4d83`](https://github.com/hamlet-io/docker-hamlet/compare/8.1.2...f7b4d83)
+* update CHANGELOG generation and reduce build churn
+
+Full set of changes: [`8.1.2...56448d2`](https://github.com/hamlet-io/docker-hamlet/compare/8.1.2...56448d2)
 
 ## 8.1.2 (2021-05-13)
 

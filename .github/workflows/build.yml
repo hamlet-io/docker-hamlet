@@ -6,7 +6,7 @@ on:
       - 'master'
   pull_request:
 
-  # Make a latest update build to keep things in shape
+  # Run a weekly update to get the latest packages
   workflow_dispatch:
   schedule:
     - cron: 0 7 * * 0
@@ -50,9 +50,9 @@ jobs:
             latest=auto
             suffix=${{ matrix.suffix }}
           tags: |
-            type=edge,branch=main
+            type=edge,branch=master
             type=semver,pattern={{version}}
-            type=schedule,pattern=nightly
+            type=schedule,pattern=weekly
             type=schedule,pattern=schedule-{{date 'YYYYMMDD'}}
             type=sha
 

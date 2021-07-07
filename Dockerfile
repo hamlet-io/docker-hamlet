@@ -6,8 +6,8 @@ FROM buildpack-deps:stretch-scm AS base
 
 USER root
 
-# Hamlet Version Control
-ARG DOCKER_IMAGE_VERSION=latest
+# Apply some global envs to how hamlet should behave
+ENV HAMLET_ENGINE_INSTALL_UPDATE="true"
 
 # Basic Package installs
 RUN apt-get update && apt-get install --no-install-recommends -y \
@@ -61,10 +61,10 @@ RUN groupadd -g "${DOCKERGID}" docker \
 
 RUN /usr/sbin/groupadd appenv
 
-# Docker
+# Python Lang support
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
 
-### Tool scripts that are run by users
+### Tool scripts that setup user environments
 COPY scripts/ /opt/tools/scripts/
 RUN chmod -R ugo+rx  /opt/tools/scripts/
 
@@ -108,14 +108,13 @@ ENV GENERATION_ENGINE_DIR="$HOME/.hamlet/engine/engines/_global/shim/engine-core
         GENERATION_WRAPPER_JAR_FILE="$HOME/.hamlet/engine/engines/_global/shim/engine-wrapper/freemarker-wrapper.jar" \
         GENERATION_BASE_DIR="$HOME/.hamlet/engine/engines/_global/shim/executor-bash" \
         GENERATION_DIR="$HOME/.hamlet/engine/engines/_global/shim/executor-bash/cli" \
-        AUTOMATION_DIR="$HOME/.hamlet/engine/engines/_global/shim/executor-bash/automation/jenkins/aws"\
+        AUTOMATION_DIR="$HOME/.hamlet/engine/engines/_global/shim/executor-bash/automation/jenkins/aws" \
         AUTOMATION_BASE_DIR="$HOME/.hamlet/engine/engines/_global/shim/executor-bash/automation"
 
 RUN echo 'export PS1='\''\033[0;32m\]\[\033[0m\033[0;32m\]\u\[\033[0;36m\] @ \w\[\033[0;32m\]\n$(git branch 2>/dev/null | grep "^*" | cut -d " " -f2)\[\033[0;32m\]└─\[\033[0m\033[0;32m\] \$\[\033[0m\033[0;32m\]\[\033[0m\] '\''' >> /home/hamlet/.bashrc
 RUN mkdir -p ${HOME}/cmdb
 
 ## Setup user level stuff
-
 RUN /opt/tools/scripts/setup_user_env.sh
 
 

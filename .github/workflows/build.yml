@@ -45,7 +45,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: ghcr.io/${{github.repository}}
+          images: hamletio/hamlet
           flavor: |
             latest=auto
             suffix=${{ matrix.suffix }}

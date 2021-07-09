@@ -5,7 +5,7 @@ on:
     branches:
       - 'master'
     tags:
-      - "[0-9]+.[0-9]+.[0-9]+"
+      - '[0-9]+.[0-9]+.[0-9]+'
   pull_request:
 
   # Run a weekly update to get the latest packages
@@ -70,7 +70,7 @@ jobs:
       - name: Push Release
         uses: docker/build-push-action@v2
         with:
-          push: ${{ github.event_name == 'scheduled' || startsWith(github.ref, 'refs/tags/*') || github.ref == 'refs/heads/master' }}
+          push: ${{ github.event_name == 'scheduled' || startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/master' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           target: ${{ matrix.docker_target }}

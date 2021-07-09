@@ -1,6 +1,36 @@
 # Changelog
 
-## Unreleased (2021-07-07)
+## Unreleased (2021-07-09)
+
+#### New Features
+
+* align engine handling with offical release
+* default to unicycle builds on schedules
+#### Fixes
+
+* testing for handling explicit set engine vs global
+* add suffic on latest tags
+* output type
+
+Full set of changes: [`8.2.2...ee1934e`](https://github.com/hamlet-io/docker-hamlet/compare/8.2.2...ee1934e)
+
+## 8.2.2 (2021-07-09)
+
+#### Fixes
+
+* tag tigger for push
+
+Full set of changes: [`8.2.1...8.2.2`](https://github.com/hamlet-io/docker-hamlet/compare/8.2.1...8.2.2)
+
+## 8.2.1 (2021-07-07)
+
+#### Fixes
+
+* add tag trigger for ci build process ([#60](https://github.com/hamlet-io/docker-hamlet/issues/60))
+
+Full set of changes: [`8.2.0...8.2.1`](https://github.com/hamlet-io/docker-hamlet/compare/8.2.0...8.2.1)
+
+## 8.2.0 (2021-07-07)
 
 #### New Features
 
@@ -33,9 +63,10 @@
 * update CHANGELOG generation and reduce build churn
 #### Others
 
+* changelog bump ([#54](https://github.com/hamlet-io/docker-hamlet/issues/54))
 * (ci): fix description on step name
 
-Full set of changes: [`8.1.2...a7f1bf2`](https://github.com/hamlet-io/docker-hamlet/compare/8.1.2...a7f1bf2)
+Full set of changes: [`8.1.2...8.2.0`](https://github.com/hamlet-io/docker-hamlet/compare/8.1.2...8.2.0)
 
 ## 8.1.2 (2021-05-13)
 

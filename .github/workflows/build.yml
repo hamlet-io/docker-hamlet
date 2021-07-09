@@ -50,7 +50,7 @@ jobs:
           images: hamletio/hamlet
           flavor: |
             latest=auto
-            suffix=${{ matrix.suffix }}
+            suffix=${{ matrix.suffix }},onlatest=true
           tags: |
             type=edge,branch=master
             type=semver,pattern={{version}}

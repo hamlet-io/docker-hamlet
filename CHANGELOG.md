@@ -11,8 +11,11 @@
 * testing for handling explicit set engine vs global
 * add suffic on latest tags
 * output type
+#### Others
 
-Full set of changes: [`8.2.2...ee1934e`](https://github.com/hamlet-io/docker-hamlet/compare/8.2.2...ee1934e)
+* changelog bump ([#59](https://github.com/hamlet-io/docker-hamlet/issues/59))
+
+Full set of changes: [`8.2.2...dd66c98`](https://github.com/hamlet-io/docker-hamlet/compare/8.2.2...dd66c98)
 
 ## 8.2.2 (2021-07-09)
 

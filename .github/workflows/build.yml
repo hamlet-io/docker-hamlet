@@ -74,9 +74,9 @@ jobs:
           # run each night and contains the latest engine and docker updates
 
           if [[ "${{ github.event_name == 'scheduled' }}" == "true" ]]; then
-            echo ::set-env name=HAMLET_ENGINE::"unicycle"
+            echo ::set-output name=HAMLET_ENGINE::"unicycle"
           else
-            echo ::set-env name=HAMLET_ENGINE::""
+            echo ::set-output name=HAMLET_ENGINE::""
           fi
 
       - name: Push Release

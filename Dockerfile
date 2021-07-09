@@ -9,6 +9,9 @@ USER root
 # Apply some global envs to how hamlet should behave
 ENV HAMLET_ENGINE_INSTALL_UPDATE="true"
 
+ARG HAMLET_ENGINE
+ENV HAMLET_ENGINE=$HAMLET_ENGINE
+
 # Basic Package installs
 RUN apt-get update && apt-get install --no-install-recommends -y \
         # setup apt for different sources

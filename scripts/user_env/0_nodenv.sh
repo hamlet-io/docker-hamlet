@@ -12,8 +12,8 @@ git clone --depth 1 https://github.com/nodenv/nodenv-default-packages.git "${NOD
 
 ( cd ${NODENV_ROOT} && src/configure && make -C src )
 
-# install package managers in all nodenv versions
-echo "npm" >> "${NODENV_ROOT}/default-packages"
+# Install yarn package manager in all nodenv versions
+# Leave npm version aligned with version of node
 echo "yarn" >> "${NODENV_ROOT}/default-packages"
 
 # nodenv install
@@ -21,6 +21,10 @@ NODE_VERSION=12.22.1
 eval "$(nodenv init -)"
 nodenv install "${NODE_VERSION}"
 nodenv global "${NODE_VERSION}"
-node --version
 
 nodenv package-hooks install --all
+
+# Show installed versions
+echo "node version = $(node --version)"
+echo "npm version = $(npm --version)"
+echo "yarn version = $(yarn --version)"

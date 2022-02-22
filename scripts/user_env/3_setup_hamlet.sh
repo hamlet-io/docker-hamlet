@@ -4,7 +4,7 @@ set -euo pipefail
 pip install "hamlet-cli>=9.1.1,<10.0.0"
 
 # Setup a base engine to get things going
-hamlet engine install-engine
+hamlet engine install-engine "${HAMLET_ENGINE:-"train"}"
 
 # Snoke tests to ensure we have a base setup in place
 [[ "$(hamlet --engine _global engine env GENERATION_DIR)" == "${GENERATION_DIR}" ]] || ( echo "GENERATION_DIR environment variable doesn't match cli expected variable"; hamlet engine env; echo "Current Env: ${GENERATION_DIR}"; exit 255 )

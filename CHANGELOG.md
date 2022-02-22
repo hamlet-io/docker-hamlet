@@ -1,6 +1,30 @@
 # Changelog
 
-## Unreleased (2021-07-09)
+## Unreleased (2022-02-22)
+
+#### Fixes
+
+* hamlet engine install
+* ignore meteor certificate issues ([#68](https://github.com/hamlet-io/docker-hamlet/issues/68))
+* match npm version to node version
+#### Refactorings
+
+* Ignore dockerhub login for PRs
+#### Docs
+
+* move docs for docker image from docs site
+
+Full set of changes: [`8.2.4...49904cc`](https://github.com/hamlet-io/docker-hamlet/compare/8.2.4...49904cc)
+
+## 8.2.4 (2021-07-16)
+
+#### Others
+
+* changelog bump ([#64](https://github.com/hamlet-io/docker-hamlet/issues/64))
+
+Full set of changes: [`8.2.3...8.2.4`](https://github.com/hamlet-io/docker-hamlet/compare/8.2.3...8.2.4)
+
+## 8.2.3 (2021-07-09)
 
 #### New Features
 
@@ -15,7 +39,7 @@
 
 * changelog bump ([#59](https://github.com/hamlet-io/docker-hamlet/issues/59))
 
-Full set of changes: [`8.2.2...dd66c98`](https://github.com/hamlet-io/docker-hamlet/compare/8.2.2...dd66c98)
+Full set of changes: [`8.2.2...8.2.3`](https://github.com/hamlet-io/docker-hamlet/compare/8.2.2...8.2.3)
 
 ## 8.2.2 (2021-07-09)
 

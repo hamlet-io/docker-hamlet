@@ -1,8 +1,8 @@
 # Hamlet Deploy Docker Image
 
-Ths repo contains the docker image build process for the Hamlet Deploy CI Container
+Ths repo contains the docker image build process for the Hamlet Deploy CI Container. The container includes the required dependencies for hamlet along with a CI build environment for common languages used in cloud native applications, Python, Ruby and NodeJS.
 
-For more information see https://docs.hamlet.io
+For more information on hamlet see https://docs.hamlet.io
 
 ## Image Variants
 
@@ -36,6 +36,6 @@ This image extends the base image with the Azure Pipelines agent, this allows fo
 ## Versions
 
 The versions of the docker image do not reflect the latest version of hamlet. The installation of the hamlet cli will be the latest at the time of build for the container. The cli then manages the installation of the engine parts of hamlet deploy.
-The image does include caches of the latest images to get you up and running
+The image does include caches of the latest engine to get you up and running
 
 The `latest` tag is the latest build of this repository and we will generate regular tagged updates this container with changes included in the [CHANGELOG](./CHANGELOG.md)

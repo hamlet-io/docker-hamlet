@@ -8,6 +8,3 @@ pip install --upgrade --no-cache-dir \
 
 # Az extension installs
 az extension add --name front-door
-
-# cfn-nag for testing
-gem install cfn-nag

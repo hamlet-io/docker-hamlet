@@ -6,12 +6,6 @@ FROM buildpack-deps:stretch-scm AS base
 
 USER root
 
-# Apply some global envs to how hamlet should behave
-ENV HAMLET_ENGINE_INSTALL_UPDATE="true"
-
-ARG HAMLET_ENGINE
-ENV HAMLET_ENGINE=$HAMLET_ENGINE
-
 # Basic Package installs
 RUN apt-get update && apt-get install --no-install-recommends -y \
         # setup apt for different sources
@@ -106,13 +100,13 @@ ENV PATH=$HOME/.pyenv/bin:$HOME/.pyenv/versions:$HOME/.pyenv/shims:$PATH
 ENV PATH=$HOME/.rbenv/bin:$HOME/.rbenv/versions:$HOME/.rbenv/shims:$PATH
 ENV PYENV_ROOT=$HOME/.pyenv NODENV_ROOT=$HOME/.nodenv RBENV_ROOT=$HOME/.rbenv
 
-ENV GENERATION_ENGINE_DIR="$HOME/.hamlet/engine/engines/_global/shim/engine-core" \
-        GENERATION_PLUGIN_DIRS="$HOME/.hamlet/engine/engines/_global/shim/engine-plugin-aws;$HOME/.hamlet/engine/engines/_global/shim/engine-plugin-azure" \
-        GENERATION_WRAPPER_JAR_FILE="$HOME/.hamlet/engine/engines/_global/shim/engine-wrapper/freemarker-wrapper.jar" \
-        GENERATION_BASE_DIR="$HOME/.hamlet/engine/engines/_global/shim/executor-bash" \
-        GENERATION_DIR="$HOME/.hamlet/engine/engines/_global/shim/executor-bash/cli" \
-        AUTOMATION_DIR="$HOME/.hamlet/engine/engines/_global/shim/executor-bash/automation/jenkins/aws" \
-        AUTOMATION_BASE_DIR="$HOME/.hamlet/engine/engines/_global/shim/executor-bash/automation"
+ENV GENERATION_ENGINE_DIR="$HOME/.hamlet/engine/engines/shim/shim/engine-core" \
+        GENERATION_PLUGIN_DIRS="$HOME/.hamlet/engine/engines/shim/shim/engine-plugin-aws;$HOME/.hamlet/engine/engines/shim/shim/engine-plugin-azure" \
+        GENERATION_WRAPPER_JAR_FILE="$HOME/.hamlet/engine/engines/shim/shim/engine-wrapper/freemarker-wrapper.jar" \
+        GENERATION_BASE_DIR="$HOME/.hamlet/engine/engines/shim/shim/executor-bash" \
+        GENERATION_DIR="$HOME/.hamlet/engine/engines/shim/shim/executor-bash/cli" \
+        AUTOMATION_DIR="$HOME/.hamlet/engine/engines/shim/shim/executor-bash/automation/jenkins/aws" \
+        AUTOMATION_BASE_DIR="$HOME/.hamlet/engine/engines/shim/shim/executor-bash/automation"
 
 RUN echo 'export PS1='\''\033[0;32m\]\[\033[0m\033[0;32m\]\u\[\033[0;36m\] @ \w\[\033[0;32m\]\n$(git branch 2>/dev/null | grep "^*" | cut -d " " -f2)\[\033[0;32m\]└─\[\033[0m\033[0;32m\] \$\[\033[0m\033[0;32m\]\[\033[0m\] '\''' >> /home/hamlet/.bashrc
 RUN mkdir -p ${HOME}/cmdb
@@ -140,7 +134,7 @@ RUN useradd -u ${JENKINSUID} --shell /bin/bash --create-home jenkins \
         && usermod -aG docker jenkins
 
 # See https://github.com/jenkinsci/docker-inbound-agent/blob/master/jenkins-agent
-ARG JENKINS_REMOTING_VERSION=4.7
+ARG JENKINS_REMOTING_VERSION=4.13
 RUN curl --create-dirs -fsSLo /usr/share/jenkins/agent.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${JENKINS_REMOTING_VERSION}/remoting-${JENKINS_REMOTING_VERSION}.jar \
   && chmod 755 /usr/share/jenkins \
   && chmod 644 /usr/share/jenkins/agent.jar
@@ -157,13 +151,13 @@ ENV PATH=$HOME/.pyenv/bin:$HOME/.pyenv/versions:$HOME/.pyenv/shims:$PATH
 ENV PATH=$HOME/.rbenv/bin:$HOME/.rbenv/versions:$HOME/.rbenv/shims:$PATH
 ENV PYENV_ROOT=$HOME/.pyenv NODENV_ROOT=$HOME/.nodenv RBENV_ROOT=$HOME/.rbenv
 
-ENV GENERATION_ENGINE_DIR="$HOME/.hamlet/engine/engines/_global/shim/engine-core" \
-        GENERATION_PLUGIN_DIRS="$HOME/.hamlet/engine/engines/_global/shim/engine-plugin-aws;$HOME/.hamlet/engine/engines/_global/shim/engine-plugin-azure" \
-        GENERATION_WRAPPER_JAR_FILE="$HOME/.hamlet/engine/engines/_global/shim/engine-wrapper/freemarker-wrapper.jar" \
-        GENERATION_BASE_DIR="$HOME/.hamlet/engine/engines/_global/shim/executor-bash" \
-        GENERATION_DIR="$HOME/.hamlet/engine/engines/_global/shim/executor-bash/cli" \
-        AUTOMATION_DIR="$HOME/.hamlet/engine/engines/_global/shim/executor-bash/automation/jenkins/aws"\
-        AUTOMATION_BASE_DIR="$HOME/.hamlet/engine/engines/_global/shim/executor-bash/automation"
+ENV GENERATION_ENGINE_DIR="$HOME/.hamlet/engine/engines/shim/shim/engine-core" \
+        GENERATION_PLUGIN_DIRS="$HOME/.hamlet/engine/engines/shim/shim/engine-plugin-aws;$HOME/.hamlet/engine/engines/shim/shim/engine-plugin-azure" \
+        GENERATION_WRAPPER_JAR_FILE="$HOME/.hamlet/engine/engines/shim/shim/engine-wrapper/freemarker-wrapper.jar" \
+        GENERATION_BASE_DIR="$HOME/.hamlet/engine/engines/shim/shim/executor-bash" \
+        GENERATION_DIR="$HOME/.hamlet/engine/engines/shim/shim/executor-bash/cli" \
+        AUTOMATION_DIR="$HOME/.hamlet/engine/engines/shim/shim/executor-bash/automation/jenkins/aws"\
+        AUTOMATION_BASE_DIR="$HOME/.hamlet/engine/engines/shim/shim/executor-bash/automation"
 
 ## Setup the user specific tooling
 RUN /opt/tools/scripts/setup_user_env.sh
@@ -214,13 +208,13 @@ ENV PATH=$HOME/.pyenv/bin:$HOME/.pyenv/versions:$HOME/.pyenv/shims:$PATH
 ENV PATH=$HOME/.rbenv/bin:$HOME/.rbenv/versions:$HOME/.rbenv/shims:$PATH
 ENV PYENV_ROOT=$HOME/.pyenv NODENV_ROOT=$HOME/.nodenv RBENV_ROOT=$HOME/.rbenv
 
-ENV GENERATION_ENGINE_DIR="$HOME/.hamlet/engine/engines/_global/shim/engine-core" \
-        GENERATION_PLUGIN_DIRS="$HOME/.hamlet/engine/engines/_global/shim/engine-plugin-aws;$HOME/.hamlet/engine/engines/_global/shim/engine-plugin-azure" \
-        GENERATION_WRAPPER_JAR_FILE="$HOME/.hamlet/engine/engines/_global/shim/engine-wrapper/freemarker-wrapper.jar" \
-        GENERATION_BASE_DIR="$HOME/.hamlet/engine/engines/_global/shim/executor-bash" \
-        GENERATION_DIR="$HOME/.hamlet/engine/engines/_global/shim/executor-bash/cli" \
-        AUTOMATION_DIR="$HOME/.hamlet/engine/engines/_global/shim/executor-bash/automation/jenkins/aws"\
-        AUTOMATION_BASE_DIR="$HOME/.hamlet/engine/engines/_global/shim/executor-bash/automation"
+ENV GENERATION_ENGINE_DIR="$HOME/.hamlet/engine/engines/shim/shim/engine-core" \
+        GENERATION_PLUGIN_DIRS="$HOME/.hamlet/engine/engines/shim/shim/engine-plugin-aws;$HOME/.hamlet/engine/engines/shim/shim/engine-plugin-azure" \
+        GENERATION_WRAPPER_JAR_FILE="$HOME/.hamlet/engine/engines/shim/shim/engine-wrapper/freemarker-wrapper.jar" \
+        GENERATION_BASE_DIR="$HOME/.hamlet/engine/engines/shim/shim/executor-bash" \
+        GENERATION_DIR="$HOME/.hamlet/engine/engines/shim/shim/executor-bash/cli" \
+        AUTOMATION_DIR="$HOME/.hamlet/engine/engines/shim/shim/executor-bash/automation/jenkins/aws"\
+        AUTOMATION_BASE_DIR="$HOME/.hamlet/engine/engines/shim/shim/executor-bash/automation"
 
 ## Setup the user specific tooling
 RUN /opt/tools/scripts/setup_user_env.sh

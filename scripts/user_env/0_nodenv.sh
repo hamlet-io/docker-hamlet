@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -eo pipefail
+set -euo pipefail
 
 NODENV_ROOT="${NODENV_ROOT:-"${HOME}/.nodenv"}"
 

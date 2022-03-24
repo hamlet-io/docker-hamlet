@@ -15,7 +15,3 @@ pip install --upgrade --no-cache-dir \
         pytest-django \
         coverage \
         flake8
-
-# Install Global NPM Packages
-npm install -g \
-        yarn

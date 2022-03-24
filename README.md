@@ -4,6 +4,19 @@ Ths repo contains the docker image build process for the Hamlet Deploy CI Contai
 
 For more information on hamlet see https://docs.hamlet.io
 
+## Shim engines
+
+The docker container supports a shim style engine that provides a fixed set of directory locations symlinked to the current default engine.
+This is used when you are calling the bash executor commands directly instead of using the hamlet cli commands and would like to manage the engine version through the cli.
+
+The standard engine environment variables are set within the docker container to support this as soon as you start the container up.
+
+To support the migration from using the local java installation to a bundled installation there are two shim modes available, the bundled and the local shims.
+
+If you are planning on using a version of hamlet before 8.5.0 make sure to set the shim mode to the local shim. For any versions above 8.5.0 you can leave the mode as the bundled mode.
+
+To configure the mode set the environment variable `HAMLET_ENGINE_SHIM_MODE` to either `local` or `bundled` as part of the containers startup environment variables
+
 ## Image Variants
 
 ### Base

@@ -36,6 +36,9 @@
 #                              the agent skips connecting to an HTTP(S) port for connection info.
 # * JENKINS_PROTOCOLS:         Specify the remoting protocols to attempt when instanceIdentity is provided.
 
+# Set the shim environment variables
+. /opt/tools/scripts/shim_setup.sh
+
 # Allows for running extra startup commands
 if [ -n "${STARTUP_COMMANDS}" ]; then
 	echo "Running extra startup commands...."

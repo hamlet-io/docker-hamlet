@@ -16,14 +16,10 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
         software-properties-common \
         # Standard linux tools
         tar zip unzip \
-        less vim tree groff \
-        sudo \
+        less vim sudo \
         iputils-ping \
-        netcat \
         # hamlet req
-        jq dos2unix \
-        openjdk-8-jdk \
-        graphviz \
+        jq graphviz openjdk-8-jdk \
         # Python/PyEnv Reqs
         make build-essential \
         libssl-dev zlib1g-dev libbz2-dev libreadline-dev \
@@ -42,39 +38,28 @@ RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - \
    stable"
 
 # Add Backports sources
-RUN echo "deb http://deb.debian.org/debian stretch-backports main" | tee /etc/apt/sources.list.d/backports.list && \
-        echo 'Package: * \n Pin: release a=stretch-backports \n Pin-Priority: 900' | tee /etc/apt/preferences.d/backports
+RUN echo "deb http://deb.debian.org/debian stretch-backports main" | tee /etc/apt/sources.list.d/backports.list \
+        && echo 'Package: * \n Pin: release a=stretch-backports \n Pin-Priority: 900' | tee /etc/apt/preferences.d/backports
 
 RUN apt-get update && apt-get install --no-install-recommends -y \
-    docker-ce-cli \
-    git-lfs \
+        docker-ce-cli \
+        git-lfs \
     && rm -rf /var/lib/apt/lists/*
-
-#Docker config
-ARG DOCKERGID=497
-ENV DOCKER_API_VERSION=1.39
-RUN groupadd -g "${DOCKERGID}" docker \
-        && groupmod -g "${DOCKERGID}" docker
-
-RUN /usr/sbin/groupadd appenv
 
 # Python Lang support
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
 
-### Tool scripts that setup user environments
+### Scripts for user env and entrypoint
 COPY scripts/ /opt/tools/scripts/
-RUN chmod -R ugo+rx  /opt/tools/scripts/
-
-### Entrypoint setup
 COPY scripts/entrypoint.sh /entrypoint.sh
-RUN chmod ugo+rx /entrypoint.sh
 
-RUN echo '#Allow everyone in appenv group to install packages' \
+# Sudo support for apt-get installs
+RUN /usr/sbin/groupadd appenv \
+        && echo '#Allow everyone in appenv group to install packages' \
         && echo '%appenv ALL = NOPASSWD : /usr/bin/apt-get' >> /etc/sudoers
 
 ENTRYPOINT [ "/entrypoint.sh" ]
 CMD [ "/bin/bash" ]
-
 
 
 # ----------------------
@@ -89,8 +74,7 @@ ARG HOME=/home/hamlet
 
 RUN useradd -u 1003 --shell /bin/bash --create-home hamlet \
         && chown hamlet:hamlet /home/hamlet && chmod u+rwx $HOME \
-        && usermod -aG appenv hamlet \
-        && usermod -aG docker hamlet
+        && usermod -aG appenv hamlet
 
 USER hamlet
 WORKDIR $HOME
@@ -100,21 +84,20 @@ ENV PATH=$HOME/.pyenv/bin:$HOME/.pyenv/versions:$HOME/.pyenv/shims:$PATH
 ENV PATH=$HOME/.rbenv/bin:$HOME/.rbenv/versions:$HOME/.rbenv/shims:$PATH
 ENV PYENV_ROOT=$HOME/.pyenv NODENV_ROOT=$HOME/.nodenv RBENV_ROOT=$HOME/.rbenv
 
-ENV GENERATION_ENGINE_DIR="$HOME/.hamlet/engine/engines/shim/shim/engine-core" \
-        GENERATION_PLUGIN_DIRS="$HOME/.hamlet/engine/engines/shim/shim/engine-plugin-aws;$HOME/.hamlet/engine/engines/shim/shim/engine-plugin-azure" \
-        GENERATION_WRAPPER_JAR_FILE="$HOME/.hamlet/engine/engines/shim/shim/engine-wrapper/freemarker-wrapper.jar" \
-        GENERATION_BASE_DIR="$HOME/.hamlet/engine/engines/shim/shim/executor-bash" \
-        GENERATION_DIR="$HOME/.hamlet/engine/engines/shim/shim/executor-bash/cli" \
-        AUTOMATION_DIR="$HOME/.hamlet/engine/engines/shim/shim/executor-bash/automation/jenkins/aws" \
-        AUTOMATION_BASE_DIR="$HOME/.hamlet/engine/engines/shim/shim/executor-bash/automation"
+ENV GENERATION_PLUGIN_DIRS="$HOME/.hamlet/engine/engines/bundled_shim/shim/engine-plugin-aws;$HOME/.hamlet/engine/engines/bundled_shim/shim/engine-plugin-azure" \
+        GENERATION_WRAPPER_LOCAL_JAVA="false" \
+        GENERATION_WRAPPER_SCRIPT_FILE="$HOME/.hamlet/engine/engines/bundled_shim/shim/engine-wrapper/freemarker-wrapper-Linux/bin/freemarker-wrapper" \
+        GENERATION_WRAPPER_JAR_FILE="" \
+        GENERATION_BASE_DIR="$HOME/.hamlet/engine/engines/bundled_shim/shim/executor-bash" \
+        GENERATION_DIR="$HOME/.hamlet/engine/engines/bundled_shim/shim/executor-bash/cli" \
+        AUTOMATION_DIR="$HOME/.hamlet/engine/engines/bundled_shim/shim/executor-bash/automation/jenkins/aws" \
+        AUTOMATION_BASE_DIR="$HOME/.hamlet/engine/engines/bundled_shim/shim/executor-bash/automation"
 
 RUN echo 'export PS1='\''\033[0;32m\]\[\033[0m\033[0;32m\]\u\[\033[0;36m\] @ \w\[\033[0;32m\]\n$(git branch 2>/dev/null | grep "^*" | cut -d " " -f2)\[\033[0;32m\]└─\[\033[0m\033[0;32m\] \$\[\033[0m\033[0;32m\]\[\033[0m\] '\''' >> /home/hamlet/.bashrc
 RUN mkdir -p ${HOME}/cmdb
 
 ## Setup user level stuff
 RUN /opt/tools/scripts/setup_user_env.sh
-
-
 
 # ----------------------
 # Jenkins TCP/JNLP Agent
@@ -130,8 +113,7 @@ ARG HOME=/home/jenkins
 # Workaround for docker in docker permissions - ECS seems to use 497 for the group Id
 RUN useradd -u ${JENKINSUID} --shell /bin/bash --create-home jenkins \
         && chown jenkins:jenkins $HOME && chmod u+rwx $HOME \
-        && usermod -aG appenv jenkins \
-        && usermod -aG docker jenkins
+        && usermod -aG appenv jenkins
 
 # See https://github.com/jenkinsci/docker-inbound-agent/blob/master/jenkins-agent
 ARG JENKINS_REMOTING_VERSION=4.13
@@ -140,8 +122,6 @@ RUN curl --create-dirs -fsSLo /usr/share/jenkins/agent.jar https://repo.jenkins-
   && chmod 644 /usr/share/jenkins/agent.jar
 
 COPY scripts/jenkins-jnlp-agent/ /usr/local/bin/
-RUN chmod 755 /usr/local/bin/wait-for-it \
-    && chmod 755 /usr/local/bin/jenkins-agent
 
 USER jenkins
 WORKDIR $HOME
@@ -151,13 +131,14 @@ ENV PATH=$HOME/.pyenv/bin:$HOME/.pyenv/versions:$HOME/.pyenv/shims:$PATH
 ENV PATH=$HOME/.rbenv/bin:$HOME/.rbenv/versions:$HOME/.rbenv/shims:$PATH
 ENV PYENV_ROOT=$HOME/.pyenv NODENV_ROOT=$HOME/.nodenv RBENV_ROOT=$HOME/.rbenv
 
-ENV GENERATION_ENGINE_DIR="$HOME/.hamlet/engine/engines/shim/shim/engine-core" \
-        GENERATION_PLUGIN_DIRS="$HOME/.hamlet/engine/engines/shim/shim/engine-plugin-aws;$HOME/.hamlet/engine/engines/shim/shim/engine-plugin-azure" \
-        GENERATION_WRAPPER_JAR_FILE="$HOME/.hamlet/engine/engines/shim/shim/engine-wrapper/freemarker-wrapper.jar" \
-        GENERATION_BASE_DIR="$HOME/.hamlet/engine/engines/shim/shim/executor-bash" \
-        GENERATION_DIR="$HOME/.hamlet/engine/engines/shim/shim/executor-bash/cli" \
-        AUTOMATION_DIR="$HOME/.hamlet/engine/engines/shim/shim/executor-bash/automation/jenkins/aws"\
-        AUTOMATION_BASE_DIR="$HOME/.hamlet/engine/engines/shim/shim/executor-bash/automation"
+ENV GENERATION_PLUGIN_DIRS="$HOME/.hamlet/engine/engines/bundled_shim/shim/engine-plugin-aws;$HOME/.hamlet/engine/engines/bundled_shim/shim/engine-plugin-azure" \
+        GENERATION_WRAPPER_LOCAL_JAVA="false" \
+        GENERATION_WRAPPER_SCRIPT_FILE="$HOME/.hamlet/engine/engines/bundled_shim/shim/engine-wrapper/freemarker-wrapper-Linux/bin/freemarker-wrapper" \
+        GENERATION_WRAPPER_JAR_FILE="" \
+        GENERATION_BASE_DIR="$HOME/.hamlet/engine/engines/bundled_shim/shim/executor-bash" \
+        GENERATION_DIR="$HOME/.hamlet/engine/engines/bundled_shim/shim/executor-bash/cli" \
+        AUTOMATION_DIR="$HOME/.hamlet/engine/engines/bundled_shim/shim/executor-bash/automation/jenkins/aws" \
+        AUTOMATION_BASE_DIR="$HOME/.hamlet/engine/engines/bundled_shim/shim/executor-bash/automation"
 
 ## Setup the user specific tooling
 RUN /opt/tools/scripts/setup_user_env.sh
@@ -179,15 +160,12 @@ USER root
 
 ARG PIPELINESUID=1000
 ARG HOME=/home/azp
-ARG DOCKERGID=115
 
 RUN useradd -u ${PIPELINESUID} --shell /bin/bash --create-home azp \
-  && groupmod -g "${DOCKERGID}" docker \
-  && chown azp:azp $HOME && chmod u+rwx $HOME \
-  && usermod -aG docker azp \
-  && usermod -aG appenv azp \
-  && usermod -aG sudo azp \
-  && echo '%docker ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+        && chown azp:azp $HOME \
+        && chmod u+rwx $HOME \
+        && usermod -aG appenv azp \
+        && usermod -aG sudo azp
 
 # https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/docker?view=azure-devops#linux
 RUN apt-get update \
@@ -198,7 +176,7 @@ RUN apt-get update \
 
 COPY scripts/azpipelines-agent/start /usr/local/bin/start
 RUN chmod +x /usr/local/bin/start \
-  && chown azp:azp /usr/local/bin/start
+        && chown azp:azp /usr/local/bin/start
 
 USER azp
 
@@ -208,19 +186,19 @@ ENV PATH=$HOME/.pyenv/bin:$HOME/.pyenv/versions:$HOME/.pyenv/shims:$PATH
 ENV PATH=$HOME/.rbenv/bin:$HOME/.rbenv/versions:$HOME/.rbenv/shims:$PATH
 ENV PYENV_ROOT=$HOME/.pyenv NODENV_ROOT=$HOME/.nodenv RBENV_ROOT=$HOME/.rbenv
 
-ENV GENERATION_ENGINE_DIR="$HOME/.hamlet/engine/engines/shim/shim/engine-core" \
-        GENERATION_PLUGIN_DIRS="$HOME/.hamlet/engine/engines/shim/shim/engine-plugin-aws;$HOME/.hamlet/engine/engines/shim/shim/engine-plugin-azure" \
-        GENERATION_WRAPPER_JAR_FILE="$HOME/.hamlet/engine/engines/shim/shim/engine-wrapper/freemarker-wrapper.jar" \
-        GENERATION_BASE_DIR="$HOME/.hamlet/engine/engines/shim/shim/executor-bash" \
-        GENERATION_DIR="$HOME/.hamlet/engine/engines/shim/shim/executor-bash/cli" \
-        AUTOMATION_DIR="$HOME/.hamlet/engine/engines/shim/shim/executor-bash/automation/jenkins/aws"\
-        AUTOMATION_BASE_DIR="$HOME/.hamlet/engine/engines/shim/shim/executor-bash/automation"
+ENV GENERATION_PLUGIN_DIRS="$HOME/.hamlet/engine/engines/bundled_shim/shim/engine-plugin-aws;$HOME/.hamlet/engine/engines/bundled_shim/shim/engine-plugin-azure" \
+        GENERATION_WRAPPER_LOCAL_JAVA="false" \
+        GENERATION_WRAPPER_SCRIPT_FILE="$HOME/.hamlet/engine/engines/bundled_shim/shim/engine-wrapper/freemarker-wrapper-Linux/bin/freemarker-wrapper" \
+        GENERATION_WRAPPER_JAR_FILE="" \
+        GENERATION_BASE_DIR="$HOME/.hamlet/engine/engines/bundled_shim/shim/executor-bash" \
+        GENERATION_DIR="$HOME/.hamlet/engine/engines/bundled_shim/shim/executor-bash/cli" \
+        AUTOMATION_DIR="$HOME/.hamlet/engine/engines/bundled_shim/shim/executor-bash/automation/jenkins/aws" \
+        AUTOMATION_BASE_DIR="$HOME/.hamlet/engine/engines/bundled_shim/shim/executor-bash/automation"
 
 ## Setup the user specific tooling
 RUN /opt/tools/scripts/setup_user_env.sh
 
 ENTRYPOINT [ "/usr/local/bin/start" ]
-
 
 
 # ----------------------------

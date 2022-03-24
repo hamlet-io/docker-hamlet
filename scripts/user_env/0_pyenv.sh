@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -eo pipefail
+set -euo pipefail
 
 PYENV_ROOT="${PYENV_ROOT:-"${HOME}/.pyenv"}"
 

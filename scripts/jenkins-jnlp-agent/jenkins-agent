@@ -40,7 +40,7 @@
 . /opt/tools/scripts/shim_setup.sh
 
 # Allows for running extra startup commands
-if [ -n "${STARTUP_COMMANDS}" ]; then
+if [ -n "${STARTUP_COMMANDS:-}" ]; then
 	echo "Running extra startup commands...."
 	/usr/bin/env sh -c "${STARTUP_COMMANDS}"
 fi

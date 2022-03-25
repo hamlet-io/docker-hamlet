@@ -1,6 +1,37 @@
 # Changelog
 
-## Unreleased (2022-02-22)
+## Unreleased (2022-03-25)
+
+#### Fixes
+
+* shim setup env config
+
+Full set of changes: [`8.5.1...b6597ff`](https://github.com/hamlet-io/docker-hamlet/compare/8.5.1...b6597ff)
+
+## 8.5.1 (2022-03-25)
+
+#### New Features
+
+* add support for bundled and local shims
+#### Fixes
+
+* relax the set commands used in bash scripts
+* update shell for jenkins agent ([#72](https://github.com/hamlet-io/docker-hamlet/issues/72))
+
+Full set of changes: [`8.5.0...8.5.1`](https://github.com/hamlet-io/docker-hamlet/compare/8.5.0...8.5.1)
+
+## 8.5.0 (2022-03-14)
+
+#### New Features
+
+* support changes to the cli with the shim engine
+#### Fixes
+
+* default to cli defined default engine
+
+Full set of changes: [`8.4.2...8.5.0`](https://github.com/hamlet-io/docker-hamlet/compare/8.4.2...8.5.0)
+
+## 8.4.2 (2022-02-22)
 
 #### Fixes
 
@@ -13,8 +44,11 @@
 #### Docs
 
 * move docs for docker image from docs site
+#### Others
 
-Full set of changes: [`8.2.4...49904cc`](https://github.com/hamlet-io/docker-hamlet/compare/8.2.4...49904cc)
+* changelog bump ([#65](https://github.com/hamlet-io/docker-hamlet/issues/65))
+
+Full set of changes: [`8.2.4...8.4.2`](https://github.com/hamlet-io/docker-hamlet/compare/8.2.4...8.4.2)
 
 ## 8.2.4 (2021-07-16)
 

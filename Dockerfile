@@ -195,7 +195,7 @@ RUN useradd -u ${PIPELINESUID} --shell /bin/bash --create-home azp \
 # https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/docker?view=azure-devops#linux
 RUN apt-get update \
         && apt-get install -y --no-install-recommends \
-                libcurl3 \
+                libcurl4 \
                 libunwind8 \
         && rm -rf /var/lib/apt/lists/*
 

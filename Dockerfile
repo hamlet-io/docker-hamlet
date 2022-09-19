@@ -2,32 +2,31 @@
 # Base CI image
 # This image is a general purpose CI image that also includes hamlet
 # -------------------------------------------------------------------
-FROM buildpack-deps:stretch-scm AS base
+FROM buildpack-deps:bullseye-scm AS base
 
 USER root
 
 # Basic Package installs
 RUN apt-get update && apt-get install --no-install-recommends -y \
         # setup apt for different sources
-        apt-utils \
-        apt-transport-https \
+        apt-utils apt-transport-https \
         ca-certificates \
         gnupg2 \
         software-properties-common \
+        git git-lfs \
         # Standard linux tools
         tar zip unzip \
         less vim sudo \
         iputils-ping \
         # hamlet req
-        jq graphviz openjdk-8-jdk \
+        jq graphviz \
         # Python/PyEnv Reqs
-        make build-essential \
-        libssl-dev zlib1g-dev libbz2-dev libreadline-dev \
-        libsqlite3-dev wget curl llvm libncurses5-dev xz-utils tk-dev \
-        libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev \
+        make build-essential libssl-dev zlib1g-dev \
+        libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm \
+        libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev \
         # Builder Req
         libpq-dev libcurl4-openssl-dev \
-        libncursesw5-dev libedit-dev \
+        libedit-dev \
    && rm -rf /var/lib/apt/lists/*
 
 # Add docker to apt-get
@@ -37,13 +36,8 @@ RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - \
    $(lsb_release -cs) \
    stable"
 
-# Add Backports sources
-RUN echo "deb http://deb.debian.org/debian stretch-backports main" | tee /etc/apt/sources.list.d/backports.list \
-        && echo 'Package: * \n Pin: release a=stretch-backports \n Pin-Priority: 900' | tee /etc/apt/preferences.d/backports
-
 RUN apt-get update && apt-get install --no-install-recommends -y \
         docker-ce-cli \
-        git-lfs \
     && rm -rf /var/lib/apt/lists/*
 
 # Python Lang support
@@ -100,28 +94,63 @@ RUN mkdir -p ${HOME}/cmdb
 RUN /opt/tools/scripts/setup_user_env.sh
 
 # ----------------------
-# Jenkins TCP/JNLP Agent
+# Jenkins Inbound Agent
 # ----------------------
 
-FROM base as jenkins-jnlp-agent
+FROM jenkins/inbound-agent:latest-jdk11 as jenkins-agent
 
 USER root
 
 ARG JENKINSUID=1000
 ARG HOME=/home/jenkins
 
-# Workaround for docker in docker permissions - ECS seems to use 497 for the group Id
-RUN useradd -u ${JENKINSUID} --shell /bin/bash --create-home jenkins \
-        && chown jenkins:jenkins $HOME && chmod u+rwx $HOME \
+# Basic Package installs
+RUN apt-get update && apt-get install --no-install-recommends -y \
+        # setup apt for different sources
+        apt-utils apt-transport-https \
+        ca-certificates \
+        gnupg2 \
+        software-properties-common \
+        git git-lfs \
+        # Standard linux tools
+        tar zip unzip \
+        less vim sudo \
+        iputils-ping \
+        # hamlet req
+        jq graphviz \
+        # Python/PyEnv Reqs
+        make build-essential libssl-dev zlib1g-dev \
+        libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm \
+        libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev \
+        # Builder Req
+        libpq-dev libcurl4-openssl-dev \
+        libedit-dev \
+   && rm -rf /var/lib/apt/lists/*
+
+# Add docker to apt-get
+RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - \
+    && add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/debian \
+   $(lsb_release -cs) \
+   stable"
+
+RUN apt-get update && apt-get install --no-install-recommends -y \
+        docker-ce-cli \
+    && rm -rf /var/lib/apt/lists/*
+
+# Python Lang support
+ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
+
+### Scripts for user env and entrypoint
+COPY scripts/ /opt/tools/scripts/
+COPY scripts/entrypoint.sh /entrypoint.sh
+
+
+# Sudo support for apt-get installs
+RUN /usr/sbin/groupadd appenv \
+        && echo '#Allow everyone in appenv group to install packages' \
+        && echo '%appenv ALL = NOPASSWD : /usr/bin/apt-get' >> /etc/sudoers \
         && usermod -aG appenv jenkins
-
-# See https://github.com/jenkinsci/docker-inbound-agent/blob/master/jenkins-agent
-ARG JENKINS_REMOTING_VERSION=4.13
-RUN curl --create-dirs -fsSLo /usr/share/jenkins/agent.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${JENKINS_REMOTING_VERSION}/remoting-${JENKINS_REMOTING_VERSION}.jar \
-  && chmod 755 /usr/share/jenkins \
-  && chmod 644 /usr/share/jenkins/agent.jar
-
-COPY scripts/jenkins-jnlp-agent/ /usr/local/bin/
 
 USER jenkins
 WORKDIR $HOME
@@ -145,10 +174,6 @@ RUN /opt/tools/scripts/setup_user_env.sh
 
 # Create the workspace directory so we can mount volumes to it and maintain user permissions
 RUN mkdir -p ${HOME}/workspace
-
-ENTRYPOINT [ "/usr/local/bin/jenkins-agent"]
-
-
 
 # ----------------------------
 # Azure Pipelines Agent Setup
@@ -214,7 +239,7 @@ ENV PATH=$HOME/.meteor:$PATH
 RUN /opt/tools/scripts/meteor/setup_meteor.sh
 
 
-FROM jenkins-jnlp-agent AS meteor-jenkins-jnlp-agent
+FROM jenkins-agent AS meteor-jenkins-agent
 
 COPY scripts/meteor /opt/tools/scripts/meteor
 ENV PATH=$HOME/.meteor:$PATH

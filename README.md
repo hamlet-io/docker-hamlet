@@ -28,11 +28,6 @@ The image also includes common application runtimes for application builds
 
 - python (pyenv for version management)
 - node (nodenv for version management)
-- ruby (rbenv for version management)
-
-#### ```hamletio/hamlet:<version>-builder-meteor```
-
-An extension of the base image which also includes Meteor (https://www.meteor.com/ ) installed along with a pre-cached package repository
 
 ### Pipeline Agents
 

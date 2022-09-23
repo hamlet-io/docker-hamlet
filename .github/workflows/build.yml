@@ -32,13 +32,6 @@ jobs:
           - docker_target: azure-pipelines-agent
             suffix: -azpipeline
 
-          - docker_target: meteor-hamlet
-            suffix: -builder-meteor
-          - docker_target: meteor-jenkins-agent
-            suffix: -jenkins-builder-meteor
-          - docker_target: meteor-azure-pipelines-agent
-            suffix: -azpipeline-builder-meteor
-
     steps:
       - name: Checkout
         uses: actions/checkout@v2

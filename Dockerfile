@@ -37,11 +37,17 @@ RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - \
    stable"
 
 RUN apt-get update && apt-get install --no-install-recommends -y \
-        docker-ce-cli \
-    && rm -rf /var/lib/apt/lists/*
+        docker-ce-cli docker-compose-plugin \
+    && rm -rf /var/lib/apt/lists/
+
+RUN echo "alias docker-compose='docker compose'" >> /etc/bash.bashrc
 
 # Python Lang support
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
+
+# AWSCliv2 Install
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip" \
+        && unzip "/tmp/awscliv2.zip" -d "/tmp/" && /tmp/aws/install && rm -rf /tmp/aws/
 
 ### Scripts for user env and entrypoint
 COPY scripts/ /opt/tools/scripts/
@@ -135,16 +141,21 @@ RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - \
    stable"
 
 RUN apt-get update && apt-get install --no-install-recommends -y \
-        docker-ce-cli \
-    && rm -rf /var/lib/apt/lists/*
+        docker-ce-cli docker-compose-plugin \
+    && rm -rf /var/lib/apt/lists/
+
+RUN echo "alias docker-compose='docker compose'" >> /etc/bash.bashrc
 
 # Python Lang support
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
 
+# AWSCliv2 Install
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip" \
+        && unzip "/tmp/awscliv2.zip" -d "/tmp/" && /tmp/aws/install && rm -rf /tmp/aws/
+
 ### Scripts for user env and entrypoint
 COPY scripts/ /opt/tools/scripts/
 COPY scripts/entrypoint.sh /entrypoint.sh
-
 
 # Sudo support for apt-get installs
 RUN /usr/sbin/groupadd appenv \
@@ -224,30 +235,3 @@ ENV GENERATION_PLUGIN_DIRS="$HOME/.hamlet/engine/engines/bundled_shim/shim/engin
 RUN /opt/tools/scripts/setup_user_env.sh
 
 ENTRYPOINT [ "/usr/local/bin/start" ]
-
-
-# ----------------------------
-# meteor variants
-# ----------------------------
-
-# Each of these runs user specific setup processes for the user its running under
-
-FROM hamlet as meteor-hamlet
-
-COPY scripts/meteor /opt/tools/scripts/meteor
-ENV PATH=$HOME/.meteor:$PATH
-RUN /opt/tools/scripts/meteor/setup_meteor.sh
-
-
-FROM jenkins-agent AS meteor-jenkins-agent
-
-COPY scripts/meteor /opt/tools/scripts/meteor
-ENV PATH=$HOME/.meteor:$PATH
-RUN /opt/tools/scripts/meteor/setup_meteor.sh
-
-
-FROM azure-pipelines-agent AS meteor-azure-pipelines-agent
-
-COPY scripts/meteor /opt/tools/scripts/meteor
-ENV PATH=$HOME/.meteor:$PATH
-RUN /opt/tools/scripts/meteor/setup_meteor.sh

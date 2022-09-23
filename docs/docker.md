@@ -21,16 +21,9 @@
 * Intended for development and production usage - intended for interactive usage
   * link to setting up docker articles
 
-## builder-meteor
-
-* builds from base
-* installs [Meteor](https://www.meteor.com/)
-* Intended for use in build pipelines - not intended for interactive use
-
 ## jenkins
 
-* builds from base
-* installs the JNLP agent
+* based on the jenkins inbound-agent docker image
 * designed to work with container-based cloud agents - not intended for interactive use
 
 ## azpipelines

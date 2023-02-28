@@ -155,7 +155,7 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/aws
 
 ### Scripts for user env and entrypoint
 COPY scripts/ /opt/tools/scripts/
-COPY scripts/entrypoint.sh /entrypoint.sh
+COPY scripts/jenkins-agent/entrypoint.sh /entrypoint.sh
 
 # Sudo support for apt-get installs
 RUN /usr/sbin/groupadd appenv \
@@ -185,6 +185,8 @@ RUN /opt/tools/scripts/setup_user_env.sh
 
 # Create the workspace directory so we can mount volumes to it and maintain user permissions
 RUN mkdir -p ${HOME}/workspace
+
+ENTRYPOINT [ "/entrypoint.sh" ]
 
 # ----------------------------
 # Azure Pipelines Agent Setup

@@ -243,8 +243,8 @@ USER azp
 WORKDIR $HOME
 ENV PATH=$HOME/.nodenv/bin:$HOME/.nodenv/versions:$HOME/.nodenv/shims:$PATH
 ENV PATH=$HOME/.pyenv/bin:$HOME/.pyenv/versions:$HOME/.pyenv/shims:$PATH
-ENV PATH=$HOME/.rbenv/bin:$HOME/.rbenv/versions:$HOME/.rbenv/shims:$PATH
-ENV PYENV_ROOT=$HOME/.pyenv NODENV_ROOT=$HOME/.nodenv RBENV_ROOT=$HOME/.rbenv
+ENV PATH=$HOME/.jenv/bin:$HOME/.jenv/versions:$HOME/.jenv/shims:$PATH
+ENV PYENV_ROOT=$HOME/.pyenv NODENV_ROOT=$HOME/.nodenv JENV_ROOT=$HOME/.jenv
 
 ENV GENERATION_PLUGIN_DIRS="$HOME/.hamlet/engine/engines/bundled_shim/shim/engine-plugin-aws;$HOME/.hamlet/engine/engines/bundled_shim/shim/engine-plugin-azure" \
         GENERATION_WRAPPER_LOCAL_JAVA="false" \

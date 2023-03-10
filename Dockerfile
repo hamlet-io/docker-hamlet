@@ -31,14 +31,25 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 
 # Add docker to apt-get
 RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - \
-    && add-apt-repository \
-   "deb [arch=amd64] https://download.docker.com/linux/debian \
-   $(lsb_release -cs) \
-   stable"
+        && add-apt-repository \
+        "deb [arch=amd64] https://download.docker.com/linux/debian \
+        $(lsb_release -cs) \
+        stable"
 
 RUN apt-get update && apt-get install --no-install-recommends -y \
         docker-ce-cli docker-compose-plugin \
-    && rm -rf /var/lib/apt/lists/
+        && rm -rf /var/lib/apt/lists/
+
+# Add various java versions via apt-get
+RUN curl -fsSL https://packages.adoptium.net/artifactory/api/gpg/key/public | apt-key add - \
+        && add-apt-repository \
+        "deb [arch=amd64] https://packages.adoptium.net/artifactory/deb \
+        $(lsb_release -cs) \
+        main"
+
+RUN apt-get update && apt-get install --no-install-recommends -y \
+        temurin-8-jdk temurin-11-jdk \
+        && rm -rf /var/lib/apt/lists/
 
 RUN echo "alias docker-compose='docker compose'" >> /etc/bash.bashrc
 
@@ -81,8 +92,8 @@ WORKDIR $HOME
 
 ENV PATH=$HOME/.nodenv/bin:$HOME/.nodenv/versions:$HOME/.nodenv/shims:$PATH
 ENV PATH=$HOME/.pyenv/bin:$HOME/.pyenv/versions:$HOME/.pyenv/shims:$PATH
-ENV PATH=$HOME/.rbenv/bin:$HOME/.rbenv/versions:$HOME/.rbenv/shims:$PATH
-ENV PYENV_ROOT=$HOME/.pyenv NODENV_ROOT=$HOME/.nodenv RBENV_ROOT=$HOME/.rbenv
+ENV PATH=$HOME/.jenv/bin:$HOME/.jenv/versions:$HOME/.jenv/shims:$PATH
+ENV PYENV_ROOT=$HOME/.pyenv NODENV_ROOT=$HOME/.nodenv JENV_ROOT=$HOME/.jenv
 
 ENV GENERATION_PLUGIN_DIRS="$HOME/.hamlet/engine/engines/bundled_shim/shim/engine-plugin-aws;$HOME/.hamlet/engine/engines/bundled_shim/shim/engine-plugin-azure" \
         GENERATION_WRAPPER_LOCAL_JAVA="false" \
@@ -135,14 +146,25 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 
 # Add docker to apt-get
 RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - \
-    && add-apt-repository \
-   "deb [arch=amd64] https://download.docker.com/linux/debian \
-   $(lsb_release -cs) \
-   stable"
+        && add-apt-repository \
+        "deb [arch=amd64] https://download.docker.com/linux/debian \
+        $(lsb_release -cs) \
+        stable"
 
 RUN apt-get update && apt-get install --no-install-recommends -y \
         docker-ce-cli docker-compose-plugin \
-    && rm -rf /var/lib/apt/lists/
+        && rm -rf /var/lib/apt/lists/
+
+# Add various java versions via apt-get
+RUN curl -fsSL https://packages.adoptium.net/artifactory/api/gpg/key/public | apt-key add - \
+        && add-apt-repository \
+        "deb [arch=amd64] https://packages.adoptium.net/artifactory/deb \
+        $(lsb_release -cs) \
+        main"
+
+RUN apt-get update && apt-get install --no-install-recommends -y \
+        temurin-8-jdk temurin-11-jdk \
+        && rm -rf /var/lib/apt/lists/
 
 RUN echo "alias docker-compose='docker compose'" >> /etc/bash.bashrc
 
@@ -168,8 +190,8 @@ WORKDIR $HOME
 
 ENV PATH=$HOME/.nodenv/bin:$HOME/.nodenv/versions:$HOME/.nodenv/shims:$PATH
 ENV PATH=$HOME/.pyenv/bin:$HOME/.pyenv/versions:$HOME/.pyenv/shims:$PATH
-ENV PATH=$HOME/.rbenv/bin:$HOME/.rbenv/versions:$HOME/.rbenv/shims:$PATH
-ENV PYENV_ROOT=$HOME/.pyenv NODENV_ROOT=$HOME/.nodenv RBENV_ROOT=$HOME/.rbenv
+ENV PATH=$HOME/.jenv/bin:$HOME/.jenv/versions:$HOME/.jenv/shims:$PATH
+ENV PYENV_ROOT=$HOME/.pyenv NODENV_ROOT=$HOME/.nodenv JENV_ROOT=$HOME/.jenv
 
 ENV GENERATION_PLUGIN_DIRS="$HOME/.hamlet/engine/engines/bundled_shim/shim/engine-plugin-aws;$HOME/.hamlet/engine/engines/bundled_shim/shim/engine-plugin-azure" \
         GENERATION_WRAPPER_LOCAL_JAVA="false" \

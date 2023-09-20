@@ -17,7 +17,7 @@ git clone --depth 1 https://github.com/nodenv/nodenv-default-packages.git "${NOD
 echo "yarn" >> "${NODENV_ROOT}/default-packages"
 
 # nodenv install
-NODE_VERSION=14.19.0
+NODE_VERSION="16.20.2"
 eval "$(nodenv init -)"
 nodenv install "${NODE_VERSION}"
 nodenv global "${NODE_VERSION}"

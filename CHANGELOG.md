@@ -1,12 +1,37 @@
 # Changelog
 
-## Unreleased (2022-03-25)
+## Unreleased (2023-09-21)
+
+#### New Features
+
+* add jenv support and jdk8/11 installs
+* migrate to java11 for jenkins agents
+#### Fixes
+
+* update github action steps
+* JENV in the az agent
+* jenkins agent entrypoint
+* docker hub tokens
+* libcurl update for azpipeline
+* cd updates for new stage names
+#### Refactorings
+
+* migrate to ghcr for hosting ([#77](https://github.com/hamlet-io/docker-hamlet/issues/77))
+* general updates to the hamlet image
+* remove tools that are required for base
+
+Full set of changes: [`8.5.2, 8.7.0...b34468d`](https://github.com/hamlet-io/docker-hamlet/compare/8.5.2, 8.7.0...b34468d)
+
+## 8.5.2, 8.7.0 (2022-03-25)
 
 #### Fixes
 
 * shim setup env config
+#### Others
 
-Full set of changes: [`8.5.1...b6597ff`](https://github.com/hamlet-io/docker-hamlet/compare/8.5.1...b6597ff)
+* changelog bump ([#69](https://github.com/hamlet-io/docker-hamlet/issues/69))
+
+Full set of changes: [`8.5.1...8.5.2, 8.7.0`](https://github.com/hamlet-io/docker-hamlet/compare/8.5.1...8.5.2, 8.7.0)
 
 ## 8.5.1 (2022-03-25)
 

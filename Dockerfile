@@ -40,11 +40,8 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     && rm -rf /var/lib/apt/lists/
 
 # Add various java versions via apt-get
-RUN curl -fsSL https://packages.adoptium.net/artifactory/api/gpg/key/public | apt-key add - \
-    && add-apt-repository \
-    "deb [arch=amd64] https://packages.adoptium.net/artifactory/deb \
-    $(lsb_release -cs) \
-    main"
+RUN wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --dearmor | tee /etc/apt/trusted.gpg.d/adoptium.gpg > /dev/null \
+    && echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list
 
 RUN apt-get update && apt-get install --no-install-recommends -y \
     temurin-11-jdk temurin-17-jdk\
@@ -150,11 +147,9 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     && rm -rf /var/lib/apt/lists/
 
 # Add various java versions via apt-get
-RUN curl -fsSL https://packages.adoptium.net/artifactory/api/gpg/key/public | apt-key add - \
-    && add-apt-repository \
-    "deb [arch=amd64] https://packages.adoptium.net/artifactory/deb \
-    $(lsb_release -cs) \
-    main"
+RUN wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --dearmor | tee /etc/apt/trusted.gpg.d/adoptium.gpg > /dev/null \
+    && echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list
+
 
 # Fix for slim docker images not including the man directories
 RUN mkdir -p /usr/share/man/man1

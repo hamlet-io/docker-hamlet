@@ -1,6 +1,14 @@
 # Changelog
 
-## Unreleased (2023-09-21)
+## latest (2024-03-25)
+
+#### Fixes
+
+* move to standard changelog ([#79](https://github.com/hamlet-io/docker-hamlet/issues/79))
+
+Full set of changes: [`8.8.0...latest`](https://github.com/hamlet-io/docker-hamlet/compare/8.8.0...latest)
+
+## 8.8.0 (2023-09-21)
 
 #### New Features
 
@@ -19,8 +27,11 @@
 * migrate to ghcr for hosting ([#77](https://github.com/hamlet-io/docker-hamlet/issues/77))
 * general updates to the hamlet image
 * remove tools that are required for base
+#### Others
 
-Full set of changes: [`8.5.2, 8.7.0...b34468d`](https://github.com/hamlet-io/docker-hamlet/compare/8.5.2, 8.7.0...b34468d)
+* changelog bump ([#74](https://github.com/hamlet-io/docker-hamlet/issues/74))
+
+Full set of changes: [`8.5.2, 8.7.0...8.8.0`](https://github.com/hamlet-io/docker-hamlet/compare/8.5.2, 8.7.0...8.8.0)
 
 ## 8.5.2, 8.7.0 (2022-03-25)
 
